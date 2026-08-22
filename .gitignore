@@ -32,3 +32,8 @@ venv/
 Thumbs.db
 .idea/
 .vscode/
+
+# --- Node / Astro ---
+node_modules/
+dist/
+.astro/
