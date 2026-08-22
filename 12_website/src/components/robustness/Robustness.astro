@@ -1,0 +1,100 @@
+---
+import { ROBUSTNESS_DIMENSIONS } from '../../data/metrics';
+---
+
+<section class="section" id="robustness" aria-labelledby="robustness-h">
+  <div class="container">
+    <div class="section-head section-head--split">
+      <div>
+        <p class="section-num">12 · Robustness</p>
+        <h2 id="robustness-h">Does the winner survive different assumptions?</h2>
+      </div>
+      <p class="section-sub" data-reveal>
+        A model that wins under one assumption may not win under another. Testing the range is part of the research question, not a footnote to it.
+      </p>
+    </div>
+
+    <div class="sens" data-reveal>
+      {ROBUSTNESS_DIMENSIONS.map((d) => (
+        <div class="sens__row">
+          <div class="sens__meta">
+            <p class="mono sens__label">{d.label}</p>
+            <p class="sens__note">{d.note}</p>
+          </div>
+          <div class="sens__scale" role="img" aria-label={`${d.label}: low to medium to high`}>
+            <span class="sens__tick sens__tick--lo" aria-hidden="true"></span>
+            <span class="sens__tick sens__tick--mid" aria-hidden="true"></span>
+            <span class="sens__tick sens__tick--hi" aria-hidden="true"></span>
+            <span class="mono sens__range">{d.range}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <p class="sens-note" data-reveal>
+      <span class="mono sens-note__label">Why this matters</span>
+      If the best approach changes under reasonable alternatives, that is an important finding — not a problem with the experiment. Findings are reported with the assumptions they depend on.
+    </p>
+  </div>
+</section>
+
+<style>
+  .sens {
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-1);
+    overflow: hidden;
+  }
+  .sens__row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--sp-6);
+    align-items: center;
+    padding: var(--sp-5) var(--sp-6);
+  }
+  .sens__row + .sens__row { border-top: 1px solid var(--line); }
+  @media (max-width: 44rem) {
+    .sens__row { grid-template-columns: 1fr; gap: var(--sp-3); }
+  }
+  .sens__label { font-weight: 700; margin-bottom: var(--sp-1); }
+  .sens__note { color: var(--ink-3); font-size: var(--fs-body-sm); }
+
+  .sens__scale {
+    position: relative;
+    width: min(22rem, 60vw);
+    height: 3.6rem;
+  }
+  .sens__scale::before {
+    content: "";
+    position: absolute;
+    left: 0.5rem; right: 0.5rem;
+    top: 50%;
+    height: 1px;
+    background: var(--line-2);
+  }
+  .sens__tick {
+    position: absolute;
+    top: 50%;
+    width: 1px;
+    background: var(--ink-2);
+  }
+  .sens__tick--lo { left: 0.5rem; height: 0.7rem; }
+  .sens__tick--mid { left: 50%; height: 1rem; }
+  .sens__tick--hi { right: 0.5rem; height: 0.7rem; }
+  .sens__range {
+    position: absolute;
+    right: 0;
+    bottom: 0.1rem;
+    color: var(--ink-3);
+    font-size: var(--fs-mono-sm);
+  }
+
+  .sens-note {
+    margin-top: var(--sp-6);
+    max-width: var(--measure);
+    color: var(--ink-2);
+    font-size: var(--fs-body-sm);
+  }
+  .sens-note__label { display: block; color: var(--c-uncertainty); margin-bottom: var(--sp-2); }
+</style>

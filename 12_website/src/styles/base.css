@@ -1,0 +1,256 @@
+/* ============================================================
+   Base styles — reset, typography, primitives
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 1.5rem);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+img, svg, video { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: inherit; }
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--r-sm);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--c-traditional) 22%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---------- Typography ---------- */
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: var(--lh-display);
+  letter-spacing: var(--track-display);
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+h1 { font-size: var(--fs-hero); font-weight: 500; }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
+h4 { font-size: var(--fs-h4); font-family: var(--font-body); font-weight: 650; letter-spacing: -0.01em; }
+
+p { max-width: var(--measure); }
+strong { font-weight: 650; }
+em { font-style: italic; }
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: var(--track-mono);
+  text-transform: uppercase;
+}
+
+.lede { font-size: clamp(1.125rem, 1.6vw, 1.3rem); line-height: 1.6; color: var(--ink-2); }
+
+/* ---------- Layout primitives ---------- */
+
+.container {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--section-pad);
+  position: relative;
+}
+
+.section-head {
+  display: grid;
+  gap: var(--sp-5);
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.section-head--split {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+}
+@media (min-width: 56rem) {
+  .section-head--split {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    column-gap: var(--sp-7);
+  }
+  .section-head--split .section-sub { margin-bottom: 0.4rem; }
+}
+
+.section-num {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono-sm);
+  letter-spacing: var(--track-mono);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.section-num::after {
+  content: "";
+  height: 1px;
+  width: 2.5rem;
+  background: var(--line-2);
+}
+
+.section-sub { color: var(--ink-2); max-width: var(--measure); }
+
+/* ---------- Links & buttons ---------- */
+
+.link {
+  color: var(--c-traditional);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition: color var(--dur-fast) ease;
+}
+.link:hover { color: var(--ink); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.7rem 1.25rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color var(--dur-fast) ease, background var(--dur-fast) ease, transform var(--dur-fast) ease;
+}
+.btn:hover { border-color: var(--ink-2); background: var(--surface-2); }
+.btn:active { transform: translateY(1px); }
+.btn--primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.btn--primary:hover { background: var(--ink-2); border-color: var(--ink-2); }
+
+/* ---------- Skip link ---------- */
+
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: var(--gutter);
+  z-index: 200;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.6rem 1rem;
+  border-radius: 0 0 var(--r-md) var(--r-md);
+  text-decoration: none;
+  font-weight: 600;
+  transition: top var(--dur-fast) ease;
+}
+.skip-link:focus { top: 0; }
+
+/* ---------- Grid helpers ---------- */
+
+.grid-2 { display: grid; gap: var(--grid-gap); }
+.grid-3 { display: grid; gap: var(--grid-gap); }
+@media (min-width: 48rem) {
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 60rem) {
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ---------- Reveal-on-scroll (JS-driven, safe default) ---------- */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity var(--dur-reveal) var(--ease-out), transform var(--dur-reveal) var(--ease-out);
+  transition-delay: var(--dlay, 0ms);
+}
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1; transform: none; }
+}
+
+/* ---------- Tabular numbers where we show data ---------- */
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* ---------- Shared chain (step-flow) pattern ---------- */
+.chain {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-4) var(--grid-gap);
+}
+@media (max-width: 56rem) { .chain { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 34rem) { .chain { grid-template-columns: 1fr; } }
+.chain__step {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  padding: var(--sp-4);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--sp-3);
+  align-items: start;
+  box-shadow: var(--shadow-1);
+}
+.chain__num { font-weight: 700; }
+.chain__body { display: grid; gap: 0.15rem; }
+.chain__label { font-weight: 700; }
+.chain__detail { color: var(--ink-3); font-size: var(--fs-body-sm); }
+.chain__arrow {
+  position: absolute;
+  right: -1.1rem;
+  top: 50%;
+  translate: 0 -50%;
+  color: var(--line-2);
+  font-size: 1rem;
+  z-index: 1;
+}
+@media (max-width: 56rem) {
+  .chain__arrow { display: none; }
+}
+
+/* ---------- Colors carry meaning ---------- */
+.trad { color: var(--c-traditional); }
+.stat { color: var(--c-statistical); }
+.neural { color: var(--c-neural); }
+.llm { color: var(--c-llm); }
+.inv { color: var(--c-inventory); }
+.unc { color: var(--c-uncertainty); }

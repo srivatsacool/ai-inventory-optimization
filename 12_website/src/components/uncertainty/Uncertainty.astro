@@ -1,0 +1,86 @@
+---
+import { UNCERTAINTY } from '../../data/research';
+---
+
+<section class="lab" id="uncertainty" aria-labelledby="uncertainty-h">
+  <div class="lab__gridpaper" aria-hidden="true"></div>
+  <div class="container">
+    <div class="lab__head">
+      <p class="mono lab__num">11 · Research uncertainty</p>
+      <h2 id="uncertainty-h" class="lab__title">{UNCERTAINTY.headline}</h2>
+      <p class="lab__body lede">{UNCERTAINTY.body}</p>
+    </div>
+
+    <div class="lab__candidates" data-reveal>
+      {UNCERTAINTY.candidates.map((c) => (
+        <div class={`lab__candidate lab__candidate--${c.hue}`}>
+          <span class="mono lab__candidate-label">{c.label}</span>
+          <span class="lab__candidate-q mark-${c.hue}">?</span>
+        </div>
+      ))}
+    </div>
+
+    <p class="lab__foot mono">No fake ranking. The experiment determines the answer.</p>
+  </div>
+</section>
+
+<style>
+  .lab {
+    position: relative;
+    background: var(--lab-bg);
+    color: var(--lab-ink);
+    padding-block: var(--section-pad);
+    overflow: hidden;
+  }
+  .lab__gridpaper {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgba(233,232,226,0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(233,232,226,0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .lab__head { position: relative; max-width: 44rem; }
+  .lab__num { color: var(--lab-ink-2); margin-bottom: var(--sp-5); }
+  .lab__title { color: var(--lab-ink); margin-bottom: var(--sp-5); }
+  .lab__body { color: var(--lab-ink-2); }
+
+  .lab__candidates {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--grid-gap);
+    margin-top: var(--sp-8);
+  }
+  @media (max-width: 48rem) { .lab__candidates { grid-template-columns: repeat(2, 1fr); } }
+
+  .lab__candidate {
+    border: 1px solid var(--lab-line);
+    border-radius: var(--r-lg);
+    background: var(--lab-bg-2);
+    padding: var(--sp-6);
+    display: grid;
+    gap: var(--sp-4);
+    transition: border-color var(--dur-med) ease, transform var(--dur-med) var(--ease-out);
+  }
+  .lab__candidate:hover { border-color: var(--lab-line-2); transform: translateY(-3px); }
+  .lab__candidate-label { color: var(--lab-ink-2); }
+  .lab__candidate-q {
+    font-family: var(--font-display);
+    font-size: 3.2rem;
+    line-height: 1;
+    font-weight: 500;
+  }
+  .mark-trad { color: var(--c-traditional); }
+  .mark-stat { color: var(--c-statistical); }
+  .mark-neural { color: var(--c-neural); }
+  .mark-llm { color: var(--c-llm); }
+
+  .lab__foot {
+    position: relative;
+    margin-top: var(--sp-7);
+    color: var(--lab-ink-2);
+    font-size: var(--fs-mono-sm);
+  }
+</style>

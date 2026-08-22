@@ -1,0 +1,22 @@
+{
+  "name": "ai-inventory-optimization-website",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Research proposal website — From Traditional Forecasting to Large Language Models: Evaluating AI-Based Inventory Optimization",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource/fragment-mono": "^5.3.0",
+    "@fontsource/spectral": "^5.3.0",
+    "astro": "^7.2.4",
+    "gsap": "^3.15.0",
+    "typescript": "6"
+  }
+}

@@ -1,0 +1,34 @@
+# AI-INVENTORY-OPTIMIZATION — .gitignore
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+*.ipynb_checkpoints/
+
+# --- Data (never commit downloaded datasets / processed data) ---
+02_data/dataset_01_m5/raw/
+02_data/dataset_01_m5/interim/
+02_data/dataset_02_grocery/raw/
+02_data/dataset_02_grocery/interim/
+*.csv
+*.csv.gz
+*.parquet
+*.feather
+*.h5
+*.hdf5
+
+# --- Experiments / generated artifacts (regenerable, keep repo lean) ---
+07_results/
+09_visualizations/
+08_llm/responses/
+08_llm/logs/
+10_report/final/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

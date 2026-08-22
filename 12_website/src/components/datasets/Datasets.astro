@@ -1,0 +1,84 @@
+---
+import { DATASETS, DATA_DISTINCTION } from '../../data/datasets';
+---
+
+<section class="section section--alt" id="data" aria-labelledby="data-h">
+  <div class="container">
+    <div class="section-head section-head--split">
+      <div>
+        <p class="section-num">05 · The data</p>
+        <h2 id="data-h">Two retail environments, one question</h2>
+      </div>
+      <p class="section-sub" data-reveal>
+        The same model ladder runs in both environments, so findings can be tested across different demand behaviours rather than assumed to generalise.
+      </p>
+    </div>
+
+    <div class="ds-grid grid-2">
+      {DATASETS.map((d) => (
+        <article class={`ds-card ds-card--${d.roleTag}`} data-reveal>
+          <div class="ds-card__top">
+            <p class="mono ds-card__org">{d.organization}</p>
+            <span class={`mono ds-card__role ds-card__role--${d.roleTag}`}>{d.role}</span>
+          </div>
+          <h3 class="ds-card__name">{d.name}</h3>
+          <p class="ds-card__blurb">{d.blurb}</p>
+          <dl class="ds-card__chars">
+            {d.characteristics.map((c) => (
+              <div class="ds-card__char">
+                <dt class="mono">{c.label}</dt>
+                <dd>{c.note}</dd>
+              </div>
+            ))}
+          </dl>
+        </article>
+      ))}
+    </div>
+
+    <aside class="ds-note" data-reveal>
+      <p class="mono ds-note__label">{DATA_DISTINCTION.title}</p>
+      <p class="ds-note__text">{DATA_DISTINCTION.body}</p>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .ds-card {
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-1);
+    padding: clamp(1.75rem, 3.5vw, 2.5rem);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+  }
+  .ds-card--primary { border-top: 3px solid var(--c-traditional); }
+  .ds-card--secondary { border-top: 3px solid var(--c-statistical); }
+  .ds-card__top { display: flex; justify-content: space-between; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+  .ds-card__org { color: var(--ink-3); font-size: var(--fs-mono-sm); }
+  .ds-card__role { font-size: var(--fs-mono-sm); border: 1px solid var(--line-2); border-radius: 999px; padding: 0.3rem 0.7rem; }
+  .ds-card__role--primary { color: var(--c-traditional); border-color: color-mix(in srgb, var(--c-traditional) 40%, var(--line)); }
+  .ds-card__role--secondary { color: var(--c-statistical); border-color: color-mix(in srgb, var(--c-statistical) 40%, var(--line)); }
+  .ds-card__name { font-size: clamp(1.6rem, 2.6vw, 2.1rem); font-weight: 600; }
+  .ds-card__blurb { color: var(--ink-2); font-size: var(--fs-body-sm); }
+  .ds-card__chars { display: grid; gap: var(--sp-3); margin-top: auto; padding-top: var(--sp-4); border-top: 1px solid var(--line); }
+  .ds-card__char { display: grid; grid-template-columns: 7.5rem 1fr; gap: var(--sp-3); font-size: var(--fs-body-sm); }
+  .ds-card__char dt { color: var(--ink-3); font-size: var(--fs-mono-sm); }
+  .ds-card__char dd { color: var(--ink-2); margin: 0; }
+  @media (max-width: 30rem) {
+    .ds-card__char { grid-template-columns: 1fr; gap: 0.1rem; }
+  }
+
+  .ds-note {
+    margin-top: var(--sp-6);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--c-uncertainty);
+    border-radius: var(--r-md);
+    background: var(--surface-2);
+    padding: var(--sp-5);
+    max-width: var(--measure);
+  }
+  .ds-note__label { color: var(--c-uncertainty); margin-bottom: var(--sp-2); }
+  .ds-note__text { color: var(--ink-2); font-size: var(--fs-body-sm); }
+</style>

@@ -1,0 +1,175 @@
+---
+import { MODELS } from '../../data/models';
+---
+
+<section class="section" id="models" aria-labelledby="models-h">
+  <div class="container">
+    <div class="section-head section-head--split">
+      <div>
+        <p class="section-num">04 · Model evolution</p>
+        <h2 id="models-h">Eight approaches, one ladder of increasing complexity</h2>
+      </div>
+      <p class="section-sub" data-reveal>
+        Each rung adds capability — and each one also adds complexity that must earn its place. Expand any rung to see what it is, why it is in the study, and what it costs.
+      </p>
+    </div>
+
+    <div class="ladder-list" data-ladder>
+      {MODELS.map((m, i) => (
+        <article class={`rung ${m.hue}`} data-rung data-reveal style={`--dlay:${Math.min(i * 50, 250)}ms`}>
+          <div class="rung__rail" aria-hidden="true">
+            <span class={`rung__dot ${m.hue}`}></span>
+            <span class="rung__wire"></span>
+          </div>
+
+          <div class="rung__head">
+            <button
+              class="rung__toggle"
+              type="button"
+              data-rung-toggle
+              id={`rung-toggle-${m.id}`}
+              aria-expanded="false"
+              aria-controls={`rung-panel-${m.id}`}
+            >
+              <span class="mono rung__index">{String(i + 1).padStart(2, '0')}</span>
+              <span class="rung__names">
+                <span class={`mono rung__name ${m.hue}`}>{m.name}</span>
+                <span class="rung__long">{m.longName}</span>
+              </span>
+              <span class={`mono rung__cat ${m.hue}`}>{m.category}</span>
+              <svg class="rung__chev" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="rung__panel" id={`rung-panel-${m.id}`} data-rung-panel hidden>
+            <div class="rung__cols">
+              <div>
+                <p class="mono rung__field">The idea</p>
+                <p class="rung__text">{m.idea}</p>
+              </div>
+              <div>
+                <p class="mono rung__field">Why it is included</p>
+                <p class="rung__text">{m.whyIncluded}</p>
+              </div>
+              <div>
+                <p class="mono rung__field">Complexity it adds</p>
+                <p class="rung__text">{m.complexity}</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <p class="models-note" data-reveal>
+      <span class="mono models-note__label">The question each rung carries</span>
+      Does adding this form of complexity actually improve the forecast — and, eventually, the inventory decision?
+    </p>
+  </div>
+</section>
+
+<style>
+  .ladder-list {
+    display: grid;
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-1);
+    overflow: hidden;
+  }
+
+  .rung { position: relative; }
+  .rung + .rung { border-top: 1px solid var(--line); }
+
+  /* connecting rail behind each rung dot */
+  .rung__rail { position: absolute; left: var(--sp-5); top: 0; bottom: 0; width: 2px; }
+  .rung__dot {
+    position: absolute;
+    top: 1.55rem;
+    left: 50%;
+    translate: -50% -50%;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--ink-2);
+    box-shadow: 0 0 0 3px var(--surface);
+  }
+  .rung__dot.trad { background: var(--c-traditional); }
+  .rung__dot.stat { background: var(--c-statistical); }
+  .rung__dot.neural { background: var(--c-neural); }
+  .rung__dot.llm { background: var(--c-llm); }
+
+  .rung__head { position: relative; }
+  .rung__toggle {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 2.75rem 1fr auto 1.5rem;
+    gap: var(--sp-4);
+    align-items: center;
+    padding: var(--sp-5) var(--sp-6);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background var(--dur-fast) ease;
+  }
+  .rung__toggle:hover { background: var(--surface-2); }
+  .rung__index { color: var(--ink-3); font-size: var(--fs-mono-sm); }
+  .rung__names { display: grid; gap: 0.15rem; }
+  .rung__name { font-weight: 700; font-size: var(--fs-mono); }
+  .rung__name.trad { color: var(--c-traditional); }
+  .rung__name.stat { color: var(--c-statistical); }
+  .rung__name.neural { color: var(--c-neural); }
+  .rung__name.llm { color: var(--c-llm); }
+  .rung__long { color: var(--ink-2); font-size: var(--fs-body-sm); }
+  .rung__cat {
+    font-size: var(--fs-mono-sm);
+    padding: 0.3rem 0.7rem;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    opacity: 0.85;
+  }
+  .rung__cat.trad { color: var(--c-traditional); }
+  .rung__cat.stat { color: var(--c-statistical); }
+  .rung__cat.neural { color: var(--c-neural); }
+  .rung__cat.llm { color: var(--c-llm); }
+  .rung__chev {
+    color: var(--ink-3);
+    transition: transform var(--dur-med) var(--ease-out);
+    justify-self: end;
+  }
+  .rung.is-open .rung__chev { transform: rotate(180deg); }
+
+  .rung__panel {
+    padding: 0 var(--sp-6) var(--sp-5);
+  }
+  .rung__cols {
+    display: grid;
+    gap: var(--sp-5);
+    border-left: 2px solid var(--line);
+    margin-left: 2.75rem;
+    padding-left: var(--sp-5);
+  }
+  @media (min-width: 48rem) {
+    .rung__cols { grid-template-columns: repeat(3, 1fr); }
+  }
+  .rung__field { color: var(--ink-3); font-size: var(--fs-mono-sm); margin-bottom: var(--sp-2); }
+  .rung__text { color: var(--ink-2); font-size: var(--fs-body-sm); max-width: 46ch; }
+
+  @media (max-width: 40rem) {
+    .rung__toggle { grid-template-columns: 1fr auto; padding: var(--sp-4); }
+    .rung__index { display: none; }
+    .rung__cat { display: none; }
+    .rung__rail { left: var(--sp-4); }
+    .rung__panel { padding: 0 var(--sp-4) var(--sp-4); }
+    .rung__cols { margin-left: var(--sp-4); }
+  }
+
+  .models-note {
+    margin-top: var(--sp-5);
+    max-width: var(--measure);
+    color: var(--ink-2);
+  }
+  .models-note__label { display: block; color: var(--ink-3); margin-bottom: var(--sp-2); }
+</style>

@@ -1,0 +1,387 @@
+---
+// The Inventory Decision Engine — the hero's analytical instrument.
+// All values are neutral placeholders; nothing here claims results.
+import { ENGINE } from '../../data/engine';
+---
+
+<section class="engine" data-engine aria-label="Inventory decision engine — interactive research visualization">
+  <!-- Header: title + status -->
+  <header class="engine__head">
+    <h2 class="engine__title">{ENGINE.title}</h2>
+    <p class="engine__status mono"><span class="engine__dot" aria-hidden="true"></span>{ENGINE.status}</p>
+  </header>
+
+  <!-- Demand signal -->
+  <figure class="signal" data-signal>
+    <figcaption class="engine__label mono">{ENGINE.chartTitle}<span class="engine__charthint">{ENGINE.chartNote}</span></figcaption>
+    <svg class="signal__svg" viewBox="0 0 560 252" role="img"
+      aria-label="Schematic demand signal: historical demand, a forecast extending beyond the forecast horizon, and a widening uncertainty band. Values pending research results.">
+      <!-- grid -->
+      <g class="signal__grid" aria-hidden="true">
+        <line x1="8" y1="40" x2="552" y2="40" />
+        <line x1="8" y1="90" x2="552" y2="90" />
+        <line x1="8" y1="140" x2="552" y2="140" />
+        <line x1="8" y1="190" x2="552" y2="190" />
+      </g>
+      <!-- uncertainty band (widens into the future) -->
+      <path class="signal__band" aria-hidden="true"
+        d="M345 118 C 396 84, 430 82, 470 78 S 528 62, 552 56 L 552 158 C 520 150, 494 152, 458 158 S 392 168, 345 166 Z" />
+      <!-- forecast horizon -->
+      <line class="signal__horizon" aria-hidden="true" x1="345" y1="26" x2="345" y2="226" />
+      <text class="signal__horizontag mono" aria-hidden="true" x="345" y="16" text-anchor="middle">Forecast horizon</text>
+      <!-- forecast -->
+      <path class="signal__forecast" aria-hidden="true"
+        d="M345 142 C 388 132, 420 118, 460 122 S 520 108, 552 96" />
+      <!-- actual demand -->
+      <path class="signal__actual" aria-hidden="true"
+        d="M8 190 C 44 168, 62 136, 96 156 S 148 182, 184 152 S 240 104, 272 124 S 320 150, 345 142" />
+      <!-- baseline -->
+      <line class="signal__base" aria-hidden="true" x1="8" y1="226" x2="552" y2="226" />
+      <text class="signal__time mono" aria-hidden="true" x="552" y="244" text-anchor="end">time →</text>
+    </svg>
+    <ul class="signal__legend mono">
+      <li><span class="signal__sw signal__sw--actual" aria-hidden="true"></span>{ENGINE.legend.actual}</li>
+      <li><span class="signal__sw signal__sw--forecast" aria-hidden="true"></span>{ENGINE.legend.forecast}</li>
+      <li><span class="signal__sw signal__sw--band" aria-hidden="true"></span>{ENGINE.legend.uncertainty}</li>
+    </ul>
+  </figure>
+
+  <!-- Forecast comparison (illustrative only) -->
+  <section class="engine__block" aria-labelledby="fc-title">
+    <div class="engine__blockhead">
+      <h3 class="engine__label mono" id="fc-title">{ENGINE.comparisonTitle}</h3>
+      <span class="engine__chip mono">{ENGINE.illustrative}</span>
+    </div>
+    <ul class="compare">
+      {ENGINE.comparison.map((c) => (
+        <li class="compare__row">
+          <span class={`compare__name mono ${c.hue}`}>{c.name}</span>
+          <span class="compare__track" aria-hidden="true"><span class="compare__fill" data-fill></span></span>
+          <span class="compare__metric mono">{c.metric}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="compare__note">{'Each approach feeds the same inventory decision. Bars populate when the experiment produces results.'}</p>
+  </section>
+
+  <!-- Dataset snapshot -->
+  <section class="engine__block" aria-labelledby="ds-title">
+    <h3 class="engine__label mono" id="ds-title">{ENGINE.datasetTitle}</h3>
+    <ul class="datasets">
+      {ENGINE.datasets.map((d) => (
+        <li class="datasets__row">
+          <div class="datasets__main">
+            <span class="datasets__name">{d.name}</span>
+            <span class="datasets__detail">{d.detail}</span>
+          </div>
+          <div class="datasets__status mono">
+            <span class="datasets__state">{d.status}</span>
+            <span class="datasets__sub">{d.sub}</span>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- Inventory policy recommendation -->
+  <section class="engine__block" aria-labelledby="pol-title">
+    <h3 class="engine__label mono" id="pol-title">{ENGINE.policyTitle}</h3>
+    <ul class="policy">
+      {ENGINE.policy.map((p) => (
+        <li class="policy__card">
+          <span class="policy__name mono">{p.name}</span>
+          <span class="policy__value">{p.value}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="policy__note">{'The research moves beyond forecasting and evaluates the actual inventory decision.'}</p>
+  </section>
+
+  <!-- Decision impact -->
+  <section class="engine__block" aria-labelledby="imp-title">
+    <h3 class="engine__label mono" id="imp-title">{ENGINE.impactTitle}</h3>
+    <ul class="impact">
+      {ENGINE.impact.map((m) => (
+        <li class="impact__row">
+          <span class="impact__arrow" aria-hidden="true">→</span>
+          <span class="impact__name">{m.name}</span>
+          <span class="impact__value mono">{m.value}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- Research scope -->
+  <footer class="scope" aria-label="Research scope">
+    {ENGINE.scope.map((s) => (
+      <div class="scope__stat">
+        <span class="scope__value">{s.value}</span>
+        <span class="scope__label mono">{s.label}</span>
+      </div>
+    ))}
+  </footer>
+</section>
+
+<style>
+  .engine {
+    position: relative;
+    width: min(42vw, 36rem);
+    background: color-mix(in srgb, var(--surface) 86%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-2);
+    padding: var(--sp-3);
+    display: grid;
+    gap: var(--sp-3);
+  }
+  /* barely-there violet atmosphere behind the panel */
+  .engine::before {
+    content: "";
+    position: absolute;
+    inset: -12%;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 70% 40%, color-mix(in srgb, var(--c-llm) 12%, transparent) 0%, transparent 62%);
+    filter: blur(40px);
+  }
+
+  .engine__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--sp-2);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: var(--sp-2);
+  }
+  .engine__title {
+    font-size: var(--fs-h4);
+    font-family: var(--font-body);
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin: 0;
+  }
+  .engine__status {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    color: var(--ink-3);
+    font-size: var(--fs-mono-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--track-mono);
+    margin: 0;
+    white-space: nowrap;
+  }
+  .engine__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--c-inventory);
+    animation: status-breathe 3.2s ease-in-out infinite;
+  }
+  @keyframes status-breathe {
+    0%, 100% { opacity: 0.35; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.15); }
+  }
+
+  .engine__label {
+    margin: 0;
+    color: var(--ink-2);
+    font-size: var(--fs-mono-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--track-mono);
+  }
+  .engine__charthint {
+    color: var(--ink-3);
+    margin-left: var(--sp-2);
+    font-size: 0.6rem;
+  }
+
+  /* ---------- demand signal ---------- */
+  .signal { margin: 0; display: grid; gap: var(--sp-1); }
+  .signal__svg { width: 100%; height: auto; max-height: 10rem; overflow: visible; }
+  .signal__grid line {
+    stroke: var(--line);
+    stroke-width: 1;
+    stroke-dasharray: 2 6;
+  }
+  .signal__actual {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+  .signal__forecast {
+    fill: none;
+    stroke: var(--fc-hue, var(--c-traditional));
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-dasharray: 6 5;
+    transition: stroke 350ms var(--ease-out);
+  }
+  .signal__band {
+    fill: color-mix(in srgb, var(--c-uncertainty) 16%, transparent);
+    opacity: 0;
+  }
+  .signal__horizon {
+    stroke: var(--line-2);
+    stroke-width: 1;
+    stroke-dasharray: 3 4;
+  }
+  .signal__horizontag {
+    fill: var(--ink-3);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .signal__base {
+    stroke: var(--line-2);
+    stroke-width: 1;
+  }
+  .signal__time {
+    fill: var(--ink-3);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .signal__legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3) var(--sp-4);
+    color: var(--ink-3);
+    font-size: var(--fs-mono-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .signal__legend li { display: inline-flex; align-items: center; gap: var(--sp-2); }
+  .signal__sw { width: 0.6rem; height: 0.6rem; display: inline-block; }
+  .signal__sw--actual { background: var(--ink); border-radius: 1px; }
+  .signal__sw--forecast { background: var(--c-traditional); border-radius: 50%; }
+  .signal__sw--band { background: color-mix(in srgb, var(--c-uncertainty) 30%, var(--surface)); border: 1px solid var(--line-2); }
+
+  /* ---------- blocks ---------- */
+  .engine__block { display: grid; gap: var(--sp-2); }
+  .engine__blockhead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+  .engine__chip {
+    color: var(--c-uncertainty);
+    border: 1px solid color-mix(in srgb, var(--c-uncertainty) 35%, transparent);
+    border-radius: var(--r-sm);
+    background: var(--wash-uncertainty);
+    padding: 0.15rem 0.45rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* comparison */
+  .compare { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-1); }
+  .compare__row {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr 2rem;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+  .compare__name { font-size: var(--fs-mono-sm); font-weight: 700; letter-spacing: 0.06em; }
+  .compare__track {
+    height: 0.4rem;
+    border: 1px dashed var(--line-2);
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--paper-2) 60%, transparent);
+    position: relative;
+  }
+  .compare__fill { position: absolute; inset: 0; width: 0; background: currentColor; opacity: 0.5; }
+  .compare__metric { text-align: right; color: var(--ink-3); font-size: var(--fs-mono-sm); }
+  .compare__note, .policy__note {
+    margin: 0;
+    color: var(--ink-3);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    max-width: 52ch;
+  }
+
+  /* datasets */
+  .datasets { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-1); }
+  .datasets__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: var(--sp-1) var(--sp-2);
+    background: color-mix(in srgb, var(--surface-2) 60%, transparent);
+  }
+  .datasets__main { display: grid; gap: 0.1rem; }
+  .datasets__name { font-weight: 650; color: var(--ink); font-size: 0.92rem; }
+  .datasets__detail { color: var(--ink-3); font-size: 0.78rem; }
+  .datasets__status { display: grid; gap: 0.15rem; text-align: right; }
+  .datasets__state { color: var(--c-inventory); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .datasets__sub { color: var(--ink-3); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* policy */
+  .policy { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-1); }
+  .policy__card {
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: color-mix(in srgb, var(--surface-2) 50%, transparent);
+    padding: var(--sp-2) var(--sp-1);
+    display: grid;
+    gap: var(--sp-1);
+    text-align: center;
+  }
+  .policy__name { color: var(--ink-3); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.07em; }
+  .policy__value { color: var(--ink); font-weight: 650; font-size: 1.02rem; font-variant-numeric: tabular-nums; }
+
+  /* impact */
+  .impact { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+  .impact__row {
+    display: grid;
+    grid-template-columns: 1.2rem 1fr auto;
+    align-items: baseline;
+    gap: var(--sp-1);
+    padding-block: var(--sp-1);
+    border-bottom: 1px solid var(--line);
+  }
+  .impact__row:last-child { border-bottom: 0; }
+  .impact__arrow { color: var(--line-2); font-size: 0.85rem; }
+  .impact__name { color: var(--ink-2); font-size: 0.88rem; }
+  .impact__value { color: var(--ink-3); font-size: var(--fs-mono-sm); }
+
+  /* scope */
+  .scope {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-1);
+    border-top: 1px solid var(--line);
+    padding-top: var(--sp-2);
+  }
+  .scope__stat { display: grid; gap: 0.1rem; }
+  .scope__value { font-family: var(--font-display); font-size: 1.35rem; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .scope__label { color: var(--ink-3); font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.07em; }
+
+  @media (max-width: 64rem) {
+    .engine { width: 100%; max-width: 38rem; }
+  }
+  @media (max-width: 34rem) {
+    .engine { padding: var(--sp-4); }
+    .policy { grid-template-columns: 1fr; }
+    .scope { grid-template-columns: repeat(2, 1fr); row-gap: var(--sp-3); }
+    .engine__status { white-space: normal; text-align: right; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .engine__dot { animation: none; opacity: 0.9; }
+    .signal__band { opacity: 1; }
+  }
+</style>

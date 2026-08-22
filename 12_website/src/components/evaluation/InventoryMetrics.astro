@@ -1,0 +1,140 @@
+---
+import { INVENTORY_METRICS, COMMON_POLICY_PRINCIPLE } from '../../data/metrics';
+import { SCOREBOARD_MESSAGE } from '../../data/research';
+---
+
+<section class="section section--alt" id="inventory-metrics" aria-labelledby="imetrics-h">
+  <div class="container">
+    <div class="section-head section-head--split">
+      <div>
+        <p class="section-num">09 · Inventory metrics</p>
+        <h2 id="imetrics-h">The scoreboard that matters</h2>
+      </div>
+      <p class="section-sub" data-reveal>
+        These are the business-level outcomes — simulated under one common policy so the differences are attributable to the forecasts.
+      </p>
+    </div>
+
+    <div class="scoreboard" data-reveal>
+      <div class="scoreboard__panel scoreboard__panel--forecast">
+        <p class="mono scoreboard__label">Forecasting scoreboard</p>
+        <ul class="scoreboard__list">
+          <li>MAE <span class="scoreboard__placeholder">·</span> RMSE <span class="scoreboard__placeholder">·</span> sMAPE</li>
+          <li>MASE / RMSSE where justified</li>
+          <li class="scoreboard__muted">— results pending —</li>
+        </ul>
+      </div>
+
+      <div class="scoreboard__vs" aria-hidden="true">
+        <span class="scoreboard__vs-word">≠</span>
+      </div>
+
+      <div class="scoreboard__panel scoreboard__panel--inventory">
+        <p class="mono scoreboard__label">Inventory scoreboard</p>
+        <ul class="scoreboard__list">
+          <li>Total cost · Holding · Stockouts</li>
+          <li>Service level · Average inventory · Orders</li>
+          <li class="scoreboard__muted">— results pending —</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="scoreboard__message" data-reveal>{SCOREBOARD_MESSAGE}</p>
+
+    <div class="inv-metrics">
+      {INVENTORY_METRICS.map((m) => (
+        <div class="inv-metric" data-reveal>
+          <p class="mono inv-metric__code inv">{m.code}</p>
+          <p class="inv-metric__name">{m.name}</p>
+          <p class="inv-metric__note">{m.note}</p>
+        </div>
+      ))}
+    </div>
+
+    <aside class="policy-note" data-reveal>
+      <p class="mono policy-note__label">{COMMON_POLICY_PRINCIPLE.title}</p>
+      <p class="policy-note__text">{COMMON_POLICY_PRINCIPLE.body}</p>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .scoreboard {
+    display: grid;
+    gap: var(--sp-5);
+    align-items: center;
+    margin-bottom: var(--sp-4);
+  }
+  @media (min-width: 52rem) {
+    .scoreboard { grid-template-columns: 1fr auto 1fr; }
+  }
+  .scoreboard__panel {
+    border-radius: var(--r-lg);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    padding: clamp(1.5rem, 3.5vw, 2.25rem);
+    box-shadow: var(--shadow-1);
+  }
+  .scoreboard__panel--forecast { border-top: 3px solid var(--c-traditional); }
+  .scoreboard__panel--inventory { border-top: 3px solid var(--c-inventory); }
+  .scoreboard__label { margin-bottom: var(--sp-4); }
+  .scoreboard__panel--forecast .scoreboard__label { color: var(--c-traditional); }
+  .scoreboard__panel--inventory .scoreboard__label { color: var(--c-inventory); }
+  .scoreboard__list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--sp-3);
+    font-size: var(--fs-body-sm);
+    color: var(--ink-2);
+  }
+  .scoreboard__muted { color: var(--ink-3); font-family: var(--font-mono); font-size: var(--fs-mono-sm); letter-spacing: var(--track-mono); text-transform: uppercase; }
+  .scoreboard__placeholder { color: var(--line-2); }
+  .scoreboard__vs { display: grid; place-items: center; }
+  .scoreboard__vs-word {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    color: var(--ink-3);
+    font-weight: 600;
+  }
+
+  .scoreboard__message {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+    line-height: 1.35;
+    max-width: 30ch;
+    margin: var(--sp-6) 0 var(--sp-8);
+    font-weight: 500;
+  }
+
+  .inv-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--grid-gap);
+    margin-bottom: var(--sp-6);
+  }
+  @media (max-width: 60rem) { .inv-metrics { grid-template-columns: repeat(2, 1fr); } }
+  .inv-metric {
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    background: var(--surface);
+    padding: var(--sp-4);
+    display: grid;
+    gap: var(--sp-1);
+    align-content: start;
+  }
+  .inv-metric__code { font-weight: 700; }
+  .inv-metric__name { font-weight: 600; font-size: var(--fs-body-sm); }
+  .inv-metric__note { color: var(--ink-3); font-size: var(--fs-body-sm); }
+
+  .policy-note {
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--c-inventory);
+    border-radius: var(--r-md);
+    background: var(--surface-2);
+    padding: var(--sp-5);
+    max-width: var(--measure);
+  }
+  .policy-note__label { color: var(--c-inventory); margin-bottom: var(--sp-2); }
+  .policy-note__text { color: var(--ink-2); font-size: var(--fs-body-sm); }
+</style>

@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-22T00:00:00.000Z",
+  "title": "Design System: AI-INVENTORY-OPTIMIZATION",
+  "extensions": {
+    "colorMeta": {
+      "traditional": { "role": "primary", "displayName": "Steel Blue", "canonical": "#35618A", "tonalRamp": ["#0F1D2E", "#16334F", "#1C4470", "#24558F", "#35618A", "#4E7BA8", "#7A9DC4", "#C9D7E6"] },
+      "statistical": { "role": "secondary", "displayName": "Teal", "canonical": "#27757A", "tonalRamp": ["#0A2326", "#0F3940", "#144E56", "#1B636B", "#27757A", "#3F9398", "#7AB9BD", "#D4E7E8"] },
+      "neural": { "role": "secondary", "displayName": "Indigo", "canonical": "#5B56A0", "tonalRamp": ["#181636", "#262350", "#332F6B", "#47428A", "#5B56A0", "#7A76B9", "#B2B0D8", "#E5E4F2"] },
+      "llm": { "role": "secondary", "displayName": "LLM Violet", "canonical": "#7A53A6", "tonalRamp": ["#25122F", "#372150", "#4A3073", "#634096", "#7A53A6", "#9673BE", "#C3AEDD", "#EAE3F2"] },
+      "inventory": { "role": "secondary", "displayName": "Inventory Green", "canonical": "#3D7B55", "tonalRamp": ["#102A1B", "#1A422B", "#235A3B", "#2E6C49", "#3D7B55", "#579772", "#93BD9F", "#E0EAE2"] },
+      "uncertainty": { "role": "secondary", "displayName": "Uncertainty Amber", "canonical": "#8F5619", "tonalRamp": ["#2E1A08", "#4A2A0D", "#663A13", "#7A4917", "#8F5619", "#A96F36", "#D2A678", "#F2E6D8"] },
+      "paper": { "role": "neutral", "displayName": "Cool Stone Paper", "canonical": "#F4F4F1", "tonalRamp": ["#161A22", "#2C313C", "#4A505C", "#7C828E", "#A9ADB4", "#D0D1CE", "#E6E5E1", "#F4F4F1"] },
+      "ink": { "role": "neutral", "displayName": "Blue-Black Ink", "canonical": "#161A22", "tonalRamp": ["#0B0D12", "#161A22", "#2A303B", "#3B424E", "#5A6270", "#8A919E", "#C2C6CD", "#EDEEF0"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero research question only." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles." },
+      "label": { "displayName": "Label", "purpose": "Mono uppercase instrument markings: nav, stamps, section numbers, ladder rungs." }
+    },
+    "shadows": [
+      { "name": "shadow-1", "value": "0 1px 2px rgba(22, 26, 34, 0.05), 0 2px 8px rgba(22, 26, 34, 0.05)", "purpose": "Resting cards (chain steps)." },
+      { "name": "shadow-2", "value": "0 2px 4px rgba(22, 26, 34, 0.06), 0 8px 24px rgba(22, 26, 34, 0.09)", "purpose": "Raised/hover states." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Default easing for reveals, underlines, enters." },
+      { "name": "dur-fast", "value": "160ms", "purpose": "Hover/color/transform transitions." },
+      { "name": "dur-med", "value": "320ms", "purpose": "Structural transitions (nav underline, rung-in)." },
+      { "name": "dur-reveal", "value": "700ms", "purpose": "Scroll-reveal of blocks." }
+    ],
+    "breakpoints": [
+      { "name": "md", "value": "48rem" },
+      { "name": "lg", "value": "56rem" },
+      { "name": "xl", "value": "60rem" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one primary action per viewport; ink-filled, paper text.",
+      "html": "<button class=\"ds-btn-primary\">Enter the research</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.95rem; padding: 0.7rem 1.25rem; border-radius: 8px; border: 1px solid #161A22; background: #161A22; color: #F4F4F1; cursor: pointer; text-decoration: none; transition: border-color 160ms ease, background 160ms ease, transform 160ms ease; } .ds-btn-primary:hover { background: #3B424E; border-color: #3B424E; } .ds-btn-primary:active { transform: translateY(1px); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(53, 97, 138, 0.45), 0 0 0 1.5px #161A22; }"
+    },
+    {
+      "name": "Default Button",
+      "kind": "button",
+      "refersTo": "button-default",
+      "description": "Secondary action; surfaced with a hairline border.",
+      "html": "<button class=\"ds-btn-default\">Read the proposal</button>",
+      "css": ".ds-btn-default { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.95rem; padding: 0.7rem 1.25rem; border-radius: 8px; border: 1px solid #C6C4B9; background: #FDFDFB; color: #161A22; cursor: pointer; transition: border-color 160ms ease, background 160ms ease, transform 160ms ease; } .ds-btn-default:hover { border-color: #3B424E; background: #F7F7F4; } .ds-btn-default:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Mono uppercase instrument link with growing underline on hover/active.",
+      "html": "<a class=\"ds-nav-link is-active\" href=\"#\">Question</a>",
+      "css": ".ds-nav-link { font-family: 'Fragment Mono', monospace; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; color: #3B424E; padding-block: 0.5rem; position: relative; transition: color 160ms ease; } .ds-nav-link::after { content: ''; position: absolute; left: 0; right: 100%; bottom: 0.3rem; height: 1px; background: #35618A; transition: right 320ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-nav-link:hover { color: #161A22; } .ds-nav-link.is-active { color: #161A22; } .ds-nav-link.is-active::after { right: 0; }"
+    },
+    {
+      "name": "Chain Step Card",
+      "kind": "card",
+      "refersTo": "chain-step",
+      "description": "Numbered step card in progression flows; surface on paper with a whisper shadow.",
+      "html": "<div class=\"ds-chain-step\"><span class=\"ds-chain-num\">01</span><div class=\"ds-chain-body\"><span class=\"ds-chain-label\">Forecast</span><span class=\"ds-chain-detail\">Generate demand forecasts across the model ladder.</span></div></div>",
+      "css": ".ds-chain-step { display: grid; grid-template-columns: auto 1fr; gap: 0.75rem; align-items: start; border: 1px solid #D9D8D0; border-radius: 8px; background: #FDFDFB; padding: 1rem; box-shadow: 0 1px 2px rgba(22, 26, 34, 0.05), 0 2px 8px rgba(22, 26, 34, 0.05); } .ds-chain-num { font-weight: 700; color: #35618A; font-family: 'Fragment Mono', monospace; font-size: 0.78rem; } .ds-chain-body { display: grid; gap: 0.15rem; } .ds-chain-label { font-weight: 700; color: #161A22; } .ds-chain-detail { color: #5A6270; font-size: 0.9375rem; }"
+    },
+    {
+      "name": "Section Head",
+      "kind": "custom",
+      "refersTo": "section-num",
+      "description": "Mono section number with hairline rule above a serif headline — the editorial section opener.",
+      "html": "<div class=\"ds-section-head\"><p class=\"ds-section-num\">01 · Foundation</p><h2 class=\"ds-section-title\">Why inventory is the endpoint</h2></div>",
+      "css": ".ds-section-head { display: grid; gap: 1.5rem; margin-bottom: 2.5rem; } .ds-section-num { font-family: 'Fragment Mono', monospace; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: #5A6270; display: flex; align-items: center; gap: 0.75rem; margin: 0; } .ds-section-num::after { content: ''; height: 1px; width: 2.5rem; background: #C6C4B9; } .ds-section-title { font-family: 'Spectral', Georgia, serif; font-size: clamp(1.8rem, 3.2vw, 2.6rem); font-weight: 600; line-height: 1.16; letter-spacing: -0.015em; color: #161A22; margin: 0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Instrument Bench",
+    "overview": "A research laboratory bench where a serious study is laid out for inspection: premium data product meets editorial storytelling. The page reads like a well-kept lab notebook plus a rigorous data readout: serif-display headlines carry the argument, mono uppercase labels act as instrument markings, and a faint gridpaper underpins the hero. Density is editorial but disciplined; the atmosphere is calm, evidence-first, and explicitly neutral — the site's whole stance is \"we don't know which model will win,\" and the visuals never oversell. Color is semantic only: each model family and each outcome type has one restrained hue; nothing is decorative. One deliberate inversion: the Uncertainty section becomes The Dark Lab — the only dark surface on the page.",
+    "keyCharacteristics": [
+      "Cool stone paper and near-white surfaces, never cream or warm paper.",
+      "Serif argument headlines over sans body with mono instrument labels.",
+      "Color is semantic only — each model family and outcome type has one restrained hue.",
+      "Flat-by-default depth: hairline borders, small precise radii (4/8/14px), low offset-blur shadows.",
+      "One deliberate inversion: the Uncertainty section becomes The Dark Lab."
+    ],
+    "rules": [
+      { "name": "The Meaning Rule", "body": "Color marks meaning: model family, inventory outcome, uncertainty. No decoration, no gradients, no gratuitous accents. If a color can't be named, it doesn't get used.", "section": "colors" },
+      { "name": "The Instrument Label Rule", "body": "Every measurement or meta annotation is mono, uppercase, tracked. If it reads like an instrument marking, it is mono.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Surfaces rest flat; elevation is a 1px hairline plus a whisper of shadow, only where structure demands it.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do label every measurement, stamp, and nav item in tracked uppercase mono.",
+      "Do keep color semantic — steel blue for traditional, violet for LLM, green for inventory outcomes.",
+      "Do cap prose at 66ch and let sections breathe with the full --section-pad rhythm.",
+      "Do use the Dark Lab inversion for uncertainty content as the page's single dramatic moment."
+    ],
+    "donts": [
+      "Don't decorate with color — no gradients, no colorful fills; washes stay at ≈8–12% tint.",
+      "Don't add hard block shadows or floating cards without hairlines.",
+      "Don't break the ladder's axis metaphor (tick + name + category per rung) into a generic grid.",
+      "Don't show invented results, meter fill, or 'winner' states — pending is a real state on this site."
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+---
+import { CONTRIBUTIONS } from '../../data/roadmap';
+---
+
+<section class="section section--alt" id="contribution" aria-labelledby="contribution-h">
+  <div class="container">
+    <div class="section-head section-head--split">
+      <div>
+        <p class="section-num">15 · Expected contribution</p>
+        <h2 id="contribution-h">What the study is designed to add</h2>
+      </div>
+      <p class="section-sub" data-reveal>
+        Contribution categories — not promised conclusions. Each one is earned (or not) by the evidence.
+      </p>
+    </div>
+
+    <div class="contribs grid-2">
+      {CONTRIBUTIONS.map((c) => (
+        <article class={`contrib contrib--${c.tag}`} data-reveal>
+          <p class="mono contrib__area">{c.area}</p>
+          <p class="contrib__note">{c.note}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .contrib {
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: var(--surface);
+    padding: clamp(1.5rem, 3.5vw, 2.25rem);
+    display: grid;
+    gap: var(--sp-3);
+    box-shadow: var(--shadow-1);
+  }
+  .contrib--academic { border-top: 3px solid var(--c-traditional); }
+  .contrib--method { border-top: 3px solid var(--c-inventory); }
+  .contrib--practical { border-top: 3px solid var(--c-statistical); }
+  .contrib--ai { border-top: 3px solid var(--c-llm); }
+  .contrib--academic .contrib__area { color: var(--c-traditional); }
+  .contrib--method .contrib__area { color: var(--c-inventory); }
+  .contrib--practical .contrib__area { color: var(--c-statistical); }
+  .contrib--ai .contrib__area { color: var(--c-llm); }
+  .contrib__area { font-weight: 700; }
+  .contrib__note { color: var(--ink-2); font-size: var(--fs-body-sm); }
+</style>

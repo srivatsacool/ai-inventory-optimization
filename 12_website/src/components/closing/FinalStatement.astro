@@ -1,0 +1,58 @@
+---
+import { RESEARCH } from '../../data/research';
+---
+
+<section class="final" id="final" aria-labelledby="final-h">
+  <div class="container">
+    <p class="mono final__num">17 · Closing statement</p>
+
+    <h2 id="final-h" class="final__head">
+      <span class="final__line">{RESEARCH.finalStatement.line1}</span>
+      <span class="final__line final__line--strong">{RESEARCH.finalStatement.line2}</span>
+    </h2>
+
+    <p class="final__sub lede">
+      The experiment determines which approach earns its place — in forecast accuracy, in inventory outcome, and in the practical realities of running a retail operation.
+    </p>
+
+    <nav class="final__nav" aria-label="Section navigation">
+      {[
+        ['#question', 'Research'],
+        ['#models', 'Model evolution'],
+        ['#data', 'Datasets'],
+        ['#evaluation', 'Evaluation'],
+        ['#roadmap', 'Roadmap'],
+        ['#references', 'References'],
+      ].map(([href, label]) => (
+        <a class="btn final__link" href={href}>{label}<span aria-hidden="true">→</span></a>
+      ))}
+    </nav>
+  </div>
+</section>
+
+<style>
+  .final {
+    padding-top: var(--sp-9);
+  }
+  .final__num { color: var(--ink-3); margin-bottom: var(--sp-5); }
+  .final__head {
+    font-size: clamp(2rem, 4.5vw, 3.6rem);
+    font-weight: 500;
+    line-height: 1.2;
+    display: grid;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-6);
+    max-width: 26ch;
+  }
+  .final__line--strong {
+    color: var(--c-inventory);
+    font-style: italic;
+  }
+  .final__sub { color: var(--ink-2); margin-bottom: var(--sp-7); max-width: var(--measure); }
+  .final__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+  }
+  .final__link { column-gap: var(--sp-3); }
+</style>

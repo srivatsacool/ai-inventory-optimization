@@ -1,0 +1,25 @@
+---
+import { RESEARCH } from '../../data/research';
+---
+
+<div class="sub">
+  <div class="sub__title">{RESEARCH.title}</div>
+  <div class="sub__sub">{RESEARCH.subtitle}</div>
+</div>
+
+<style>
+  .sub {
+    border-left: 2px solid var(--line-2);
+    padding-left: var(--sp-4);
+  }
+  .sub__title {
+    font-size: clamp(1rem, 1.7vw, 1.35rem);
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .sub__sub {
+    color: var(--ink-2);
+    margin-top: var(--sp-1);
+    font-size: var(--fs-body-sm);
+  }
+</style>
