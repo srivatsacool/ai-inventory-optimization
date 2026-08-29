@@ -270,6 +270,35 @@ Complete; Notebook 06 ready for review
 
 ---
 
+## 2026-08-29 Notebook restructuring — 05a foundation + 05b baselines
+
+### Decision
+Insert a dedicated educational foundation notebook 05a (time series components: level, trend, seasonality, noise, additive vs multiplicative, M5 vs Store Item structure) before the existing baseline experiments. Rename the existing verified baseline notebook 05_baseline_forecasting.ipynb to 05b_baseline_forecasting.ipynb without modifying its models, parameters, results, or frozen experimental design.
+
+### Why
+The modelling ladder needs an explicit conceptual foundation. Readers should understand *what* patterns (level, trend, weekly seasonality, noise, sparsity) exist in the two datasets before seeing *how* Naive / Seasonal Naive / Moving Average perform. 05a explains the components; 05b measures the baselines that try to capture them.
+
+### Alternatives considered
+- Keep single Notebook 05 mixing education + experiments — rejected: overloads one notebook and breaks the intuition→experiment progression.
+- Create 05a as a separate concept note outside the notebook ladder — rejected: the ladder should be self-contained (05a → 05b → 06 → 07).
+
+### Evidence
+- 05a: 43 cells (16 code), 0 execution errors, 19 educational figures under 07_figures/model_explanations/time_series_components/.
+- 05b: renamed via git mv, verified still 27 code cells, hashes of 06_results/baselines/* unchanged.
+
+### Date
+2026-08-29
+
+### Impact
+- Notebook order becomes 05a (components) → 05b (baselines, frozen experiment, 112k forecast points per dataset per model) → 06 (SES/DES/TES) → 07 (ARIMA) → ...
+- 11_src/_make_nb05.py now builds 05b; new 11_src/_make_nb05a.py builds 05a.
+- research_progress.md updated to reflect 05a/05b.
+
+### Status
+Complete
+
+---
+
 ## 2026-08-27 Dataset 02 migration: Favorita → Store Item Demand Forecasting
 
 ### Decision

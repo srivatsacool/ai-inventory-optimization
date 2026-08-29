@@ -1,7 +1,7 @@
 # Research Progress Tracker
 
-> **Last updated:** 2026-08-29 (Notebook 06 complete)
-> **Current phase:** Baselines and exponential smoothing complete (05–06). Notebook 07 is pending review.
+> **Last updated:** 2026-08-29 (Notebook 05a+05b+06 complete)
+> **Current phase:** Foundation + baselines + smoothing complete (05a, 05b, 06). Notebook 07 is pending review.
 
 ---
 
@@ -12,7 +12,7 @@ WHAT IS THE PROBLEM?           → 00_research_map
         ↓
 WHAT DOES THE DATA LOOK LIKE?  → 02_data_acquisition_and_audit + 03_exploratory_data_analysis
         ↓
-WHAT SIMPLE METHODS CAN DO     → 05_baseline + 06_moving_average + 07_ses
+WHAT SIMPLE METHODS CAN DO     → 05a_components + 05b_baselines + 06_smoothing
         ↓
 WHAT DOES STATISTICAL MODELING ADD? → 08_des + 09_tes + 10_arima + 11_sarima + 12_classical_comparison
         ↓
@@ -41,7 +41,8 @@ WHAT SHOULD A BUSINESS CHOOSE? → 21_final_research_findings
 || 02b | `02b_store_item_demand_acquisition_and_audit.ipynb` | Dataset 02 (Store Item Demand) audit, EDA, M5 comparison | ✅ Complete | `02_data/dataset_02_store_item_demand/processed/`, `07_figures/eda/store_item_demand/` |
 | 03 | `03_exploratory_data_analysis.ipynb` | Demand character, intermittency, seasonality, selection criteria | ✅ Complete | `07_figures/eda/` (5 figures) |
 || 04 | `04_series_selection_and_experimental_design.ipynb` | Representative sample, feasibility, train/val/test design | ✅ Complete | `05_experiments/config.json` |
-|| 05 | `05_baseline_forecasting.ipynb` | Naïve + Seasonal Naïve + Moving Average baselines | ✅ Complete | `06_results/baselines/` |
+| 05a | `05a_time_series_components.ipynb` | **Foundation:** level, trend, seasonality, noise, additive vs multiplicative, M5 vs Store Item structure | ✅ Complete | `07_figures/model_explanations/time_series_components/` (19 figures) |
+| 05b | `05b_baseline_forecasting.ipynb` | Naïve + Seasonal Naïve + Moving Average baselines (frozen experiment) | ✅ Complete | `06_results/baselines/` |
 | 06 | `06_exponential_smoothing.ipynb` | SES + Holt/DES + Holt–Winters/TES | ✅ Complete | `06_results/exponential_smoothing/` |
 | 07 | `07_simple_exponential_smoothing.ipynb` | SES | ⬜ Not started | `06_results/ses/` |
 | 08 | `08_double_exponential_smoothing.ipynb` | DES (Holt) | ⬜ Not started | `06_results/des/` |
@@ -82,8 +83,8 @@ evidence-driven. See `decisions.md`.
 
 | Model | Concept | Implementation | Validation | Forecast | Inventory | Business interpretation |
 |-------|---------|---------------|------------|----------|-----------|------------------------|
-| Naïve / Seasonal Naïve | ⬜ | ⬜ | — | ⬜ | ⬜ | ⬜ |
-| Moving Average | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Naïve / Seasonal Naïve | ✅ | ✅ | — | ✅ | ✅ | ✅ |
+| Moving Average | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | SES | ✅ | ✅ | ✅ | ✅ | ⬜ | ✅ |
 | DES | ✅ | ✅ | ✅ | ✅ | ⬜ | ✅ |
 | TES | ✅ | ✅ | ✅ | ✅ | ⬜ | ✅ |
@@ -116,7 +117,8 @@ All decisions live in `00_project/decisions.md`.
 | Determine common window from data overlap | Research decision | NB 02 | ✅ Complete |
 | Define series-selection criteria | Research decision | NB 04 | ✅ Complete |
 | Choose horizon, splits, policy parameters | Research decision | NB 04 | ✅ Complete |
-| Implement Level 1 baselines (Naive, SNaive, MA) | Completed | NB 05 | 🟢 Complete |
+| Time-series components foundation | Completed | NB 05a |
+| Implement Level 1 baselines (Naive, SNaive, MA) | Completed | NB 05b | 🟢 Complete |
 | Implement Level 2 smoothing (SES, DES, TES) | Completed | NB 06 | 🟢 Complete |
 | Review Notebook 06 before statistical models | Review gate | User | ⬜ Pending |
 

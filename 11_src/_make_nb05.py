@@ -1,11 +1,11 @@
-"""Build 08_notebooks/05_baseline_forecasting.ipynb (unexecuted).
+"""Build 08_notebooks/05b_baseline_forecasting.ipynb (unexecuted).
 
 Run from the repo root:
     python 11_src/_make_nb05.py
 
 Then execute:
     .venv/Scripts/python.exe -m jupyter nbconvert --to notebook --execute \
-        --ExecutePreprocessor.timeout=900 --inplace 08_notebooks/05_baseline_forecasting.ipynb
+        --ExecutePreprocessor.timeout=900 --inplace 08_notebooks/05b_baseline_forecasting.ipynb
 """
 from __future__ import annotations
 
@@ -15,13 +15,13 @@ import pathlib
 import nbformat
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-OUT = ROOT / "08_notebooks" / "05_baseline_forecasting.ipynb"
+OUT = ROOT / "08_notebooks" / "05b_baseline_forecasting.ipynb"
 
 # ---------------------------------------------------------------------------
 # Cell content
 # ---------------------------------------------------------------------------
 
-MD_TITLE = r"""# 05 — Baseline Forecasting: Naive, Seasonal Naive, Moving Average
+MD_TITLE = r""" # 05b — Baseline Forecasting: Naive, Seasonal Naive, Moving Average
 
 ## Before the fancy AI, what does "dumb" forecasting look like?
 
