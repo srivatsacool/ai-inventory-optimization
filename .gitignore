@@ -1,5 +1,3 @@
-# AI-INVENTORY-OPTIMIZATION — .gitignore
-
 # --- Python ---
 __pycache__/
 *.py[cod]
@@ -8,11 +6,12 @@ __pycache__/
 venv/
 *.ipynb_checkpoints/
 
-# --- Data (never commit downloaded datasets / processed data) ---
+# --- Raw + processed data (never commit downloaded/derived datasets) ---
 02_data/dataset_01_m5/raw/
 02_data/dataset_01_m5/interim/
 02_data/dataset_02_grocery/raw/
 02_data/dataset_02_grocery/interim/
+03_processed_data/
 *.csv
 *.csv.gz
 *.parquet
@@ -21,11 +20,11 @@ venv/
 *.hdf5
 
 # --- Experiments / generated artifacts (regenerable, keep repo lean) ---
-07_results/
-09_visualizations/
-08_llm/responses/
-08_llm/logs/
-10_report/final/
+04_models/
+05_experiments/
+06_results/
+07_figures/
+09_reports/
 
 # --- OS / editor ---
 .DS_Store
@@ -33,7 +32,17 @@ Thumbs.db
 .idea/
 .vscode/
 
-# --- Node / Astro ---
+# --- Archived reset material (kept locally, not committed) ---
+_ARCHIVE_2026-08-27_RESET/
+_ARCHIVE_2026-08-27_FAVORITA/
+
+
+# --- Node / Astro (no longer part of this project) ---
 node_modules/
 dist/
 .astro/
+
+# --- Local temp ---
+.tmp/
+TMP_zs.npy
+RESET_LOG.md

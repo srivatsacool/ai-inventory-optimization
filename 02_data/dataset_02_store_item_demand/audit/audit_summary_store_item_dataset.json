@@ -1,0 +1,141 @@
+{
+  "dataset": "Store Item Demand Forecasting",
+  "source": "Kaggle: akshaymairal/store-item-demand-forecasting-challenge",
+  "role": "Dataset 02 - secondary cross-dataset robustness environment (replaces rejected Favorita)",
+  "generated": "2026-08-28T19:34:20",
+  "raw_files": {
+    "sample_submission.csv": 393899,
+    "test.csv": 975309,
+    "train.csv": 17333449
+  },
+  "train": {
+    "rows": 913000,
+    "columns": [
+      "date",
+      "store",
+      "item",
+      "sales",
+      "weekday",
+      "month",
+      "year"
+    ],
+    "date_range": [
+      "2013-01-01",
+      "2017-12-31"
+    ],
+    "calendar_days": 1826,
+    "stores": 10,
+    "items": 50,
+    "series": 500,
+    "panel_complete": true,
+    "missing_combos": 0,
+    "duplicates": 0,
+    "zero_rows": 1,
+    "zero_share": 1.095290251916758e-06,
+    "negative_rows": 0,
+    "total_demand": 47704512.0,
+    "mean": 52.250286966046005,
+    "median": 47.0,
+    "std": 28.801143603517097,
+    "cv": 0.5512150320290691,
+    "min": 0.0,
+    "max": 231.0,
+    "skewness": 0.8671122960235801,
+    "kurtosis": 0.5090704757198123
+  },
+  "test": {
+    "rows": 45000,
+    "columns": [
+      "id",
+      "date",
+      "store",
+      "item"
+    ],
+    "date_range": [
+      "2018-01-01",
+      "2018-03-31"
+    ],
+    "calendar_days": 90,
+    "series": 500
+  },
+  "m5": {
+    "series": 30490,
+    "daily_obs": 59181090,
+    "day_columns": 1941,
+    "stores": 10,
+    "items": 3049,
+    "states": 3,
+    "state_counts": {
+      "CA": 12196,
+      "TX": 9147,
+      "WI": 9147
+    },
+    "date_range": [
+      "2011-01-29",
+      "2016-05-22"
+    ],
+    "total_demand": 66927173,
+    "zero_share": 0.6799776584040612,
+    "panel_complete": true
+  },
+  "overlap_with_m5": {
+    "start": "2013-01-01",
+    "end": "2016-05-22",
+    "days": 1238,
+    "m5_days_before_overlap": 703,
+    "store_item_days_after_overlap": 588,
+    "sufficient": true
+  },
+  "archetypes": {
+    "Smooth": 500
+  },
+  "series_profile": {
+    "rows": 500,
+    "columns": [
+      "store",
+      "item",
+      "mean",
+      "std",
+      "median",
+      "min",
+      "max",
+      "total",
+      "skewness",
+      "zero_share",
+      "cv",
+      "archetype",
+      "trend_slope_per_day",
+      "trend_pvalue",
+      "seasonality_strength"
+    ],
+    "file": "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\02_data\\dataset_02_store_item_demand\\processed\\series_profile.csv",
+    "cv_summary": {
+      "count": 500.0,
+      "mean": 0.2905,
+      "std": 0.0226,
+      "min": 0.2616,
+      "25%": 0.2731,
+      "50%": 0.2839,
+      "75%": 0.3039,
+      "max": 0.3734
+    },
+    "all_series_rising": true
+  },
+  "outputs": {
+    "parquet_train": "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\02_data\\dataset_02_store_item_demand\\processed\\store_item_demand_daily.parquet",
+    "parquet_test": "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\02_data\\dataset_02_store_item_demand\\processed\\store_item_demand_test.parquet",
+    "figures": [
+      "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\07_figures\\eda\\store_item_demand\\01_overall_demand_distribution.png",
+      "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\07_figures\\eda\\store_item_demand\\02_weekly_seasonality.png",
+      "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\07_figures\\eda\\store_item_demand\\03_monthly_annual_patterns.png",
+      "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\07_figures\\eda\\store_item_demand\\04_aggregate_trend.png",
+      "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\07_figures\\eda\\store_item_demand\\05_store_comparison.png",
+      "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\07_figures\\eda\\store_item_demand\\06_item_comparison.png",
+      "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\07_figures\\eda\\store_item_demand\\07_store_item_heatmap.png",
+      "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\07_figures\\eda\\store_item_demand\\08_representative_series.png",
+      "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\07_figures\\eda\\store_item_demand\\09_series_variability.png",
+      "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\07_figures\\eda\\store_item_demand\\10_weekly_monthly_heatmap.png",
+      "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\07_figures\\eda\\store_item_demand\\11_series_diversity_panel.png"
+    ]
+  }
+}

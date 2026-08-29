@@ -1,0 +1,70 @@
+{
+  "generated": "2026-08-28T18:37:04.078861",
+  "m5": {
+    "total_series": 30490,
+    "n_days": 1913,
+    "date_range": [
+      "2011-01-29",
+      "2016-04-24"
+    ],
+    "mean_zero_share": 0.6819627560783215,
+    "median_zero_share": 0.7354939884997387,
+    "pct_series_gt90pct_zero": 0.1733027222040013,
+    "categories": {
+      "FOODS": 14370,
+      "HOUSEHOLD": 10470,
+      "HOBBIES": 5650
+    },
+    "departments": {
+      "FOODS_3": 8230,
+      "HOUSEHOLD_1": 5320,
+      "HOUSEHOLD_2": 5150,
+      "HOBBIES_1": 4160,
+      "FOODS_2": 3980,
+      "FOODS_1": 2160,
+      "HOBBIES_2": 1490
+    },
+    "stores": {
+      "CA_1": 3049,
+      "CA_2": 3049,
+      "CA_3": 3049,
+      "CA_4": 3049,
+      "TX_1": 3049,
+      "TX_2": 3049,
+      "TX_3": 3049,
+      "WI_1": 3049,
+      "WI_2": 3049,
+      "WI_3": 3049
+    },
+    "states": {
+      "CA": 12196,
+      "TX": 9147,
+      "WI": 9147
+    },
+    "total_demand": 65695409.0,
+    "data_quality": {
+      "null_cells": 0,
+      "negative_cells": 0,
+      "duplicate_series": 0
+    }
+  },
+  "store_item_demand": {
+    "total_series": 500,
+    "n_days": 1826,
+    "date_range": [
+      "2013-01-01",
+      "2017-12-31"
+    ],
+    "unique_stores": 10,
+    "unique_items": 50,
+    "negative_sales_rows": 0,
+    "status": "SEVERELY_TRUNCATED - only 198 days, zip corrupted"
+  },
+  "common_window": {
+    "start": "2013-01-01",
+    "end": "2016-04-24",
+    "n_days": 1210,
+    "assessment": "sufficient",
+    "recommendation": "M5 primary study only; Store Item Demand deferred until full dataset available"
+  }
+}

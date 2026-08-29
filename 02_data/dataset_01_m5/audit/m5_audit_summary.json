@@ -1,0 +1,79 @@
+{
+  "dataset": "M5 Forecasting",
+  "source": "Kaggle: M5 Forecasting \u2014 Accuracy",
+  "generated": "2026-08-28T19:33:16.667352",
+  "train": {
+    "total_series": 30490,
+    "day_columns": 1913,
+    "date_range": [
+      "2011-01-29",
+      "2016-06-19"
+    ],
+    "calendar_days": 1969,
+    "stores": 10,
+    "store_list": [
+      "CA_1",
+      "CA_2",
+      "CA_3",
+      "CA_4",
+      "TX_1",
+      "TX_2",
+      "TX_3",
+      "WI_1",
+      "WI_2",
+      "WI_3"
+    ],
+    "states": 3,
+    "state_list": [
+      "CA",
+      "TX",
+      "WI"
+    ],
+    "departments": 7,
+    "dept_list": [
+      "FOODS_1",
+      "FOODS_2",
+      "FOODS_3",
+      "HOBBIES_1",
+      "HOBBIES_2",
+      "HOUSEHOLD_1",
+      "HOUSEHOLD_2"
+    ],
+    "categories": 3,
+    "cat_list": [
+      "FOODS",
+      "HOBBIES",
+      "HOUSEHOLD"
+    ],
+    "items": 3049
+  },
+  "demand": {
+    "zero_share_mean": 0.6819627560783215,
+    "zero_share_median": 0.7354939884997387,
+    "cv_mean": 2.3863336864266906,
+    "cv_median": 2.0491845874184826,
+    "n_smooth": 77,
+    "n_moderate": 1627,
+    "n_variable": 4870,
+    "n_intermittent": 12133,
+    "n_highly_intermittent": 11783
+  },
+  "overlap_with_sit": {
+    "start": "2013-01-01",
+    "end": "2016-06-19",
+    "days": 1266,
+    "sufficient": true
+  },
+  "files": {
+    "profile_csv": "..\\02_data\\dataset_01_m5\\processed\\m5_series_profile.csv",
+    "profile_parquet": "..\\02_data\\dataset_01_m5\\processed\\m5_series_profile.parquet"
+  },
+  "figures": [
+    "..\\07_figures\\eda\\m5\\01_demand_distribution.png",
+    "..\\07_figures\\eda\\m5\\02_aggregate_trend.png",
+    "..\\07_figures\\eda\\m5\\03_store_item_heatmap.png",
+    "..\\07_figures\\eda\\m5\\04_representative_series.png",
+    "..\\07_figures\\eda\\m5\\05_series_variability.png",
+    "..\\07_figures\\eda\\m5\\06_weekly_monthly_heatmap.png"
+  ]
+}

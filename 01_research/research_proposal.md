@@ -66,12 +66,14 @@ The ladder moves from traditional smoothing methods → statistical ARIMA/SARIMA
 | Dataset | Role | What it allows the study to examine |
 | --- | --- | --- |
 | Walmart M5 | Primary benchmark environment | Hierarchical retail unit-sales; multiple products/stores; seasonality; intermittent/variable demand; established benchmark literature |
-| Grocery / Corporación Favorita | Secondary environment (robustness) | Grocery retail demand; multiple stores/items; promotions; contextual variables |
+| Store Item Demand Forecasting | Secondary environment (robustness) | Daily store-item retail demand; 10 stores × 50 items; clean panel structure; weekly/monthly seasonality; trending patterns |
 
 The second dataset tests robustness across different retail demand environments — it is **not** added merely to increase data volume.
 
 **Important distinction**
-Sales/demand observations are not the same as actual inventory records. M5/Favorita do not provide a complete real-world inventory ledger (on-hand stock, supplier lead times, holding costs, stockout costs). Inventory results will therefore be **simulated under explicit, documented assumptions** — never presented as a reconstruction of the retailers' actual inventory systems.
+Sales/demand observations are not the same as actual inventory records. M5/Store Item Demand do not provide a complete real-world inventory ledger (on-hand stock, supplier lead times, holding costs, stockout costs). Inventory results will therefore be **simulated under explicit, documented assumptions** — never presented as a reconstruction of the retailers' actual inventory systems.
+
+**Dataset 02 history:** Corporación Favorita was originally selected as Dataset 02 but was rejected (2026-08-27) due to structural comparability problems with M5 (125M transactional rows, implicit zeros, complex preprocessing). Store Item Demand Forecasting was chosen as a more suitable replacement: smaller scale, complete panel, daily frequency, and comparable structure.
 
 ---
 
@@ -189,7 +191,7 @@ Open dimensions: number of layers, hidden units, lookback window (based on tempo
 **Candidate components:** lead time, safety stock, reorder point, order quantity, review frequency, initial inventory, holding cost, stockout cost, service target. Exact values remain open until justified.
 
 ### 7.10 Lead time
-**Guiding rule:** determined from dataset characteristics, literature, realistic retail assumptions, and sensitivity analysis. The study will not pretend M5/Favorita provide complete real-world supplier lead-time information when they do not.
+**Guiding rule:** determined from dataset characteristics, literature, realistic retail assumptions, and sensitivity analysis. The study will not pretend M5/Store Item Demand provide complete real-world supplier lead-time information when they do not.
 
 ### 7.11 Holding cost
 **Guiding rule:** product-specific costs are unlikely to be available; the study may use normalized or assumed costs, explicitly documented. May represent storage, capital tied up, handling, and deterioration/obsolescence where relevant.
@@ -252,7 +254,7 @@ Every important methodological decision is recorded. Previous decisions are neve
 
 ## 11. Non-goals (locked scope boundary)
 
-Excluded from the initial study: full supply-chain optimization, multi-echelon optimization, real-time ERP integration, supplier negotiation, routing, dynamic pricing, reinforcement-learning inventory control, and actual Walmart/Favorita inventory reconstruction.
+Excluded from the initial study: full supply-chain optimization, multi-echelon optimization, real-time ERP integration, supplier negotiation, routing, dynamic pricing, reinforcement-learning inventory control, and actual Walmart/retailer inventory reconstruction.
 
 ---
 

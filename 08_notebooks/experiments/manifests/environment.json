@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-08-27T13:41:21.577994",
+  "python": "3.12.3 (tags/v3.12.3:f6650f9, Apr  9 2024, 14:05:25) [MSC v.1938 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "packages": {
+    "pandas": "3.0.5",
+    "numpy": "2.5.2",
+    "statsmodels": "0.14.6",
+    "sklearn": "1.9.0",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.1",
+    "seaborn": "0.13.2"
+  },
+  "project_root": "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\08_notebooks",
+  "seed": 42,
+  "data_paths": {
+    "M5 sales": "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\08_notebooks\\02_data\\dataset_01_m5\\raw\\sales_train_validation.csv",
+    "M5 calendar": "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\08_notebooks\\02_data\\dataset_01_m5\\raw\\calendar.csv",
+    "M5 sell_prices": "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\08_notebooks\\02_data\\dataset_01_m5\\raw\\sell_prices.csv",
+    "Fav train": "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\08_notebooks\\02_data\\dataset_02_grocery\\raw\\train.csv",
+    "Fav stores": "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\08_notebooks\\02_data\\dataset_02_grocery\\raw\\stores.csv",
+    "Fav items": "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\08_notebooks\\02_data\\dataset_02_grocery\\raw\\items.csv",
+    "Fav oil": "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\08_notebooks\\02_data\\dataset_02_grocery\\raw\\oil.csv",
+    "Fav holidays": "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\08_notebooks\\02_data\\dataset_02_grocery\\raw\\holidays_events.csv",
+    "Fav transactions": "D:\\Brain\\07_Research\\AI-INVENTORY-OPTIMIZATION\\08_notebooks\\02_data\\dataset_02_grocery\\raw\\transactions.csv"
+  },
+  "data_available": {
+    "M5 sales": false,
+    "M5 calendar": false,
+    "M5 sell_prices": false,
+    "Fav train": false,
+    "Fav stores": false,
+    "Fav items": false,
+    "Fav oil": false,
+    "Fav holidays": false,
+    "Fav transactions": false
+  },
+  "files": {}
+}

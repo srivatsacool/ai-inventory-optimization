@@ -1,0 +1,112 @@
+{
+  "dataset": "Walmart M5 (m5-forecasting-accuracy)",
+  "audited_at": "2026-08-26T14:54:53.661471+05:30",
+  "protocol_version": "1.0",
+  "files_seen": [
+    "calendar.csv",
+    "sales_train_evaluation.csv",
+    "sales_train_validation.csv",
+    "sample_submission.csv",
+    "sell_prices.csv"
+  ],
+  "target_definition": {
+    "unit": "units sold per item-store-day",
+    "grain": "3049 items x 10 stores = 30490 series",
+    "series_count": 30490,
+    "caveat": "sales are stockout-censored; treated as demand under protocol \u00a710.3 assumption"
+  },
+  "frequency_calendar": {
+    "frequency": "daily",
+    "first_date": "2011-01-29",
+    "last_observed_date": "2016-04-24",
+    "observed_days": 1913,
+    "calendar_rows_total": 1969,
+    "evaluation_tail_days_reserved_by_competition": 56,
+    "contiguous_daily_index_verified": true,
+    "days_with_any_nan_in_demand_block": 0,
+    "nan_cells_in_demand_block": 0,
+    "negative_cells_in_demand_block": 0
+  },
+  "covariates_available": {
+    "calendar_events": {
+      "event_days": 154,
+      "snap_flag_day_count": 0
+    },
+    "sell_prices": {
+      "store_item_pairs_priced": 30490,
+      "pair_universe": 30490,
+      "pair_coverage_frac": 1.0,
+      "week_coverage_vs_calendar": 1.0292
+    },
+    "used_in_v1": false,
+    "note": "protocol locks univariate demand for v1; covariates listed for extension planning"
+  },
+  "missing_values": {
+    "policy_candidate": "exclude series with >1% missing; M5 documents no internal gaps \u2014 verified by nan_cells above",
+    "nan_cells": 0
+  },
+  "intermittency_profile": {
+    "cut_offs": {
+      "ADI": 1.32,
+      "CV2": 0.49
+    },
+    "series_zero_share_mean": 0.682,
+    "series_zero_share_median": 0.7355,
+    "quadrant_counts": {
+      "smooth": 980,
+      "intermittent": 23102,
+      "erratic": 497,
+      "lumpy": 5911,
+      "no_demand": 0
+    }
+  },
+  "quality_filters": {
+    "min_history_days": 1095,
+    "max_missing_frac": 0.01,
+    "usable_series": 30490,
+    "excluded_no_demand": 0
+  },
+  "controlled_sample": {
+    "target": 50,
+    "achieved": 50,
+    "seed": 42,
+    "strata_axes": [
+      "volume tercile",
+      "daily-CV tercile",
+      "Syntetos-Boylan quadrant"
+    ],
+    "cells_populated": 19,
+    "ids_preview": [
+      "FOODS_2_285_TX_1_validation",
+      "HOUSEHOLD_1_474_TX_2_validation",
+      "FOODS_2_322_CA_2_validation",
+      "FOODS_2_233_WI_2_validation",
+      "HOBBIES_1_067_TX_2_validation"
+    ]
+  },
+  "horizon_fit": {
+    "forecast_horizon_h": 28,
+    "feasible": true,
+    "detail": "1913 observed days support h=28 with 2 test origins plus >1689-day training"
+  },
+  "split_boundaries_proposed": {
+    "train_days": 1689,
+    "validation_days": 168,
+    "test_days": 56,
+    "train_end_date": "2015-09-13",
+    "val_start_date": "2015-09-14",
+    "test_start_date": "2016-02-29",
+    "test_end_date": "2016-04-24"
+  },
+  "feasibility": {
+    "audit_wall_seconds": 35.2,
+    "peak_memory_mb": 703.3,
+    "demand_matrix_mb_float32": 233.3
+  },
+  "open_items_for_g0_signoff": [
+    "confirm h=28 against inventory lead-time context (protocol \u00a77.2)",
+    "confirm cost parameters L/h/p scenario grid (protocol \u00a710.2)",
+    "freeze split boundary dates recorded above",
+    "verify sample list reproducibility (rerun must yield identical ids)"
+  ]
+}
