@@ -400,3 +400,36 @@ Direct user instruction (2026-08-27, out-of-band). To be operationalized in `02_
 
 ### Status
 Confirmed
+
+---
+
+## 2026-08-31 ARIMA/SARIMA deep teaching and rolling evaluation (Notebook 07)
+
+### Decision
+Complete Notebook 07 with transparent ARIMA (1,1,0) full rolling evaluation on 500 M5 + 500 Store Item Demand series (8 weekly origins, h=28) and SARIMA (1,1,0)(0,1,1,7) as a seasonal focus on a 100-series Store Item subset. Orders fixed for speed/generalizability after a quick validation sanity check; no test data used for selection.
+
+### Why
+ARIMA provides the statistical view of autocorrelation/stationarity that smoothing does not, and SARIMA adds seasonal autocorrelation (m=7). Small orders keep per-fit time ~0.03s (ARIMA) and ~0.31s (SARIMA) and avoid over-differencing. Sparse M5 series with >85% zeros fall back to Naive to avoid fitting noise (documented).
+
+### Evidence
+- 07: 36 cells (17 code), 0 execution errors, 11 inline images, 7 educational + 4 experimental figures
+- ARIMA: 224000 rows (112000 per dataset, 500×8×28) + SARIMA subset 22400 rows (100×8×28) = 246400 rows total, duplicate keys 0, non-negative forecasts
+- Metrics: m5 ARIMA WAPE 0.885 (worse than SES 0.78, better than DES/TES), store_item ARIMA WAPE 0.208, SARIMA subset WAPE 0.153 vs Store Item SES 0.173 — seasonal MA helps where weekly CV is high
+- Leakage audit PASS, frozen window/origins/metrics/seed unchanged, baseline hashes unchanged
+- Runtime 897s (just under 900s cell budget) with scipy 1.14.1 fix and ai-inventory kernel
+
+### Alternatives considered
+- Larger p,q,P,Q grid search per series — rejected: 0.5s×9600 fits would exceed notebook budget and overfit sparse series
+- Full 500×8 SARIMA on both datasets — rejected for budget; instead 100-series Store Item focus where seasonality is strong, clearly labelled as subset
+
+### Date
+2026-08-31
+
+### Impact
+- Results in 06_results/arima/ (all_forecasts.csv, arima_forecasts.csv, sarima_store_item_subset.csv, metrics_by_model/series/origin, metrics_by_archetype_m5, metrics_with_history)
+- Figures: 07_figures/model_explanations/arima/ (7) and 07_figures/arima/ (4)
+- Next: 08 LSTM deep teaching; SARIMA full-500 evaluation deferred to final comparison notebook if needed
+
+### Status
+Complete
+

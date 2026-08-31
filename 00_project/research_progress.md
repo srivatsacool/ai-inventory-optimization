@@ -1,7 +1,7 @@
 # Research Progress Tracker
 
-> **Last updated:** 2026-08-29 (Notebook 05a+05b+06 complete)
-> **Current phase:** Foundation + baselines + smoothing complete (05a, 05b, 06). Notebook 07 is pending review.
+> **Last updated:** 2026-08-31 (Notebook 07 ARIMA/SARIMA complete)
+> **Current phase:** Statistical models complete (07). Next: 08 LSTM (deep teaching).
 
 ---
 
@@ -14,7 +14,7 @@ WHAT DOES THE DATA LOOK LIKE?  → 02_data_acquisition_and_audit + 03_explorator
         ↓
 WHAT SIMPLE METHODS CAN DO     → 05a_components + 05b_baselines + 06_smoothing
         ↓
-WHAT DOES STATISTICAL MODELING ADD? → 08_des + 09_tes + 10_arima + 11_sarima + 12_classical_comparison
+WHAT DOES STATISTICAL MODELING ADD? → 07_arima_sarima + 12_classical_comparison
         ↓
 WHAT DOES NEURAL MODELING ADD? → 13_lstm
         ↓
@@ -44,20 +44,16 @@ WHAT SHOULD A BUSINESS CHOOSE? → 21_final_research_findings
 | 05a | `05a_time_series_components.ipynb` | **Foundation:** level, trend, seasonality, noise, additive vs multiplicative, M5 vs Store Item structure | ✅ Complete | `07_figures/model_explanations/time_series_components/` (19 figures) |
 | 05b | `05b_baseline_forecasting.ipynb` | Naïve + Seasonal Naïve + Moving Average baselines (frozen experiment) | ✅ Complete | `06_results/baselines/` |
 | 06 | `06_exponential_smoothing.ipynb` | SES + Holt/DES + Holt–Winters/TES | ✅ Complete | `06_results/exponential_smoothing/` |
-| 07 | `07_simple_exponential_smoothing.ipynb` | SES | ⬜ Not started | `06_results/ses/` |
-| 08 | `08_double_exponential_smoothing.ipynb` | DES (Holt) | ⬜ Not started | `06_results/des/` |
-| 09 | `09_triple_exponential_smoothing.ipynb` | TES (Holt-Winters) | ⬜ Not started | `06_results/tes/` |
-| 10 | `10_arima.ipynb` | ARIMA | ⬜ Not started | `06_results/arima/` |
-| 11 | `11_sarima.ipynb` | SARIMA | ⬜ Not started | `06_results/sarima/` |
+| 07 | `07_arima_sarima.ipynb` | ARIMA (1,1,0) + SARIMA (1,1,0)(0,1,1,7) deep teaching + rolling evaluation | ✅ Complete | `06_results/arima/` |
+| 08 | `08_lstm.ipynb` | LSTM (deep teaching) | ⬜ Not started | `06_results/lstm/` |
 | 12 | `12_classical_models_comparison.ipynb` | Classical comparison | ⬜ Not started | `07_figures/classical_comparison/` |
-| 13 | `13_lstm.ipynb` | LSTM | ⬜ Not started | `06_results/lstm/` |
 | 14 | `14_llm_forecasting.ipynb` | LLM | ⬜ Not started | `06_results/llm/` |
 | 15 | `15_forecast_comparison.ipynb` | All-model forecast comparison | ⬜ Not started | `07_figures/forecast_comparison/` |
 | 16 | `16_inventory_simulation.ipynb` | Common inventory simulator | ⬜ Not started | `11_src/inventory/` |
 | 17 | `17_inventory_results.ipynb` | Inventory outcomes per model | ⬜ Not started | `06_results/inventory/` |
 | 18 | `18_sensitivity_analysis.ipynb` | Sensitivity to L, h, p, α | ⬜ Not started | `07_figures/sensitivity/` |
 | 19 | `19_statistical_analysis.ipynb` | Paired tests, effect sizes | ⬜ Not started | `06_results/statistical/` |
-|| 20 | `20_cross_dataset_robustness.ipynb` | M5 vs Store Item Demand | ⬜ Not started | `07_figures/robustness/` |
+| 20 | `20_cross_dataset_robustness.ipynb` | M5 vs Store Item Demand | ⬜ Not started | `07_figures/robustness/` |
 | 21 | `21_final_research_findings.ipynb` | Business recommendation | ⬜ Not started | `09_reports/` |
 
 **Legend:** ⬜ Not started · 🟡 In progress · 🟢 Complete · ⏸ Blocked · ⏭ Skipped (documented)
@@ -88,8 +84,8 @@ evidence-driven. See `decisions.md`.
 | SES | ✅ | ✅ | ✅ | ✅ | ⬜ | ✅ |
 | DES | ✅ | ✅ | ✅ | ✅ | ⬜ | ✅ |
 | TES | ✅ | ✅ | ✅ | ✅ | ⬜ | ✅ |
-| ARIMA | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| SARIMA | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| ARIMA (1,1,0) | ✅ | ✅ | ✅ | ✅ | ⬜ | ✅ |
+| SARIMA (0,1,1,7) subset | ✅ | ✅ | ✅ | ✅ | ⬜ | ✅ |
 | LSTM | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | LLM | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
@@ -120,7 +116,7 @@ All decisions live in `00_project/decisions.md`.
 | Time-series components foundation | Completed | NB 05a |
 | Implement Level 1 baselines (Naive, SNaive, MA) | Completed | NB 05b | 🟢 Complete |
 | Implement Level 2 smoothing (SES, DES, TES) | Completed | NB 06 | 🟢 Complete |
-| Review Notebook 06 before statistical models | Review gate | User | ⬜ Pending |
+| Review Notebook 07 ARIMA/SARIMA before neural models | Review gate | User | ⬜ Pending |
 
 ---
 
