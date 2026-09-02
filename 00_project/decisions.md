@@ -433,3 +433,35 @@ ARIMA provides the statistical view of autocorrelation/stationarity that smoothi
 ### Status
 Complete
 
+---
+
+## 2026-09-02 Phase 1 complete — traditional forecasting baseline frozen
+
+### Decision
+Phase 1 is frozen. All traditional forecasting models (Naive, Seasonal Naive, Moving Average, SES, DES, TES, ARIMA, SARIMA, Global LSTM) have been evaluated on both datasets under identical conditions. Inventory simulation complete. Baseline locked as the reference for Phase 2 SLM/LLM.
+
+### Evidence
+- 08_lstm.ipynb executed: 33 cells, 17 code, 0 errors, 7 images
+- Inventory simulation: 8 models × 2 datasets, lost-sales order-up-to policy, 0 errors
+- All forecast metrics: MAE, RMSE, sMAPE, WAPE per model per dataset
+- All inventory metrics: total cost, service level, holding cost, stockout cost
+- 6 inventory figures saved to 07_figures/inventory/
+- Phase 1 final report: 09_reports/phase1/PHASE_1_FINAL_REPORT.md
+- Phase 1 methodology: 09_reports/phase1/PHASE_1_METHODOLOGY.md
+
+### Key findings
+- M5 (sparse): LSTM best on both forecast and inventory
+- Store Item (dense): Moving Average best on inventory despite lower forecast accuracy
+- Forecast accuracy does not automatically equal better inventory decisions
+
+### Date
+2026-09-02
+
+### Impact
+- Git tag phase-1-complete created
+- All Phase 1 results frozen
+- Phase 2 SLM/LLM must compare against this baseline
+
+### Status
+Complete — frozen
+
