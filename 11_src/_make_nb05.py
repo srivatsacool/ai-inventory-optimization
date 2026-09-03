@@ -116,7 +116,7 @@ MD_MODELS = r"""## 3. The Three Baselines, Explained in Plain Language
 |---|---|
 | Common window | 2013-01-01 → 2016-05-22 (1,238 days) |
 | Train | 2013-01-01 → 2015-10-31 |
-| Validation | 2015-11-01 → 2016-02-28 (120 d) |
+| Validation | 2015-11-01 → 2016-02-29 (121 d) |
 | Test | 2016-03-01 → 2016-05-22 (83 d) |
 | Horizon $h$ | 28 days |
 | Origins | 8 weekly: 2016-03-01 … 2016-04-19 |
@@ -267,12 +267,12 @@ MD_PERIODS = r"""## 7. Frozen Periods and Forecast Origins
 The split below is the experimental contract from Notebook 04:
 
 - **Train:** 2013-01-01 → 2015-10-31 — history for fitting and for the MA window search.
-- **Validation:** 2015-11-01 → 2016-02-28 (120 d) — *only* used to choose the MA window $W$.
+- **Validation:** 2015-11-01 → 2016-02-29 (121 d) — *only* used to choose the MA window $W$.
 - **Test:** 2016-03-01 → 2016-05-22 (83 d) — the only period scored on.
 
-One calendar subtlety: 2016-02-29 (a leap day) falls *between* validation and test and is
-assigned to neither period — it is simply visible as history at origin 1 (train "ends"
-2016-02-28 for the first origin, then rolls forward week by week).
+Calendar (leap-year correct): 2016-02-29 is the last day of validation; validation is
+2015-11-01 → 2016-02-29 (121 days) so that 1,034 + 121 + 83 = 1,238 with no gap. History
+at origin 1 ends 2016-02-29, then rolls forward week by week.
 
 **Origins.** 8 weekly origins starting 2016-03-01; at each origin the model sees history
 up to the previous day and produces a 28-day forecast."""
@@ -282,7 +282,7 @@ N_ORIGINS = 8
 common_start = pd.Timestamp('2013-01-01')
 common_end = pd.Timestamp('2016-05-22')
 val_start = pd.Timestamp('2015-11-01')
-val_end = pd.Timestamp('2016-02-28')
+val_end = pd.Timestamp('2016-02-29')
 test_start = pd.Timestamp('2016-03-01')
 test_end = pd.Timestamp('2016-05-22')
 origin_dates = [pd.Timestamp('2016-03-01') + pd.Timedelta(days=7 * k) for k in range(N_ORIGINS)]
@@ -292,7 +292,7 @@ def off(d):
     return int((pd.Timestamp(d) - common_start).days)
 
 TRAIN_S = slice(0, off(val_start))                # 2013-01-01 .. 2015-10-31
-VAL_S = slice(off(val_start), off(val_end) + 1)   # 2015-11-01 .. 2016-02-28
+VAL_S = slice(off(val_start), off(val_end) + 1)   # 2015-11-01 .. 2016-02-29
 TEST_S = slice(off(test_start), off(test_end) + 1)  # 2016-03-01 .. 2016-05-22
 
 print('Train      : cols %d..%d  (%d columns, %s .. %s)' % (
@@ -304,15 +304,14 @@ print('Validation : cols %d..%d  (%d columns, %s .. %s)' % (
 print('Test       : cols %d..%d  (%d columns, %s .. %s)' % (
     TEST_S.start, TEST_S.stop - 1, TEST_S.stop - TEST_S.start,
     dates_common[TEST_S.start].date(), dates_common[TEST_S.stop - 1].date()))
-print('Gap day    :', dates_common[VAL_S.stop].date(),
-      '(2016-02-29, a leap day in no period)')
+print('Boundary   : validation ends', dates_common[VAL_S.stop-1].date(), '| test starts', dates_common[TEST_S.start].date())
 
 assert TRAIN_S.stop - TRAIN_S.start == 1034
-assert VAL_S.stop - VAL_S.start == 120
+assert VAL_S.stop - VAL_S.start == 121
 assert TEST_S.stop - TEST_S.start == 83
 assert TRAIN_S.stop - TRAIN_S.start + VAL_S.stop - VAL_S.start \\
-    + TEST_S.stop - TEST_S.start == 1237
-assert dates_common[VAL_S.stop] == pd.Timestamp('2016-02-29')
+    + TEST_S.stop - TEST_S.start == 1238
+assert dates_common[VAL_S.stop] == pd.Timestamp('2016-03-01')
 assert all(off(od) == off(test_start) + 7 * k for k, od in enumerate(origin_dates))
 print('\\nOrigins:')
 for k, od in enumerate(origin_dates):
@@ -354,7 +353,7 @@ MD_MA_SELECT = r"""## 9. Moving Average Window Selection (Validation Only)
 
 The moving average has one free parameter: the window $W$. We try
 $W \in \{7, 14, 28\}$ and pick, **per dataset**, the window with the lowest one-step-ahead
-MAE computed on the *validation period* (2015-11-01 … 2016-02-28).
+MAE computed on the *validation period* (2015-11-01 … 2016-02-29).
 
 For each validation day $t$, the "forecast" is the mean of the $W$ days before $t$ —
 history only. Nothing from the test period touches this decision, so choosing $W$ here is
@@ -377,7 +376,7 @@ CODE_MA_SELECT = """def validate_ma_windows(X, Ws=(7, 14, 28)):
     return per_window_mae, per_window_series, best
 
 ma_sel = {'seed': SEED, 'horizon': H,
-          'validation_period': {'start': '2015-11-01', 'end': '2016-02-28', 'days': 120},
+          'validation_period': {'start': '2015-11-01', 'end': '2016-02-29', 'days': 121},
           'selection_rule': 'global window minimising one-step-ahead validation MAE',
           'datasets': {}}
 W_by_ds = {}

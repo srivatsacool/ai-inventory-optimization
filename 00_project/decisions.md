@@ -465,3 +465,55 @@ Phase 1 is frozen. All traditional forecasting models (Naive, Seasonal Naive, Mo
 ### Status
 Complete — frozen
 
+---
+
+## 2026-09-03 Temporal protocol correction — leap day 2016-02-29 assigned to validation
+
+### Decision
+Correct the frozen experimental calendar so every calendar day of the common window belongs to exactly one period:
+
+- **Train:** 2013-01-01 → 2015-10-31 (1,034 days)
+- **Validation:** 2015-11-01 → 2016-02-29 (121 days) — includes the 2016-02-29 leap day
+- **Test:** 2016-03-01 → 2016-05-22 (83 days)
+- **Common window:** 2013-01-01 → 2016-05-22 (1,238 days)
+
+### Why
+2016 is a leap year. The original Notebook 04 freeze ended validation at 2016-02-28 (120 d), leaving 2016-02-29 unassigned — a "gap day in no period" — so the split summed to 1,237 days, not the 1,238-day common window (the 2026-08-28 freeze record's "Train 1,005d" figure was likewise internally inconsistent; the true train length is 1,034 d). Ending validation on 2016-02-29 restores the exact partition: 1,034 + 121 + 83 = 1,238. Test and all 8 rolling origins are unchanged; model selection still uses validation only.
+
+### Impact
+- `05_experiments/config.json` (git-ignored; machine-readable source of truth): validation end 2016-02-28 → 2016-02-29, days 120 → 121.
+- `11_src/_make_nb05.py`: protocol table and prose (`val_end`, slice comments, gap-day text), MA-window selection record, and assertions updated — VAL_S is now 121 columns, periods sum to 1,238, and a boundary assertion verifies validation ends exactly where test begins (no gap day).
+- `11_src/_make_nb06.py`: protocol table + `VAL_END` constant updated.
+- `11_src/_make_nb07.py`: implementation-section prose updated.
+- Prior artifacts preserved: `08_notebooks/*.ipynb` and `06_results/` were NOT regenerated or rewritten. Notebooks 05–07 must be regenerated from the patched sources and results re-verified before any downstream experiment.
+
+### Status
+Confirmed — sources patched; notebook regeneration deferred by instruction.
+
+---
+
+## 2026-09-04 SARIMA full-500 feasibility decision (Research Hardening)
+
+### Decision
+Run SARIMA (1,1,0)(0,1,1,7) on all 500 Store Item Demand series (8 origins, H=28, identical history<origin boundary) via standalone script. Retain the 100-series subset strictly as labelled exploratory artifact.
+
+### Why
+Feasibility probe (05_experiments/sarima_feasibility.json): 16 fits, 16 ok, mean 0.62 s/fit → full 4000-fit ETA ~41 min as a background script, outside the 900 s notebook-cell budget but well within project constraints. Full run actual: 2382 s, 4000/4000 fit_ok, 0 skips, 0 failures (run_log_full500.json). 0-failure convergence is itself a finding (dense Store data vs 22.65% ARIMA pre-check fallback on sparse M5).
+
+### Alternatives considered
+1. Keep 100-series subset as primary SARIMA — rejected: directly incomparable populations (22400 vs 112000 rows) would poison the primary comparison.
+2. Run SARIMA on M5 too — rejected: seasonal differencing on >85%-zero intermittent series is methodologically dubious; Croston-family already covers the M5 specialty.
+
+### Evidence
+- 06_results/arima/sarima_store_item_full500.csv (112000 rows, 0 dup keys)
+- 06_results/arima/convergence_details_full500.csv + convergence_report.csv (scope column)
+- Rebuilt 06_results/arima/all_forecasts.csv (336000 = 224000 ARIMA + 112000 SARIMA-full500); subset-based version preserved in 06_results/_pre_hardening_backup/06_results/arima/all_forecasts_subset_based.csv
+- Full500 metrics: MAE 8.45 / WAPE 0.148 / MASE 1.055 / RMSSE 1.040 (subset was 8.31/0.153 — consistent, population shift documented, not hidden)
+
+### Impact
+- Primary comparison uses identical 500-series populations on both datasets for every model.
+- Downstream inventory/stats/sensitivity rerun on rebuilt forecasts (Store SARIMA pairs change from subset to full population).
+
+### Status
+Confirmed
+

@@ -50,7 +50,7 @@ cells.append(md(r"""
 
 **How to read this notebook:** `Concept → Visual intuition → Mathematics → Worked example → Assumptions → Limitations → Implementation (leakage-safe) → Results → Business implications`. Every chart answers a question.
 
-**Frozen experiment (unchanged):** M5 = 500 stratified series, Store Item Demand = 500 series (all), common window 2013-01-01 → 2016-05-22 (1,238 days), horizon $h=28$, 8 weekly origins, metrics MAE/RMSE/sMAPE/WAPE, seed 42. ARIMA runs full 500×8 on both datasets; SARIMA is demonstrated where seasonality is strong (Store Item Demand) on a 200-series subset to keep runtime within the frozen 900 s notebook budget — clearly labelled, methodology identical.
+**Frozen experiment (unchanged):** M5 = 500 stratified series, Store Item Demand = 500 series (all), common window 2013-01-01 → 2016-05-22 (1,238 days), horizon $h=28$, 8 weekly origins, metrics MAE/RMSE/sMAPE/WAPE, seed 42. ARIMA runs full 500×8 on both datasets; SARIMA is demonstrated where seasonality is strong (Store Item Demand) on a 200-series subset to keep runtime within the frozen 900 s notebook budget — clearly labelled, methodology identical. Scale-free MASE/RMSSE are also registered in `05_experiments/config.json` and implemented in `11_src/metrics.py` for the downstream notebooks; the frozen tables here use the same MAE/RMSE/sMAPE/WAPE definitions as 05b/06.
 
 **Pre-read:** 05a (components) explains *what* to look for; 03 (EDA) showed M5 weekly structure and ACF; 02b showed Store Item weekly strength. This notebook explains *how* ARIMA represents those patterns.
 """))
@@ -498,7 +498,7 @@ cells.append(md(r"""
 
 # 8. Implementation — Leakage-Safe, Reproducible
 
-All models see only history **strictly before** each origin. Validation window (2015-11-01 → 2016-02-28) is available for order selection in principle; we fix a single fast order per family after a quick validation check, then evaluate only on the 8 rolling origins in the test window. No test data enters fitting, scaling, or selection.
+All models see only history **strictly before** each origin. Validation window (2015-11-01 → 2016-02-29) is available for order selection in principle; we fix a single fast order per family after a quick validation check, then evaluate only on the 8 rolling origins in the test window. No test data enters fitting, scaling, or selection.
 
 **Orders chosen (rationale + speed):**
 
@@ -507,7 +507,7 @@ All models see only history **strictly before** each origin. Validation window (
 | ARIMA | $(1,1,0)$ | Differencing handles drift, one AR lag captures short memory, **0.03 s/fit** — feasible for 500×8 full evaluation |
 | SARIMA | $(1,1,0)(0,1,1,7)$ | Non-seasonal AR for short memory + seasonal MA for weekly error correction, **0.31 s/fit** — run on 100-series Store Item subset to stay within 900 s |
 
-*Both use `statsmodels.tsa.statespace.SARIMAX` / `ARIMA` with `enforce_stationarity=False, enforce_invertibility=False` for robustness. Failures fall back to Naive (last value) — counted explicitly, never silently dropped.*
+*Both use `statsmodels.tsa.statespace.SARIMAX` / `ARIMA` with `enforce_stationarity=False, enforce_invertibility=False` for robustness. Any fit that raises (non-convergence, numerical failure) — or any series refused up-front by the data pre-check (history < 10/30 days, all-zero, >85% zeros) — falls back to Naive (last value). That fallback behavior is preserved exactly, but it is no longer silent: every fit is logged and quantified — attempted fits, failures, and Naive-fallback counts with percentages, broken down by dataset/model/origin/archetype — and saved to `06_results/arima/convergence_report.csv` (per-fit log in `convergence_details.csv`).*
 
 **Leakage audit:** before forecasting we assert `history_end < origin_date <= forecast_start` for every origin/dataset.
 
@@ -558,9 +558,14 @@ ARIMA_ORDER=(1,1,0)
 SARIMA_ORDER=(1,1,0)
 SARIMA_SEASONAL=(0,1,1,7)
 
-def arima_forecast(history, horizon=H, order=ARIMA_ORDER):
+def arima_forecast(history, horizon=H, order=ARIMA_ORDER, conv=None):
     # history: 1D array strictly before origin
+    # conv: optional dict filled with convergence status ("fallback_skip" /
+    #       "fit_ok" / "fallback_fail") and reason; the returned forecast is
+    #       bit-for-bit unchanged whether or not conv is provided.
     if len(history) < 10 or np.all(history==0) or (history==0).mean() > 0.85:
+        if conv is not None:
+            conv.update(status="fallback_skip", reason="precheck: short history / all-zero / >85% zeros")
         return np.repeat(history[-1] if len(history)>0 else 0, horizon)
     try:
         m=ARIMA(history, order=order).fit()
@@ -568,12 +573,18 @@ def arima_forecast(history, horizon=H, order=ARIMA_ORDER):
         fc=np.asarray(fc, dtype=float)
         fc=np.where(np.isfinite(fc), fc, history[-1])
         fc=np.maximum(fc, 0)  # demand non-negative
+        if conv is not None:
+            conv.update(status="fit_ok", reason="")
         return fc
-    except Exception:
+    except Exception as e:
+        if conv is not None:
+            conv.update(status="fallback_fail", reason=f"{type(e).__name__}: {e}")
         return np.repeat(float(history[-1]), horizon)
 
-def sarima_forecast(history, horizon=H, order=SARIMA_ORDER, sorder=SARIMA_SEASONAL):
+def sarima_forecast(history, horizon=H, order=SARIMA_ORDER, sorder=SARIMA_SEASONAL, conv=None):
     if len(history) < 30 or np.all(history==0):
+        if conv is not None:
+            conv.update(status="fallback_skip", reason="precheck: short history / all-zero")
         return np.repeat(history[-1] if len(history)>0 else 0, horizon)
     try:
         m=SARIMAX(history, order=order, seasonal_order=sorder, enforce_stationarity=False, enforce_invertibility=False).fit(disp=False)
@@ -581,8 +592,12 @@ def sarima_forecast(history, horizon=H, order=SARIMA_ORDER, sorder=SARIMA_SEASON
         fc=np.asarray(fc, dtype=float)
         fc=np.where(np.isfinite(fc), fc, history[-1])
         fc=np.maximum(fc, 0)
+        if conv is not None:
+            conv.update(status="fit_ok", reason="")
         return fc
-    except Exception:
+    except Exception as e:
+        if conv is not None:
+            conv.update(status="fallback_fail", reason=f"{type(e).__name__}: {e}")
         return np.repeat(float(history[-1]), horizon)
 
 print("Forecast helpers defined:", arima_forecast.__name__, sarima_forecast.__name__)
@@ -628,18 +643,27 @@ cells.append(code(r"""
 import time
 
 def run_arima(m5_mat, sit_pivot, dates_idx, origins, H):
-    rows=[]
+    rows=[]; conv=[]
     t0=time.time()
     # M5: rows = series, cols = dates
     m5_ids = m5_mat.index.tolist()
     sit_ids = sit_pivot.columns.tolist()
+    # M5 archetype map for failure analysis by demand structure
+    try:
+        _prof=pd.read_csv(M5_PROC / "m5_series_profile.csv")
+        _prof["id_eval"]=_prof["item_id"].astype(str)+"_"+_prof["store_id"].astype(str)+"_evaluation"
+        archetype_map=dict(zip(_prof["id_eval"], _prof["archetype"]))
+    except Exception:
+        archetype_map={}
     for oi, od in enumerate(origins,1):
         hist_len=(dates_idx < od).sum()
         # M5
         for sid in m5_ids:
             hist=m5_mat.loc[sid].values[:hist_len].astype(float)
             fut=m5_mat.loc[sid].values[hist_len:hist_len+H].astype(float)
-            fc=arima_forecast(hist, H)
+            c={"dataset":"m5","model":"ARIMA","series_id":sid,"origin":oi,"origin_date":od,"archetype":archetype_map.get(sid,"")}
+            fc=arima_forecast(hist, H, conv=c)
+            conv.append(c)
             for h in range(H):
                 rows.append({"dataset":"m5","series_id":sid,"origin":oi,"origin_date":od,"forecast_date":dates_idx[hist_len+h],"actual":float(fut[h]),"forecast":float(fc[h]),"model":"ARIMA"})
         # Store Item
@@ -648,15 +672,17 @@ def run_arima(m5_mat, sit_pivot, dates_idx, origins, H):
         for sid in sit_ids:
             hist=hist_block[sid].values.astype(float)
             fut=fut_block[sid].values.astype(float)
-            fc=arima_forecast(hist, H)
+            c={"dataset":"store_item_demand","model":"ARIMA","series_id":sid,"origin":oi,"origin_date":od,"archetype":""}
+            fc=arima_forecast(hist, H, conv=c)
+            conv.append(c)
             for h in range(H):
                 rows.append({"dataset":"store_item_demand","series_id":sid,"origin":oi,"origin_date":od,"forecast_date":dates_idx[hist_len+h],"actual":float(fut[h]),"forecast":float(fc[h]),"model":"ARIMA"})
         print(f"Origin {oi} {od.date()} — done ({time.time()-t0:.1f}s elapsed)")
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows), conv
 
 t0=time.time()
-arima_df=run_arima(m5_common, pivot, dates_common, origin_dates, H)
-print(f"ARIMA total rows: {len(arima_df):,} — elapsed {time.time()-t0:.1f}s")
+arima_df, arima_conv=run_arima(m5_common, pivot, dates_common, origin_dates, H)
+print(f"ARIMA total rows: {len(arima_df):,} — elapsed {time.time()-t0:.1f}s (fits logged: {len(arima_conv)})")
 # quick duplicate check
 dup=arima_df.duplicated(subset=["dataset","series_id","origin","forecast_date"]).sum()
 print(f"Duplicate keys: {dup}")
@@ -671,7 +697,7 @@ sarima_ids=sorted(rng2.choice(sit_ids_all, size=100, replace=False).tolist())
 print(f"SARIMA subset: {len(sarima_ids)} Store Item series (100 to respect 900 s budget) (seed 42)")
 
 def run_sarima_subset(sit_pivot, dates_idx, origins, H, subset_ids):
-    rows=[]
+    rows=[]; conv=[]
     t0=time.time()
     for oi, od in enumerate(origins,1):
         hist_len=(dates_idx < od).sum()
@@ -680,15 +706,17 @@ def run_sarima_subset(sit_pivot, dates_idx, origins, H, subset_ids):
         for sid in subset_ids:
             hist=hist_block[sid].values.astype(float)
             fut=fut_block[sid].values.astype(float)
-            fc=sarima_forecast(hist, H)
+            c={"dataset":"store_item_demand","model":"SARIMA","series_id":sid,"origin":oi,"origin_date":od,"archetype":""}
+            fc=sarima_forecast(hist, H, conv=c)
+            conv.append(c)
             for h in range(H):
                 rows.append({"dataset":"store_item_demand","series_id":sid,"origin":oi,"origin_date":od,"forecast_date":dates_idx[hist_len+h],"actual":float(fut[h]),"forecast":float(fc[h]),"model":"SARIMA"})
         print(f"SARIMA origin {oi} {od.date()} — done ({time.time()-t0:.1f}s)")
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows), conv
 
 t1=time.time()
-sarima_df=run_sarima_subset(pivot, dates_common, origin_dates, H, sarima_ids)
-print(f"SARIMA rows: {len(sarima_df):,} — elapsed {time.time()-t1:.1f}s")
+sarima_df, sarima_conv=run_sarima_subset(pivot, dates_common, origin_dates, H, sarima_ids)
+print(f"SARIMA rows: {len(sarima_df):,} — elapsed {time.time()-t1:.1f}s (fits logged: {len(sarima_conv)})")
 sarima_df.head(3).to_string()
 """))
 
@@ -715,6 +743,65 @@ print("Forecast schema columns:", list(all_arima.columns))
 """))
 
 # ---------------------------------------------------------------------------
+# 9.1 Convergence / fallback accounting
+# ---------------------------------------------------------------------------
+
+cells.append(md(r"""
+---
+
+# 9.1 Convergence and Naive-Fallback Accounting (Transparency)
+
+Every ARIMA/SARIMA fit is logged: **attempted** (entered the optimizer), **successful**, **failed** (raised at fit time → Naive fallback), or **skipped** by the data pre-check (history too short, all-zero, or >85% zeros → Naive fallback). The frozen fallback behavior — return the last observed value — is bit-for-bit preserved; the only change is that nothing is silent anymore.
+
+Counts, percentages, and the dataset / model / origin / archetype breakdown are saved to `06_results/arima/convergence_report.csv`; the per-fit log (one row per series × origin, with status and exception reason) is in `06_results/arima/convergence_details.csv`.
+
+> Interpret `fallback_pct` with care: a high rate on sparse M5 mostly reflects the *pre-check* refusing to fit ARIMA at all (correct behaviour on >85%-zero series), not convergence failures. `failure_pct` (exceptions ÷ attempted fits) is the true optimizer non-convergence rate.
+"""))
+
+cells.append(code(r"""
+# ---- Convergence / fallback accounting (transparency) ----
+conv_detail = pd.DataFrame(arima_conv + sarima_conv)
+conv_detail["attempted"] = (conv_detail["status"] != "fallback_skip").astype(int)
+conv_detail["failed"]    = (conv_detail["status"] == "fallback_fail").astype(int)
+conv_detail["fallback"]  = (conv_detail["status"] != "fit_ok").astype(int)  # any Naive return
+conv_detail.to_csv(RES / "convergence_details.csv", index=False)
+
+def conv_summary(df, by):
+    g = df.groupby(by, dropna=False)
+    out = []
+    for keys, sub in g:
+        keys = keys if isinstance(keys, tuple) else (keys,)
+        n = len(sub); attempted = int(sub["attempted"].sum())
+        failed = int(sub["failed"].sum()); fallback = int(sub["fallback"].sum())
+        row = dict(zip(by, keys))
+        row.update({
+            "n_series": n,
+            "n_fits_attempted": attempted,
+            "n_fits_ok": attempted - failed,
+            "n_fit_failures": failed,
+            "n_fallback_naive": fallback,
+            "failure_pct": round(100 * failed / attempted, 2) if attempted else np.nan,
+            "fallback_pct": round(100 * fallback / n, 2) if n else np.nan,
+        })
+        out.append(row)
+    return pd.DataFrame(out)
+
+COLS = ["dataset","model","origin","archetype","n_series","n_fits_attempted","n_fits_ok","n_fit_failures","n_fallback_naive","failure_pct","fallback_pct"]
+parts = [
+    conv_summary(conv_detail, ["dataset","model","origin"]).assign(archetype="all"),
+    conv_summary(conv_detail, ["dataset","model"]).assign(origin="all", archetype="all"),
+    conv_summary(conv_detail[conv_detail["archetype"] != ""], ["dataset","model","archetype"]).assign(origin="all"),
+]
+conv_report = pd.concat(parts, ignore_index=True)[COLS].sort_values(["dataset","model","origin","archetype"])
+conv_report.to_csv(RES / "convergence_report.csv", index=False)
+print("Convergence / fallback report (dataset x model x origin):")
+print(conv_report[conv_report["archetype"]=="all"].round(2).to_string(index=False))
+print("\nM5 by archetype:")
+print(conv_report[conv_report["archetype"]!="all"].round(2).to_string(index=False))
+print(f"\nSaved {RES / 'convergence_report.csv'} ({len(conv_report)} rows) and {RES / 'convergence_details.csv'} ({len(conv_detail):,} rows)")
+"""))
+
+# ---------------------------------------------------------------------------
 # 11. Metrics vs baselines/smoothing
 # ---------------------------------------------------------------------------
 
@@ -737,7 +824,9 @@ def metrics_for(df):
     rows=[]
     for (ds,model), sub in g:
         a=sub["actual"].values; f=sub["forecast"].values
-        mae=np.mean(np.abs(a-f)); rmse=np.sqrt(np.mean((a-f)**2)); wape=np.sum(np.abs(a-f))/ (np.sum(np.abs(a))+1e-9)
+        mae=np.mean(np.abs(a-f)); rmse=np.sqrt(np.mean((a-f)**2))
+        # WAPE epsilon guards all-zero windows; see metrics.wape() for the documented zero limitation
+        wape=np.sum(np.abs(a-f))/ (np.sum(np.abs(a))+1e-9)
         rows.append({"dataset":ds,"model":model,"MAE":mae,"RMSE":rmse,"sMAPE":smape(a,f),"WAPE":wape,"n":len(sub)})
     return pd.DataFrame(rows).sort_values(["dataset","MAE"])
 
@@ -879,6 +968,15 @@ if "archetype" in m5_arima_series.columns:
     arch_metrics=m5_arima_series.groupby("archetype")[["MAE","WAPE"]].mean().reset_index().sort_values("WAPE")
     print(arch_metrics.round(4).to_string(index=False))
     arch_metrics.to_csv(RES / "metrics_by_archetype_m5.csv", index=False)
+    # Convergence transparency by archetype — where did ARIMA never fit?
+    try:
+        _conv = pd.read_csv(RES / "convergence_report.csv")
+        conv_arch_tab = _conv[(_conv["model"]=="ARIMA") & (_conv["origin"]=="all") & (_conv["archetype"]!="all")]
+        if len(conv_arch_tab):
+            print("\nARIMA fit outcomes by M5 archetype (failed = optimizer exception; fallback = any Naive return):")
+            print(conv_arch_tab[["archetype","n_series","n_fits_attempted","n_fit_failures","n_fallback_naive","failure_pct","fallback_pct"]].round(2).to_string(index=False))
+    except Exception as e:
+        print("convergence_report.csv unavailable:", e)
     fig, ax=plt.subplots(figsize=(10,4))
     ax.bar(arch_metrics["archetype"], arch_metrics["WAPE"], color="#0072B2", edgecolor="white")
     ax.set_title("M5 — ARIMA WAPE by archetype (lower is better)")
@@ -923,6 +1021,7 @@ cells.append(md(r"""
 
 - Forecasts: `06_results/arima/all_forecasts.csv` (ARIMA full 500×8 both datasets + SARIMA 200×8 subset, long format), `arima_forecasts.csv`, `sarima_store_item_subset.csv`
 - Metrics: `metrics_by_model.csv`, `metrics_by_series.csv`, `metrics_by_origin.csv`, `metrics_by_archetype_m5.csv`, `metrics_with_history.csv`
+- Convergence transparency: `convergence_report.csv` (attempted / successful / failed / Naive-fallback counts and percentages by dataset, model, origin, archetype), `convergence_details.csv` (per-fit status log with exception reasons)
 - Educational figures: `07_figures/model_explanations/arima/` (7 figures)
 - Experimental figures: `07_figures/arima/` (3 figures)
 - No frozen experiment change — same common window, series, horizon, origins, metrics, seed.

@@ -10,6 +10,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
 from plotting import apply_style
+from inventory_policy import POLICY_DEFAULT, simulate_group, load_all_forecasts
 
 PROJ = pathlib.Path(__file__).resolve().parents[1]
 RES = PROJ / "06_results"
@@ -21,30 +22,22 @@ FIG.mkdir(parents=True, exist_ok=True)
 SEED = 42
 np.random.seed(SEED)
 apply_style()
-C1, C2, C3, C4, CN = '#0072B2', '#D55E00', '#009E73', '#CC79A7', '#999999'
+C1, C2, C3, C4, C5, CN = '#0072B2', '#D55E00', '#009E73', '#CC79A7', '#E69F00', '#999999'
 
 # === 1. Load all forecasts ===
 print("=" * 70)
 print("PHASE 1 INVENTORY SIMULATION")
 print("=" * 70)
-families = {
-    'baselines': ('Baseline', RES / 'baselines' / 'all_forecasts.csv'),
-    'exponential_smoothing': ('Smoothing', RES / 'exponential_smoothing' / 'all_forecasts.csv'),
-    'arima': ('ARIMA/SARIMA', RES / 'arima' / 'all_forecasts.csv'),
-    'lstm': ('LSTM', RES / 'lstm' / 'all_forecasts.csv'),
-}
-frames = []
-for fam_key, (family, path) in families.items():
-    df = pd.read_csv(path)
-    if 'origin_id' in df.columns and 'origin' not in df.columns:
-        df = df.rename(columns={'origin_id': 'origin'})
-    if 'error' not in df.columns:
-        df['error'] = df['actual'] - df['forecast']
-    df['family'] = family
-    frames.append(df[['dataset', 'model', 'series_id', 'origin', 'origin_date', 'forecast_date', 'actual', 'forecast', 'error', 'family']])
-    print(f"  {fam_key}: {len(df):,} rows, models: {df['model'].unique().tolist()}")
-all_fc = pd.concat(frames, ignore_index=True)
-print(f"\n  TOTAL: {len(all_fc):,} rows, datasets: {all_fc['dataset'].unique().tolist()}")
+# Single common policy for ALL models/families (see inventory_policy.py):
+# lead_time=7, service_target=0.95 (z=1.645), H=1.0, P=5.0 (P/H = 5).
+POLICY = POLICY_DEFAULT
+print(f"  POLICY (common to every model): lead_time={POLICY['lead_time']}, "
+      f"service_target={POLICY['service_target']}, z={POLICY['z']}, "
+      f"H={POLICY['H']}, P={POLICY['P']} (P/H={POLICY['P'] / POLICY['H']})")
+all_fc = load_all_forecasts()
+print(f"  families loaded: {sorted(all_fc['family'].unique().tolist())}")
+print(f"  TOTAL: {len(all_fc):,} rows, datasets: {all_fc['dataset'].unique().tolist()}, "
+      f"models: {sorted(all_fc['model'].unique().tolist())}")
 
 # === 2. Consolidate forecast metrics ===
 print("\n--- Consolidating forecast metrics ---")
@@ -53,6 +46,7 @@ metric_files = [
     (RES / 'exponential_smoothing' / 'metrics_by_model.csv', 'Smoothing'),
     (RES / 'arima' / 'metrics_by_model.csv', 'ARIMA/SARIMA'),
     (RES / 'lstm' / 'metrics_by_model.csv', 'LSTM'),
+    (RES / 'croston' / 'metrics_by_model.csv', 'Croston-family'),
 ]
 fm_parts = []
 for path, family in metric_files:
@@ -63,42 +57,16 @@ fm = pd.concat(fm_parts, ignore_index=True)
 fm.to_csv(INV / 'phase1_forecast_comparison.csv', index=False)
 print(fm[['dataset', 'model', 'family', 'MAE', 'RMSE', 'WAPE']].round(4).to_string(index=False))
 
-# === 3. Inventory simulation ===
+# === 3. Inventory simulation (shared module = single source of truth) ===
 print("\n--- Running inventory simulation ---")
-LEAD_TIME, Z, H_COST, P_COST = 7, 1.645, 1.0, 5.0
-
-def simulate_one(group):
-    group = group.sort_values('forecast_date').reset_index(drop=True)
-    n = len(group)
-    fc = group['forecast'].values
-    act = group['actual'].values
-    err_std = max(np.std(fc - act), 0.1)
-    ss = Z * err_std * np.sqrt(LEAD_TIME)
-    inv = max(np.sum(fc[:LEAD_TIME]), 1.0)
-    pipeline = np.zeros(LEAD_TIME)
-    h_cost = s_cost = s_days = s_qty = reorders = 0.0
-    for d in range(n):
-        inv += pipeline[0]
-        pipeline = np.roll(pipeline, -1); pipeline[-1] = 0
-        ord_up = np.sum(fc[d:min(d + LEAD_TIME, n)]) + ss
-        if inv + np.sum(pipeline) < ord_up:
-            pipeline[-1] = max(0, ord_up - inv - np.sum(pipeline))
-            reorders += 1
-        dem = act[d]
-        if dem > 0:
-            if inv >= dem:
-                inv -= dem
-            else:
-                s_qty += dem - inv; s_cost += (dem - inv) * P_COST; s_days += 1; inv = 0
-        h_cost += inv * H_COST
-    return {'total_holding_cost': h_cost, 'total_stockout_cost': s_cost, 'total_cost': h_cost + s_cost,
-            'service_level': 1 - s_days / n if n else 1, 'average_inventory': h_cost / n if n else 0,
-            'stockout_frequency': s_days, 'stockout_quantity': s_qty, 'reorder_count': reorders}
+# simulate_group() from inventory_policy.py implements the canonical
+# order-up-to / lost-sales math; verified bit-identical to the legacy
+# inline simulate_one via 11_src/test_inventory_policy.py parity checks.
 
 t0 = time.time()
 results = []
 for (ds, model, sid, origin), grp in all_fc.groupby(['dataset', 'model', 'series_id', 'origin']):
-    r = simulate_one(grp)
+    r = simulate_group(grp, POLICY)
     r.update({'dataset': ds, 'model': model, 'series_id': sid, 'origin': origin})
     results.append(r)
 inv_df = pd.DataFrame(results)
@@ -139,7 +107,7 @@ print("\n--- Generating figures ---")
 def fc_for(ds): return final[final['dataset'] == ds]
 
 def get_colors(sub):
-    return [C1 if f == 'Baseline' else C2 if f == 'Smoothing' else C3 if f == 'ARIMA/SARIMA' else C4 for f in sub['family']]
+    return [C1 if f == 'Baseline' else C2 if f == 'Smoothing' else C3 if f == 'ARIMA/SARIMA' else C5 if f == 'Croston-family' else C4 for f in sub['family']]
 
 # 01 Total cost
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))

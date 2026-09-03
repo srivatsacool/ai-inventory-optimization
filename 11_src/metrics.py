@@ -70,13 +70,46 @@ def mase(
 
 
 def smape(y_true: np.ndarray, y_pred: np.ndarray) -> float:
-    """Symmetric MAPE (as percentage). Returns NaN where both are zero."""
+    """Symmetric MAPE (as percentage).
+
+    Zero limitation: pairs where *both* actual and forecast are zero are
+    excluded from the mean (their contribution is 0/0). The metric is
+    therefore NaN when all pairs are zero-zero, and on intermittent series
+    (many both-zero days) the reported value is an average over the
+    informative non-zero pairs only — it can look artificially good and is
+    not directly comparable with dense series. Use MASE/RMSSE (scale-free)
+    or WAPE (zero-aware denominator) alongside it for sparse demand.
+    """
     y_true, y_pred = np.asarray(y_true, float), np.asarray(y_pred, float)
     denom = (np.abs(y_true) + np.abs(y_pred)) / 2
     mask = denom != 0
     if mask.sum() == 0:
         return float("nan")
     return float(100 * np.mean(np.abs(y_true[mask] - y_pred[mask]) / denom[mask]))
+
+
+def wape(y_true: np.ndarray, y_pred: np.ndarray) -> float:
+    """Weighted Absolute Percentage Error (sum|actual-forecast| / sum|actual|).
+
+    Scale-free like MASE/RMSSE, but driven by the *absolute* actual level:
+    a unit error on a high-demand day weighs less than on a low-demand day.
+
+    Zero limitation: the denominator is total actual demand, so WAPE is NaN
+    when all actuals in the window are zero (a zero-demand origin on an
+    intermittent series) — and the metric is *inflated* by any non-zero
+    forecast on zero-actual days (each such unit contributes 1.0 to the
+    numerator while adding nothing to the denominator). Notebooks that add
+    an epsilon (`+1e-9`) to keep it finite silently understate the error,
+    more so the sparser the window is. Prefer this NaN-honest version.
+    """
+    y_true, y_pred = np.asarray(y_true, float), np.asarray(y_pred, float)
+    mask = np.isfinite(y_true) & np.isfinite(y_pred)
+    if mask.sum() == 0:
+        return float("nan")
+    denom = float(np.sum(np.abs(y_true[mask])))
+    if denom == 0:
+        return float("nan")
+    return float(np.sum(np.abs(y_true[mask] - y_pred[mask])) / denom)
 
 
 # Convenient bundle
@@ -90,6 +123,7 @@ def all_metrics(
         "MAE": mae(y_true, y_pred),
         "RMSE": rmse(y_true, y_pred),
         "sMAPE": smape(y_true, y_pred),
+        "WAPE": wape(y_true, y_pred),
     }
     if y_train is not None:
         out["RMSSE"] = rmsse(y_true, y_pred, y_train, seasonal_period)

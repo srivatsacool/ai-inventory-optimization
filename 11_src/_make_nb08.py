@@ -577,18 +577,28 @@ def run_global_lstm_for_dataset(mat, dataset_name, pivot_or_mat_is_pivot=False, 
         scaled_hist, means, stds = fit_scalers_and_scale(mat_np, hist_len)
         # 2) make pooled windows from scaled history
         X_all, Y_all = make_global_windows_pooled(scaled_hist, L, H, hist_len)
-        # split last 28*500? Actually last 28 windows overall are from tail of pooled set, but we want validation still < origin.
-        # For pooling, validation should be last 500*? windows? Simpler: reserve last 5% of pooled windows as val (still < origin)
-        n_val = min(2000, max(256, int(0.05 * len(X_all))))  # small val
-        # shuffle not needed for val split; take tail as val to respect time? But pooled windows are from all series interleaved — tail is still < origin.
-        # Use random split for val to avoid bias; yet still < origin so no leakage.
-        rng_val = np.random.default_rng(SEED + oi)
-        idx = np.arange(len(X_all))
-        rng_val.shuffle(idx)
-        val_idx = idx[:n_val]
-        train_idx = idx[n_val:]
-        X_train, Y_train = X_all[train_idx], Y_all[train_idx]
-        X_val, Y_val = X_all[val_idx], Y_all[val_idx]
+        # HARDENED VALIDATION (2026-09-03): chronological per-series split to avoid
+        # overlapping/near-identical windows across train/val.  The previous random
+        # 5% split allowed windows shifted by 1 day (27/28 overlap) to land on
+        # opposite sides of the split.  Now we split per series chronologically:
+        # last k windows per series -> validation block before origin.
+        # k = ~5% per series, at least 1, at most 4, respecting history < origin.
+        n_per_series = (scaled_hist.shape[1] - L - H + 1)  # windows per series
+        k_per_series = min(4, max(1, int(0.05 * n_per_series)))
+        # Re-build windows with per-series chronological split
+        Xs_train, Ys_train, Xs_val, Ys_val = [], [], [], []
+        for row in scaled_hist:
+            windows_x = [row[i:i+L] for i in range(len(row) - L - H + 1)]
+            windows_y = [row[i+L:i+L+H] for i in range(len(row) - L - H + 1)]
+            # tail k -> val, head -> train (no shuffle, no leakage beyond origin)
+            Xs_train.extend(windows_x[:-k_per_series])
+            Ys_train.extend(windows_y[:-k_per_series])
+            Xs_val.extend(windows_x[-k_per_series:])
+            Ys_val.extend(windows_y[-k_per_series:])
+        X_train = np.array(Xs_train, dtype=np.float32)
+        Y_train = np.array(Ys_train, dtype=np.float32)
+        X_val = np.array(Xs_val, dtype=np.float32)
+        Y_val = np.array(Ys_val, dtype=np.float32)
         # tensors
         X_train_t = torch.tensor(X_train, dtype=torch.float32).unsqueeze(-1)
         Y_train_t = torch.tensor(Y_train, dtype=torch.float32)

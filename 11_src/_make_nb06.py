@@ -77,7 +77,7 @@ All models in this notebook must use the same experimental conditions as Noteboo
 | Store Item Demand | All 500 series |
 | Common window | 2013-01-01 → 2016-05-22 |
 | Training history available | Up to the current forecast origin |
-| Validation | 2015-11-01 → 2016-02-28 |
+| Validation | 2015-11-01 → 2016-02-29 (121 d) |
 | Test | 2016-03-01 → 2016-05-22 |
 | Forecast horizon | 28 days |
 | Rolling origins | 8 weekly origins |
@@ -123,7 +123,7 @@ COMMON_START = pd.Timestamp('2013-01-01')
 COMMON_END = pd.Timestamp('2016-05-22')
 TRAIN_END = pd.Timestamp('2015-10-31')
 VAL_START = pd.Timestamp('2015-11-01')
-VAL_END = pd.Timestamp('2016-02-28')
+VAL_END = pd.Timestamp('2016-02-29')
 TEST_START = pd.Timestamp('2016-03-01')
 TEST_END = pd.Timestamp('2016-05-22')
 ORIGIN_DATES = [TEST_START + pd.Timedelta(days=7*i) for i in range(8)]
