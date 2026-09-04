@@ -68,7 +68,17 @@ protocol, or configurations. Appendix .tex files untouched except zero edits
 - (New) REPORT_EDITORIAL_QA.md (this file)
 
 ## Issues requiring human review
-1. Candidate references above (verification needed before adding).
+1. Candidate references: the verified Syntetos-Boylan-Croston (2005) categorization paper has been ADDED (2.5 + refs.bib, 12 entries). Remaining unverified candidates (Fildes/Goodwin, block-bootstrap refs) stay out per instructions.
 2. Em-dash reduction reached 97% (3 remain, all legitimate); confirm tone target met.
-3. DOCX was NOT regenerated (per instructions); the committed .docx predates this
-   edit pass and is now stale relative to the PDF. Regenerate on approval.
+3. DOCX was NOT regenerated (per instructions); the committed .docx predates the editorial + correction passes and is stale relative to the PDF. Regenerate on approval.
+
+## Peer-review correction log (B1-B3, I1-I5: all resolved, edit-only, no reruns)
+- B1 (4.7): SES sentence now reads second-lowest stockout (21.00, after Croston 20.28) and third-highest service (93.6%, after Croston, Seasonal Naive). Source-verified.
+- B2 (4.8): MA stockout frequency now "low (10.72, fourth-lowest)". Source-verified.
+- B3 (4.7): "ten times" ratio clause deleted; qualitative amplification point retained without cross-unit comparison.
+- I1: Store LSTM total 2,247.45 -> 2,247.46 in all five locations (front, 4.8 prose, Table 7, 4.12, 8.2); Table 7 now internally consistent (1,157.70 + 1,089.76).
+- I2: hybrid-evaluation note added below Table 3 (3,094 fitted + 906 fallback; pointer to 4.13).
+- I3: Appendix B carries the DM/bootstrap dependence-inheritance sentence.
+- I4: categorization reference added and cited in 2.5 (verified real via web search).
+- I5: 4.19 item 2 now reads "DES and TES carry roughly double (1.7x and 2.2x, respectively)".
+- Post-correction compile: EXIT=0, zero errors, zero undefined refs, 44 pages, 12 bib entries; touched pages visually spot-checked (hybrid note, Table 6/7 consistency).

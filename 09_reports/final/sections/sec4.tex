@@ -61,6 +61,7 @@ TES & 1.92 & 4.39 & 2.60 & 1.85 & 1.50 & 116.0 \\
 \bottomrule
 \end{tabular}
 \end{table}
+\noindent\textit{Note:} the M5 ARIMA row is a hybrid evaluation combining 3,094 fitted ARIMA forecasts with 906 Naive fallback forecasts triggered by the documented greater-than-85\%-zero-demand pre-check (see \cref{sec:arima-find}).
 
 \begin{figure}[H]
 \centering
@@ -188,12 +189,10 @@ Moving Average (158.83) and SES (159.31); SBA (160.66), TSB (165.13), and
 Croston (174.81) follow; Seasonal Naive (192.55), ARIMA (194.60), and Naive
 (200.75) form the middle group; DES (268.80) and TES (346.67) record
 substantially higher costs. Cost composition varies instructively: SBA's low
-holding cost (128.39) is offset by stockouts (32.27); SES records the lowest
-stockout component (21.00) with the second-highest service level (93.6\%);
+holding cost (128.39) is offset by stockouts (32.27); SES records the second-lowest
+stockout component (21.00, after Croston at 20.28) with the third-highest service level (93.6\%), after Croston and Seasonal Naive;
 Croston records the highest service level (93.9\%) at intermediate cost.
-LSTM's cost margin over Moving Average (approximately 6 units) is about ten
-times its MAE margin, indicating that the policy amplifies small accuracy
-differences into material cost differences when demand is sparse.
+LSTM's cost margin over Moving Average (approximately 6 units) indicates that the inventory policy can amplify relatively small forecast differences into larger cost differences when demand is sparse.
 
 \begin{table}[H]
 \centering
@@ -222,14 +221,14 @@ TES & 346.67 & 304.28 & 42.40 & 88.0 & 10.87 \\
 \label{sec:store-inv}
 \Cref{tab:storeinv} ranks Store decision cost and differs from the forecast
 board. Moving Average is lowest (2,084.50); SES (2,113.83) and Seasonal Naive
-(2,128.15) complete the lowest three with no LSTM among them; LSTM (2,247.45)
+(2,128.15) complete the lowest three with no LSTM among them; LSTM (2,247.46)
 ranks fourth, SARIMA (2,282.31) fifth, ARIMA (2,320.87) sixth; Naive
 (2,700.37), DES (2,779.64), and TES (3,419.88) follow. Cost composition
 reverses the M5 pattern: Naive holds the least stock (28.38) but incurs the
 highest stockout component (1,905.74) at 43.2\% service; DES and TES carry
 high inventory (76.07 and 88.77) while still incurring mid-range stockouts.
-Moving Average is comparatively balanced: moderate stock (45.58), the lowest
-stockout frequency (10.72), and no extreme in either column. This ranking
+Moving Average is comparatively balanced: moderate stock (45.58), a low
+stockout frequency (10.72, fourth-lowest), and no extreme in either column. This ranking
 holds under the default policy and is conditional on it; \cref{sec:robust}
 tests its stability and must be read alongside any citation of this table.
 
@@ -244,7 +243,7 @@ Model & Total & Holding & Stockout & Service (\%) & Avg.\ inv.\ \\
 \textbf{Moving Average} & \textbf{2,084.50} & 1,276.10 & 808.40 & 61.7 & 45.58 \\
 SES & 2,113.83 & 1,155.60 & 958.24 & 56.1 & 41.27 \\
 Seasonal Naive & 2,128.15 & 1,281.05 & 847.10 & 62.0 & 45.75 \\
-LSTM & 2,247.45 & 1,157.70 & 1,089.76 & 53.1 & 41.35 \\
+LSTM & 2,247.46 & 1,157.70 & 1,089.76 & 53.1 & 41.35 \\
 SARIMA & 2,282.31 & 1,307.78 & 974.53 & 59.2 & 46.71 \\
 ARIMA & 2,320.87 & 1,076.48 & 1,244.40 & 52.4 & 38.45 \\
 Naive & 2,700.37 & 794.63 & 1,905.74 & 43.2 & 28.38 \\
@@ -394,7 +393,7 @@ The neural rung partly confirms its premise. As a forecaster, the global LSTM
 records the lowest MAE and MASE on both datasets, the lowest archetype MAE on
 sparse shapes, and the only sub-1.0 MASE on Store demand. As an inventory
 input it is split: lowest cost on M5 (152.83, first in 25 of 27 policies) but
-fourth on Store (2,247.45), where its sharper forecasts include
+fourth on Store (2,247.46), where its sharper forecasts include
 under-predictions that the $P/H=5$ cost ratio penalizes heavily. On
 provenance: the LSTM was revalidated on chronological per-series splits after
 overlapping-window leakage was identified in the first validation design, so
@@ -526,8 +525,8 @@ Store full500 (primary) & SARIMA & 4,000 & 0 & 0 & 0.00 \\
 \subsection{Negative and surprising findings}
 \label{sec:negative}
 Null and negative results are reported explicitly. (1) TES ranks last on all
-four boards and in every archetype. (2) DES carries approximately double the
-inventory of the leading methods at lower service than SES. (3) Naive, the
+(2) DES and TES carry roughly double the
+inventory of the leading methods (1.7$\times$ and 2.2$\times$, respectively) at lower service than SES. (3) Naive, the
 simplest benchmark, wins 6 Store policies. (4) Seasonal Naive is the
 third-lowest-cost Store inventory input. (5) The LSTM trails a moving average
 on Store inventory cost. (6) Archetype-level WAPE and sMAPE required pooled
