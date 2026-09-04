@@ -44,4 +44,21 @@
 
 ## Remaining issues
 - None blocking. Minor: 8 sub-20pt overfulls (mono paths); appendix tables at scriptsize by design.
-- DOCX conversion: NOT started (awaiting approval, per instructions).
+- DOCX conversion: COMPLETE (see below; was awaiting approval, now approved and done).
+
+## DOCX conversion QA (pandoc 3.10.2 latex->docx + citeproc; Word visual QA)
+- Method: conversion copy in 09_reports/final/build_docx/ (master .tex untouched);
+  pandoc --citeproc --bibliography --resource-path=figures; cross-refs expanded
+  via report.aux numbers (generator 11_src/build_docx.py) because pandoc drops
+  cleveref type prefixes.
+- Output: 09_reports/final/research_report.docx, ~3.2 MB.
+- Structure: 318 paras, 17 tables (9 main + 7 appendix + at-a-glance), 28 images,
+  H1 x20 (8 sections + 12 appendices), H2 x89. Zero LaTeX leakage (cref/label/cite/texttt/$),
+  zero [?], zero '??' refs. All 33 crefs expanded with typed prefixes (verified
+  "truth is in appendix C", "section 4.16 shows", "tables 3 and 4" forms).
+- Numbers: all headline values present (1.316, 152.83, 2,084.49, 2,282.31, 22.65, 25/27, 2382...).
+- Citations: author-date style in DOCX (vs numbered in PDF) — standard for submissions, accepted.
+- Visual QA: exported via Word itself (11_src/word_to_pdf.py -> docx_visual_qa.pdf, 45 pages);
+  sampled title/abstract/models/tables/figures/discussion pages — clean, no overlaps,
+  tables intact, figures + captions render, typed cross-refs read naturally.
+- No research content changed in conversion (mechanical port of approved PDF).

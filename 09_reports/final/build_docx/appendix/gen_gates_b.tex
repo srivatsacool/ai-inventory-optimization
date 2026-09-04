@@ -1,0 +1,29 @@
+{\scriptsize
+\setlength\tabcolsep{4pt}
+\begin{tabular}{lll}
+\toprule Gate & Status & Detail \\
+\midrule
+lstm h28 everywhere & PASS & min=28 max=28 \\
+lstm dates in test window & PASS &  \\
+lstm forecasts finite nonneg & PASS &  \\
+croston row counts & PASS & (('m5', 'SBA'): 112000, ('m5', 'CROSTON'): 1 \\
+croston no dup keys & PASS & dups=0 \\
+croston origins 1 to 8 & PASS & [np.int64(1), np.int64(2), np.int64(3), np.i \\
+croston h28 everywhere & PASS & min=28 max=28 \\
+croston dates in test window & PASS &  \\
+croston forecasts finite nonneg & PASS &  \\
+cross family actuals identical & PASS & max spread=0.000000 \\
+baselines metrics have MASE RMSSE & PASS & ['dataset', 'model', 'MAE', 'RMSE', 'sMAPE', \\
+baselines metrics no unexpected NaN & PASS & Empty DataFrame Columns: [dataset, model] In \\
+exponential smoothing metrics have MASE RMSSE & PASS & ['dataset', 'model', 'MAE', 'RMSE', 'sMAPE', \\
+exponential smoothing metrics no unexpected NaN & PASS & Empty DataFrame Columns: [dataset, model] In \\
+arima metrics have MASE RMSSE & PASS & ['dataset', 'model', 'n', 'MAE', 'RMSE', 'sM \\
+arima metrics no unexpected NaN & PASS & Empty DataFrame Columns: [dataset, model] In \\
+lstm metrics have MASE RMSSE & PASS & ['dataset', 'model', 'MAE', 'RMSE', 'sMAPE', \\
+lstm metrics no unexpected NaN & PASS & Empty DataFrame Columns: [dataset, model] In \\
+croston metrics have MASE RMSSE & PASS & ['dataset', 'model', 'MAE', 'RMSE', 'sMAPE', \\
+croston metrics no unexpected NaN & PASS & Empty DataFrame Columns: [dataset, model] In \\
+inventory covers all models & PASS & missing=set() extra=set() \\
+inventory costs finite & PASS &  \\
+\bottomrule
+\end{tabular}}

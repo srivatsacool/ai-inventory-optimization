@@ -1,0 +1,73 @@
+% Section 7 — Limitations and future research
+\section{Limitations and Future Research}
+\label{sec:limits}
+
+\subsection{Dataset scope}
+\label{sec:l-data}
+Two retail environments, however contrasted, are still two. Both are
+brick-and-mortar-style daily demand; neither covers e-commerce spikes,
+perishables with expiry, promotions-driven regimes, or supply-side
+censoring beyond the lost-sales assumption.
+
+\subsection{Series selection}
+\label{sec:l-series}
+M5 results describe the stratified 500, not the 30,490-series catalog.
+Stratification protects archetype coverage but cannot guarantee catalog-level
+point estimates; scaling the full ladder to the catalog is compute-bound
+(SARIMA alone cost 2,382\,s for 500 series).
+
+\subsection{Forecast horizon}
+\label{sec:l-horizon}
+All conclusions are conditional on $h=28$. Shorter horizons favor naive and
+averaging methods; longer ones may favor trend/seasonal machinery. The
+robustness grid varies policy, not horizon.
+
+\subsection{Inventory-policy scope}
+\label{sec:l-policy}
+One policy family (daily-review order-up-to, lost sales, no capacity, no
+minimum order quantities, no perishability, stationary costs) carries all
+decision conclusions. Backordering regimes, batch constraints, or stochastic
+lead times could reorder the boards --- which is precisely why the
+sensitivity discipline, not any single ranking, is the transferable asset.
+
+\subsection{Feature scope}
+\label{sec:l-features}
+Univariate demand only: no prices, promotions, SNAP/calendar events, or
+cross-series covariates. The LSTM's advantage could widen with features; the
+classical methods' standing could improve with regressors. Both are open
+questions, not assumptions.
+
+\subsection{Archetype limitations}
+\label{sec:smooth-cap}
+The Smooth archetype contains exactly one series ($n=1$). Nothing in this
+report generalizes from it, and any Smooth figure is shown for completeness
+only.
+
+\subsection{SARIMA scope}
+\label{sec:l-sarima}
+SARIMA is Store-only by design; no claim is made about seasonal
+autoregression on intermittent demand. The 100-series subset is exploratory
+history, never the headline.
+
+\subsection{Computational considerations}
+\label{sec:l-compute}
+Per-fit costs ($\approx$0.03\,s ARIMA, $\approx$0.6\,s SARIMA, plus LSTM
+training) bound full-catalog scaling. Per-series ARIMA order search was
+rejected on this ground; future work with larger budgets could revisit it.
+
+\subsection{LLM experiment --- future work only}
+\label{sec:llm-future}
+The research program's final rung --- local LLM forecasting (controlled vs.\
+context-enhanced prompting, Ollama backend, leak-guarded prompt builder in
+\texttt{11\_src/llm\_experiment\_design.md}) --- is designed but deliberately
+unexecuted, held behind a frozen benchmark so the benchmark could not be tuned
+against it. \textbf{No LLM result exists; none is presented, implied, or
+charted anywhere in this report.} Executing that phase against the frozen
+evidence base is the natural next step.
+
+\subsection{Proposed future extensions}
+\label{sec:l-future}
+In priority order: (1) execute the LLM phase; (2) add price/promotion/calendar
+covariates; (3) widen the policy family (backorders, MOQs, perishability);
+(4) vary the horizon (7/56 days); (5) scale M5 toward the full catalog for the
+cheap rungs; (6) test additional retail environments beyond the two studied.

@@ -1,0 +1,42 @@
+% Section 8 — Conclusion
+\section{Conclusion}
+\label{sec:conclusion}
+
+\subsection{Answer to the research question}
+\label{sec:answer}
+Effectiveness does not march in step with sophistication. Moving from
+traditional methods to neural forecasting reliably improves \emph{forecast
+accuracy} --- the LSTM tops both datasets --- but improves \emph{inventory
+outcomes} only conditionally: decisively on sparse intermittent demand, not at
+all on dense demand under the default cost structure. The journey up the model
+ladder buys capability everywhere and value somewhere.
+
+\subsection{Main evidence}
+\label{sec:main-evidence}
+M5: LSTM best forecaster (MASE 1.316) and cheapest stocker (152.83), first in
+25 of 27 policies --- robust. Store: LSTM best forecaster (MASE 0.978) but
+fourth-cheapest stocker (2,247.45) behind Moving Average (2,084.49), SES, and
+Seasonal Naive --- fragile (9/7/6/5 policy split). Ninety-one paired tests
+separate the significant from the important (M5 LSTM--TSB: $p\approx2\times
+10^{-10}$ yet $d_z=-0.031$; Store LSTM--MA: $d_z=-0.29$). H1 confirmed, H2
+confirmed-with-qualification, H3 rejected in monotone form, H4 rejected in
+strong form.
+
+\subsection{Practical takeaway}
+\label{sec:takeaway}
+If your shelves look like M5 --- sparse, intermittent --- invest in the
+learner; the forecast win reaches the cash register and survives policy
+changes. If your shelves look like Store demand --- dense, smooth --- run a
+moving average against anything expensive under your own cost ratio before you
+buy complexity; and whatever wins, re-check it when lead times or penalties
+move. In all cases, demand an inventory-level evaluation before trusting an
+accuracy leaderboard.
+
+\subsection{Final research conclusion}
+\label{sec:final-word}
+Forecasting skill and decision value are related but distinct quantities,
+joined by demand structure and cost asymmetry. This study measured both, mapped
+where they align and where they break, stress-tested the map across 27
+policies, and froze every number for audit. The shelf, not the scoreboard, is
+where forecasting earns its keep --- and now there is a reproducible record of
+exactly when the smartest predictor is, and is not, the cheapest stocker.

@@ -1,0 +1,58 @@
+% Appendices A-D
+\section{Metric Definitions}
+\label{app:metrics}
+Let $y_t$ be actual demand, $\hat y_t$ the forecast, $n$ the test size. MAE
+$=n^{-1}\sum|y_t-\hat y_t|$. With seasonal period $m=7$ and training-only
+seasonal-naive denominator $Q=(T-m)^{-1}\sum_{t=m+1}^{T}|y_t-y_{t-m}|$ over the
+frozen train window, MASE $=(n^{-1}\sum|y_t-\hat y_t|)/Q$
+\citep{hyndman2006}. RMSSE replaces absolute errors with squared ones under
+the root. WAPE (model level) is the mean of per-series ratios
+$\sum|y-\hat y|/\sum|y|$; WAPE (archetype level) is the pooled ratio
+$\sum_{\text{cell}}|y-\hat y|/\sum_{\text{cell}}|y|$, adopted after a
+mean-of-ratios computation exploded to $\sim2\times10^9$ on
+near-zero-test-demand series. sMAPE $=100\,n^{-1}\sum 2|y-\hat y|/(|y|+|\hat
+y|)$, reported with its zero-demand distortions documented. Zero denominators
+stay honest NaNs ($n_{\text{NaN}}=0$ everywhere); no epsilon guards.
+
+\section{Statistical Methodology}
+\label{app:stats}
+For each model pair, paired errors $d_i=|e^A_i|-|e^B_i|$ ($n=112{,}000$):
+Wilcoxon signed-rank (normal approximation) and Diebold--Mariano
+\citep{diebold1995} tests, Holm step-down correction \citep{holm1979} across
+all 91 pairs, 500-replication bootstrap percentile CIs for mean $d$, Cohen
+paired $d_z=\bar d/s_d$, and Wilcoxon rank-biserial $r$. ``A better'' in the
+raw file means $\bar d<0$; the report's verdicts additionally require material
+$|d_z|$ and interval support. The MA--SES M5 disagreement (Wilcoxon
+significant, DM Holm $p=0.113$) is the worked example of restraint.
+
+\section{Model Configurations and Hyperparameters}
+\label{app:configs}
+Moving Average global windows: M5 $w=14$ (validation MAE 0.9206 vs.\ 0.9236
+for $w=7$, 0.9282 for $w=28$), Store $w=7$ (7.4057 vs.\ 7.5113/7.9132); seed
+42. SES $\alpha=0.1$; DES $(\alpha,\beta)=(0.2,0.2)$; additive TES
+$(0.3,0.3,0.3)$; identical grids both datasets
+(\texttt{model\_parameters.json}, \texttt{execution\_metadata.json}).
+ARIMA(1,1,0) both datasets with $>85\%$-zero $\rightarrow$ Naive pre-check.
+SARIMA(1,1,0)(0,1,1)$_7$ Store-only, full500
+(\texttt{run\_log\_full500.json}: 4,000 fits, 2,382\,s, seed 42).
+Croston $\alpha=0.1$, SBA $\alpha=0.5$, TSB $(0.1,0.3)$
+(\texttt{validation\_selection.json}); validation window 2015-11-01..2016-02-29
+(121\,d) throughout. LSTM: global per dataset, lookback 28, history-only
+per-series scaling, chronological last-$k$-window validation, seed 42
+(notebook 08). Inventory: shared module, POLICY\_DEFAULT $L=7$, 95\%,
+$H=1$, $P=5$, $\sigma$ floor 0.1; sensitivity grid $L\in\{3,7,14\}\times$
+service $\{0.90,0.95,0.99\}\times P\in\{3,5,10\}$.
+
+\section{Frozen Experimental Protocol}
+\label{app:protocol}
+Machine truth: \texttt{05\_experiments/config.json} (v1.0, 2026-08-28;
+validation end corrected 2016-02-28 $\rightarrow$ 2016-02-29 by recorded
+decision 2026-09-03). Common window 2013-01-01..2016-05-22 (1,238\,d); train
+2013-01-01..2015-10-31 (1,034); validation 2015-11-01..2016-02-29 (121);
+test 2016-03-01..2016-05-22 (83). Horizon 28, origin spacing 7, 8 origins
+(2016-03-01 through 2016-04-19), expanding window, history strictly before
+origin. {\sloppy M5: 500 stratified series (\texttt{m5\_series\_selection.json});
+Store: all 500. Forecast metrics MAE/RMSE/sMAPE/WAPE/MASE/RMSSE; inventory
+metrics holding/shortage/total cost, service level, average inventory,
+reorder count.\par} Governance: \texttt{00\_project/decisions.md} (519 lines),
+\texttt{00\_project/research\_readiness\_checklist.md} (all PASS).

@@ -1,0 +1,71 @@
+% Appendices E-H (chunked regular tabulars; see generator 11_src/gen_appendix_tables.py)
+\section{Validation and Quality Gates}
+\label{app:gates}
+The independent validator (\texttt{11\_src/validate\_results.py}) enforces 44
+gates: per-family row counts (112,000), zero duplicate keys, origins 1--8,
+horizon 28 everywhere, test-window containment, finite non-negative forecasts,
+cross-family actuals identity (spread 0.0), metric presence with zero
+unexpected NaNs, and SARIMA-full500 presence (112,000 rows). Result: 44 PASS,
+0 FAIL (\texttt{06\_results/validation\_report.json}). Gate log:
+\begin{table}[H]
+\centering
+\caption{Validation gates (part 1).}
+\input{appendix/gen_gates_a}
+\end{table}
+\begin{table}[H]
+\centering
+\caption{Validation gates (part 2).}
+\input{appendix/gen_gates_b}
+\end{table}
+
+\section{Complete Pairwise Statistical Results}
+\label{app:pairs}
+All 91 paired comparisons (55 M5 $+$ 36 Store) with Holm-adjusted Wilcoxon
+$p$, paired $d_z$, and rank-biserial $r$. Generated from
+\texttt{06\_results/statistical\_tests/pairwise\_tests.csv}; bootstrap CIs in
+the source file. Negative mean-$d$ favors A.
+\begin{table}[H]
+\centering
+\caption{Pairwise results: M5 (part 1 of 2).}
+\input{appendix/gen_pairs_m5a}
+\end{table}
+\begin{table}[H]
+\centering
+\caption{Pairwise results: M5 (part 2 of 2).}
+\input{appendix/gen_pairs_m5b}
+\end{table}
+\begin{table}[H]
+\centering
+\caption{Pairwise results: Store (36 pairs).}
+\input{appendix/gen_pairs_store}
+\end{table}
+
+\section{Robustness and Sensitivity Matrices}
+\label{app:sens}
+Winner per policy cell ($H=1$ throughout). M5: LSTM everywhere except two SES
+cells at short lead/high penalty. Store: short leads $\rightarrow$
+Moving Average/DES; mid leads $\rightarrow$ SES/Moving Average; long leads
+$\rightarrow$ Naive/SES; LSTM wins no Store cell --- the fragility verdict in
+tabular form. Full 540-row costs:
+\texttt{06\_results/sensitivity/sensitivity\_grid.csv}.
+\begin{table}[H]
+\centering
+\caption{Policy winners: M5 (27 cells).}
+\input{appendix/gen_winners_m5}
+\end{table}
+\begin{table}[H]
+\centering
+\caption{Policy winners: Store (27 cells).}
+\input{appendix/gen_winners_store}
+\end{table}
+
+\section{Convergence Details}
+\label{app:conv}
+Per-fit logs: \texttt{convergence\_details\_all.csv} (ARIMA both datasets),
+\texttt{convergence\_details\_full500.csv} (4,000 SARIMA fits, all
+\texttt{fit\_ok}), \texttt{run\_log\_full500.json} (seed 42, 2,382\,s, 0
+skips, 0 failures), \texttt{sarima\_feasibility.json} (16-fit probe,
+0.62\,s/fit mean). M5 ARIMA's 906 pre-check fallbacks concentrate in Highly
+Intermittent series per the per-fit archetype field. Scope column
+(\texttt{subset100\_exploratory} vs.\ \texttt{full500\_primary}) separates the
+exploratory subset from the primary run everywhere.
