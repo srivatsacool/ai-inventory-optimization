@@ -1,0 +1,55 @@
+% Appendices I-L
+\section{Reproducibility and Provenance}
+\label{app:repro}
+Repository root: \texttt{AI-INVENTORY-OPTIMIZATION}, branches main.
+Evidence-freeze commits: 53c8343 (final results), 7da7c45 (generators),
+edb42ad (tracked asset package). Seeds: 42 in config, notebooks, torch/numpy,
+SARIMA scripts, validator sampling. Manifests: smoothing execution metadata
+(121\,d), Croston validation selection (121\,d $+$ seed), SARIMA run log,
+feasibility probe, validation report (0 FAIL), pre-hardening backup manifest.
+Pre-hardening originals: \texttt{06\_results/\_pre\_hardening\_backup/} (10
+metric files $+$ subset-based forecasts) --- historical, never report sources.
+Stale/self-excluded: \texttt{06\_results/inventory/phase1\_*.csv} (legacy
+names), \texttt{12\_notebooks\_pdf/} (pre-rerun export), subset-SARIMA Store
+figure panels. Report inputs: \texttt{09\_reports/final/} (README, number
+sheet, audits, traceability, staged figures, rebuild generators
+\texttt{11\_src/build\_number\_sheet.py},
+\texttt{11\_src/rebuild\_report\_figures.py},
+\texttt{11\_src/build\_figure\_audit.py},
+\texttt{11\_src/gen\_appendix\_tables.py}).
+
+\section{Notebook Index}
+\label{app:notebooks}
+00 research map (framing); 01 environment/reproducibility; 02a M5
+acquisition/audit; 02b Store acquisition/audit; 03 EDA (M5 deep dive); 04
+series selection/experimental design (frozen numbers); 05a time-series
+components (teaching); 05b baselines (re-executed 2026-09-03 15:35); 06
+smoothing (15:36--37); 06c Croston (15:42); 07 ARIMA/SARIMA (15:55 $+$ full500
+script 22:49); 08 LSTM (hardened rerun 18:00). Full purpose/figure/table/section
+mapping: \texttt{traceability/notebook\_traceability.csv}.
+
+\section{Figure Index}
+\label{app:figures}
+Main text FIG-01..FIG-28 in narrative order: intermittency quadrants, weekly
+seasonality, ACF/PACF, M5/Store representative series, Store diversity, M5
+representativeness, model ladder, inventory connection, combined MASE board,
+full-ladder MAE, full-ladder WAPE, Croston MAE, archetype MAE, archetype WAPE,
+ARIMA-by-archetype, M5 cost-by-archetype, Store MAE (full500), Croston
+intuition, LSTM cell, total cost, service level, cost split, inventory levels,
+forecast-vs-inventory scatter, M5 rank heatmap, Store rank heatmap,
+winner-share. Full 97-figure audit with classes, placement, and captions:
+\texttt{data/figure\_audit.csv}. Rejected: the three subset-SARIMA Store
+panels. Teaching figures beyond the four main-text selections are
+appendix-only or omitted.
+
+\section{Supplementary Tables}
+\label{app:supp}
+Table audit (T-01..T-09 $+$ appendix tables with exact sources):
+\texttt{data/table\_audit.csv}. Number sheet (188 rows, programmatic):
+\texttt{data/final\_number\_sheet.csv}. Claim-to-source matrix (14 claims):
+\texttt{traceability/claim\_traceability.csv}. Key lookup values: M5 MASE
+board LSTM 1.316 / MA 1.346 / SES 1.351 / TSB 1.369; Store MASE LSTM 0.978 /
+SARIMA-full500 1.055 / SNaive 1.183; M5 costs LSTM 152.83 through TES 346.68;
+Store costs MA 2,084.49 through TES 3,419.88; policy wins M5 LSTM 25/SES 2,
+Store MA 9/SES 7/Naive 6/DES 5; convergence M5 ARIMA 22.65\% pre-check,
+Store 0\%, SARIMA-full500 4,000/4,000.

@@ -1,0 +1,71 @@
+% Front matter: abstract, keywords, RQ, hypotheses, at-a-glance. Written LAST per plan.
+
+\begin{abstract}
+Retailers live or die by two questions: how much will customers want tomorrow,
+and how much stock should sit on the shelf waiting for them? Most forecasting
+research answers only the first question. This study answers both. We compare
+twelve forecasting approaches --- from the humble moving average to a global
+long short-term memory (LSTM) neural network --- on two retail demand
+environments: 500 intermittent-demand series from the Walmart M5 competition
+data and all 500 series of a dense store-item demand dataset. Every model faces
+identical conditions: the same calendar window, the same 28-day horizon over
+eight rolling origins, the same error metrics, and --- crucially --- the same
+downstream inventory policy, so that forecasts are finally judged by the costs
+they create, not just the errors they contain.
+
+The headline result is a tale of two datasets. On sparse M5 demand, the LSTM is
+the best forecaster (mean absolute scaled error, MASE, of 1.316) and also the
+cheapest inventory driver (cost 152.83), holding first place across 25 of 27
+tested inventory policies: a robust conclusion. On dense store demand, the LSTM
+is again the best forecaster (MASE 0.978) but only the fourth-cheapest inventory
+driver (cost 2,247.45), beaten by a simple moving average (2,084.49); leadership
+there changes hands with the policy (moving average 9, SES 7, naive 6, DES 5 of
+27 policies): a fragile, policy-sensitive conclusion. In plain terms, forecast
+accuracy does not automatically buy better shelf decisions --- sometimes the
+smartest predictor is not the cheapest stocker. Ninety-one paired statistical
+comparisons (Holm-corrected) separate real differences from noise, and a
+27-policy sensitivity grid separates conclusions an executive can bank on from
+ones that flip when costs or lead times move. All data, code, and validation
+gates are frozen and traceable; the large-language-model phase of this research
+program is designed but deliberately unexecuted and appears here only as future
+work.
+\end{abstract}
+
+\noindent\textbf{Keywords:} retail demand forecasting; inventory optimization;
+intermittent demand; M5 competition; LSTM; Croston method; forecast evaluation;
+MASE; order-up-to policy; sensitivity analysis.
+
+\subsection*{Research question}
+How does the effectiveness of AI-based inventory optimization change as we move
+from traditional forecasting models toward neural-network approaches, when
+effectiveness is measured at the level of inventory outcomes rather than
+forecast errors alone?
+
+\subsection*{Hypotheses (neutral framing)}
+\begin{description}[leftmargin=!,labelwidth=2.2cm]
+\item[H1.] Forecast accuracy differs significantly across model generations on
+the same series and horizons.
+\item[H2.] Forecast-accuracy differences translate into measurable
+inventory-outcome differences under a common policy.
+\item[H3.] Increasing model sophistication yields monotonically improving
+inventory outcomes. (The claim under test --- rejection is a publishable
+finding, not a failure.)
+\item[H4.] Observed patterns are consistent across the two retail environments.
+\end{description}
+
+\subsection*{At a glance}
+\begin{center}
+\begin{tabular}{p{3.2cm}p{5.4cm}p{5.4cm}}
+\toprule
+ & \textbf{M5 (sparse, intermittent)} & \textbf{Store (dense, smooth)} \\
+\midrule
+Best forecaster & LSTM (MASE 1.316) & LSTM (MASE 0.978) \\
+Best inventory driver & LSTM (cost 152.83) & Moving average (cost 2,084.49) \\
+Verdict & \textbf{Robust:} LSTM first in 25/27 policies & \textbf{Fragile:} lead shared 9 / 7 / 6 / 5 \\
+Lesson & Best forecast $\rightarrow$ best decision & Best forecast $\not\rightarrow$ best decision \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{center}
+\emph{Forecast accuracy does not necessarily imply inventory decision superiority.}
+\end{center}

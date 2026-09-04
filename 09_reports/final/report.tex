@@ -1,0 +1,60 @@
+% Master source of the final public research report.
+% Compile: pdflatex report && bibtex report && pdflatex report && pdflatex report
+% Evidence freeze: HEAD edb42ad. Number sheet: data/final_number_sheet.csv.
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\sisetup{detect-all,round-mode=places,round-precision=2,table-format=7.2}
+\usepackage{graphicx}
+\usepackage[table,dvipsnames]{xcolor}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf,margin=10pt}
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=*,itemsep=2pt}
+\setlist[enumerate]{leftmargin=*,itemsep=2pt}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=MidnightBlue,citecolor=MidnightBlue,urlcolor=MidnightBlue}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage[numbers,sort&compress]{natbib}
+
+\graphicspath{{figures/}}
+\setlength{\parskip}{4pt}
+\setlength{\parindent}{0pt}
+
+\title{From Forecasts to Shelf Decisions:\\Evaluating AI-Based Inventory Optimization from Traditional Methods to Neural Forecasting}
+\author{AI Inventory Optimization Research Project\\\small Evidence-freeze commit \texttt{edb42ad} \enspace\textbar\enspace Final public report}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\input{sections/front}
+\tableofcontents
+\newpage
+
+\input{sections/sec1}
+\input{sections/sec2}
+\input{sections/sec3}
+\input{sections/sec4}
+\input{sections/sec5}
+\input{sections/sec6}
+\input{sections/sec7}
+\input{sections/sec8}
+
+\appendix
+\input{appendix/appA_D}
+\input{appendix/appE_H}
+\input{appendix/appI_L}
+
+\bibliographystyle{plainnat}
+\bibliography{bibliography/refs}
+
+\end{document}
