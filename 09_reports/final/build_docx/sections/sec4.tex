@@ -4,42 +4,40 @@
 
 \subsection{Overall forecasting results}
 \label{sec:overall-fc}
-\Cref{fig:mase-board} tells the whole forecasting story in one panel. On M5, a
-tight lead cluster --- LSTM (1.316), Moving Average (1.346), SES (1.351), TSB
-(1.369) --- separates from ARIMA (1.505), the Naive family ($\approx$1.53),
-and the smoothing failures DES (1.987) and TES (2.599). On Store demand the
-spread is wider and more decisive: LSTM (0.978) stands alone below 1.0,
-followed by SARIMA-full500 (1.055), Seasonal Naive (1.183), and Moving Average
-(1.191), with Naive (1.971) and TES (2.111) far behind. Two remarks before the
-detail: MASE below 1.0 means beating a seasonal-naive-on-training benchmark,
-which only Store LSTM achieves; and the M5 lead cluster is so tight that
-statistical machinery is needed to rank inside it honestly
-(section 4.5).
+\Cref{fig:mase-board} summarizes forecasting performance on one scale. On M5,
+a lead cluster (LSTM at 1.316, Moving Average at 1.346, SES at 1.351, TSB at
+1.369) separates from ARIMA (1.505), the Naive pair (approximately 1.53), and
+the smoothing failures DES (1.987) and TES (2.599). On Store demand the spread
+is wider: LSTM (0.978) is the only model below 1.0, followed by
+SARIMA-full500 (1.055), Seasonal Naive (1.183), and Moving Average (1.191),
+with Naive (1.971) and TES (2.111) at the upper end. MASE below 1.0 indicates
+improvement over the training-period seasonal-naive benchmark, which only
+Store LSTM achieves. The tight M5 cluster requires formal testing to rank
+internally (section 4.5).
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{F-NEW-01-combined-mase-leaderboard.png}
-\caption{Forecast leaderboard (MASE, $m=7$, lower is better). M5: tight LSTM /
-MA / SES / TSB cluster. Store: LSTM alone sub-1.0, SARIMA-full500 second.
-Deterministic rebuild from final files (F-NEW-01).}
+\caption{Forecast leaderboard (MASE, $m=7$, lower is better). M5 shows a close
+LSTM, Moving Average, SES, and TSB cluster; Store shows LSTM below 1.0 with
+SARIMA-full500 second. Deterministic rebuild from final files (F-NEW-01).}
 \label{fig:mase-board}
 \end{figure}
 
 \subsection{M5 forecasting results}
 \label{sec:m5-fc}
-\Cref{tab:m5fc} is the M5 board. LSTM leads on both MAE (0.989) and MASE
-(1.316); Moving Average (0.9997 / 1.346) and SES (0.998 / 1.351) are within a
-whisker, and TSB (1.010 / 1.369) completes the lead pack. SBA and Croston sit
-just behind; ARIMA (1.132 / 1.505) trails the pack without disgrace; the Naive
-pair ($\approx$1.19) anchors the middle; DES (1.514) and TES (1.922) fail
-outright. Note the RMSE column's warning: SES's RMSE (2.00) exceeds
-Croston's (2.11)? No --- read carefully: SES 2.00 vs.\ Croston 2.11 vs.\ LSTM
-1.95 vs.\ Moving Average 1.30. Moving Average owns the best RMSE by far,
-because averaging suppresses the large errors RMSE punishes quadratically ---
-yet it loses MAE/MASE to LSTM. Different losses already crown different
-champions before inventory enters the picture. sMAPE ($\approx$117--161\%)
-confirms that percentage errors on near-zero demand are huge for everyone;
-WAPE (per-series mean) ranks LSTM (0.77) first, matching the MAE story.
+\Cref{tab:m5fc} reports the M5 board. LSTM leads on MAE (0.989) and MASE
+(1.316); Moving Average (0.9997 / 1.346) and SES (0.998 / 1.351) are close
+behind, with TSB (1.010 / 1.369) completing the lead group. SBA and Croston
+follow; ARIMA (1.132 / 1.505) trails without reaching Naive-pair levels;
+Naive (1.184) and Seasonal Naive (1.187) anchor the middle; DES (1.514) and
+TES (1.922) record the highest errors. The RMSE column adds information:
+Moving Average records the lowest RMSE by a wide margin (1.30), since
+averaging suppresses the large errors RMSE penalizes quadratically, yet it
+does not lead on MAE or MASE. Metric choice already affects rankings before
+inventory enters the analysis. sMAPE (approximately 117--161\%) confirms that
+percentage errors on near-zero demand are large for all methods; per-series
+mean WAPE ranks LSTM (0.77) first, consistent with MAE.
 
 \begin{table}[H]
 \centering
@@ -63,37 +61,38 @@ TES & 1.92 & 4.39 & 2.60 & 1.85 & 1.50 & 116.0 \\
 \bottomrule
 \end{tabular}
 \end{table}
+\noindent\textit{Note:} the M5 ARIMA row is a hybrid evaluation combining 3,094 fitted ARIMA forecasts with 906 Naive fallback forecasts triggered by the documented greater-than-85\%-zero-demand pre-check (see section 4.13).
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.95\textwidth]{01_comparison_MAE.png}
 \caption{Full-ladder MAE comparison including LSTM (hardened run). The M5
-cluster at $\approx$1.0 and Store's LSTM-led spread are both visible here;
-exact boards are tables 3 and 4. Source: notebook 08.}
+cluster near 1.0 and Store's LSTM-led spread are both visible; exact boards
+are tables 3 and 4. Source: notebook 08.}
 \label{fig:mae-ladder}
 \end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.95\textwidth]{01_comparison_WAPE.png}
-\caption{Full-ladder WAPE comparison. Note Store WAPE values are an order of
-magnitude smaller (dense demand inflates the denominator) --- cross-dataset
+\caption{Full-ladder WAPE comparison. Store WAPE levels are an order of
+magnitude smaller (dense demand raises the denominator), so cross-dataset
 WAPE levels are not comparable; ranks are. Source: notebook 08.}
 \label{fig:wape-ladder}
 \end{figure}
 
 \subsection{Store forecasting results}
 \label{sec:store-fc}
-\Cref{tab:storefc} is the Store board, and it is less ambiguous. LSTM wins
-every column that matters (MAE 7.87, MASE 0.978, RMSSE 0.971, WAPE 0.138);
-SARIMA-full500 is a clear second (8.45 / 1.055 / 1.040 / 0.148);
-Seasonal Naive (9.45) and Moving Average (9.71) form the next tier; SES (9.92)
-follows; ARIMA (11.90), DES (13.63), Naive (16.29), TES (16.87) trail. Two
-points deserve emphasis. First, seasonal structure pays on Store demand:
-SARIMA's seasonal moving-average term cuts MAE from ARIMA's 11.90 to 8.45, and
-even the humble Seasonal Naive beats SES. Second, the full500 SARIMA (MAE
+\Cref{tab:storefc} reports the Store board, where ordering is less ambiguous.
+LSTM leads on MAE (7.87), MASE (0.978), RMSSE (0.971), and WAPE (0.138);
+SARIMA-full500 is second (8.45 / 1.055 / 1.040 / 0.148); Seasonal Naive
+(9.45) and Moving Average (9.71) form the next tier, followed by SES (9.92);
+ARIMA (11.90), DES (13.63), Naive (16.29), and TES (16.87) trail. Two
+observations matter. First, seasonal structure is informative on Store
+demand: SARIMA's seasonal moving-average term reduces MAE from ARIMA's 11.90
+to 8.45, and Seasonal Naive outperforms SES. Second, full500 SARIMA (MAE
 8.45, MASE 1.055) differs modestly from the exploratory 100-series subset
-(8.31 / $\approx$1.069): a population shift, documented, not hidden --- and a
-reminder that subset results must never headline.
+(8.31 and approximately 1.069): a population effect, documented rather than
+adjusted, which is why subset results do not headline.
 
 \begin{table}[H]
 \centering
@@ -119,24 +118,25 @@ TES & 16.87 & 23.39 & 2.11 & 2.16 & 0.29 & 33.7 \\
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{F-NEW-02-store-mae-full500-sarima.png}
-\caption{Store MAE with full-population SARIMA (8.45, $n=112{,}000$). This
-replaces the stale subset-based panels. Deterministic rebuild (F-NEW-02).}
+\caption{Store MAE with full-population SARIMA (8.45, $n=112{,}000$),
+replacing the subset-based panels. Deterministic rebuild (F-NEW-02).}
 \label{fig:store-mae}
 \end{figure}
 
 \subsection{Statistical significance vs.\ practical significance}
 \label{sec:sig-vs-pract}
-With 112,000 paired errors per comparison, a microscope finds everything
-significant. \Cref{tab:spotlight} therefore reports effect sizes alongside
-$p$-values, and the lesson is taught by two rows. M5 LSTM vs.\ TSB:
-$d_z \approx -0.031$, Holm-adjusted $p \approx 2\times10^{-10}$ ---
-astronomically significant, practically tiny: the models differ by two
-hundredths of an MAE unit. Store LSTM vs.\ Moving Average: $d_z \approx -0.29$,
-$p \approx 0$ --- significant \emph{and} material, nearly two MAE units apart.
-Same ``significant'' label, tenfold difference in meaning. A $p$-value answers
-``are they different?''; only $d_z$, the rank-biserial $r$, and the bootstrap
-interval answer ``should anyone care?'' \Cref{app:stats} formalizes the
-machinery; the full 91-pair table is appendix F.
+With 112,000 paired errors per comparison, tests have high power to detect
+small differences, so table 5 reports effect sizes alongside
+$p$-values. Two rows illustrate why. M5 LSTM versus TSB: $d_z \approx -0.031$
+with Holm-adjusted $p \approx 2\times10^{-10}$. The difference is significant
+in the formal sense and negligible in absolute terms (two hundredths of an
+MAE unit). Store LSTM versus Moving Average: $d_z \approx -0.29$ with
+$p \approx 0$, a difference that is both significant and material at nearly
+two MAE units. The same significance label covers a tenfold difference in
+magnitude. A $p$-value addresses whether models differ; $d_z$, the
+rank-biserial $r$, and the bootstrap interval address whether the difference
+matters. The full 91-pair table is appendix F; formal methodology is in
+appendix B.
 
 \begin{table}[H]
 \centering
@@ -156,43 +156,43 @@ Store & LSTM vs.\ SES & $-0.336$ & $\approx$0 & $-0.311$ & $[-2.085,-2.014]$ \\
 \bottomrule
 \end{tabular}
 \end{table}
-\noindent\textsuperscript{*}Wilcoxon significant but Diebold--Mariano $p=0.056$
-(raw) / $0.113$ (Holm): the two tests disagree on MA vs.\ SES --- correctly, the
-pair is declared indistinguishable in practice.
+\noindent\textsuperscript{*}Wilcoxon significant but Diebold-Mariano $p=0.056$
+(raw) and $0.113$ (Holm): the tests disagree on MA versus SES, and the pair
+is reported as indistinguishable for practical purposes.
 
 \subsection{Pairwise statistical comparisons}
 \label{sec:spotlight}
-Across all 91 pairs, three patterns stand out. First, M5's lead cluster is
-genuinely ordered (LSTM $>$ MA $\approx$ SES $>$ TSB, all pairwise significant)
-but the gaps are operationally negligible --- the entire cluster spans 0.05
-MASE. Second, Store gaps are an order of magnitude larger and every LSTM
-pairing is both significant and material. Third, the MA--SES pair on M5 is the
-honest null of the study: Wilcoxon says significant, Diebold--Mariano says not
-($p=0.113$ Holm), the interval straddles zero --- two excellent simple methods
-with nothing between them. That disagreement is a feature: it shows the
-machinery can say ``too close to call'' even at $n=112{,}000$.
+Three patterns hold across all 91 pairs. First, the M5 lead cluster is
+genuinely ordered (LSTM ahead of Moving Average, SES, and TSB, each pairwise
+significant) but the gaps are operationally negligible; the cluster spans
+0.05 MASE. Second, Store gaps are an order of magnitude larger, and every
+LSTM pairing is significant and material. Third, MA versus SES on M5 is the
+study's reference null case: significant by Wilcoxon, not significant by
+Diebold-Mariano (Holm $p=0.113$), with an interval spanning zero. Two strong
+simple methods with nothing substantive between them, recorded as such even
+at $n=112{,}000$.
 
 \subsection{Inventory evaluation framework}
 \label{sec:inv-frame}
-Recall the shared engine from section 2.10: every forecast drives the
-same daily-review order-up-to policy ($L=7$, 95\% target, $H=1$, $P=5$), lost
-sales, cost $=$ holding $+$ stockout. Rankings below are total cost under that
-policy; service level, average inventory, and reorder frequency diagnose
-\emph{how} each cost was earned. Sensitivity to the policy itself is not a
-footnote --- it is sections 4.16 and 4.17.
+The shared engine from section 2.10 supplies the decision treatment:
+every forecast drives the same daily-review order-up-to policy ($L=7$, 95\%
+target, $H=1$, $P=5$) with lost sales, where total cost equals holding plus
+stockout cost. Rankings below are total cost under that policy; service
+level, average inventory, and reorder frequency record how each cost was
+composed. Sensitivity of rankings to the policy itself is tested separately
+in sections 4.16 and 4.17.
 
 \subsection{M5 inventory results}
 \label{sec:m5-inv}
-\Cref{tab:m5inv} ranks M5 decision quality. LSTM wins (152.83), daylight ahead
-of Moving Average (158.83) and SES (159.31); SBA (160.66), TSB (165.13), and
+\Cref{tab:m5inv} ranks M5 decision cost. LSTM is lowest (152.83), followed by
+Moving Average (158.83) and SES (159.31); SBA (160.66), TSB (165.13), and
 Croston (174.81) follow; Seasonal Naive (192.55), ARIMA (194.60), and Naive
-(200.75) form the expensive middle; DES (268.80) and TES (346.67) are in a
-different, worse league. The cost anatomy matters: SBA's cheap holding (128.39)
-is eaten by stockouts (32.27); SES pairs the lowest stockout bill (21.00) with
-the second-best service level (93.6\%); Croston buys the best service (93.9\%)
-at middling cost. LSTM's margin ($\approx$6 over MA) is ten times its MAE
-margin --- the policy amplifies small accuracy edges into real money when
-demand is sparse.
+(200.75) form the middle group; DES (268.80) and TES (346.67) record
+substantially higher costs. Cost composition varies instructively: SBA's low
+holding cost (128.39) is offset by stockouts (32.27); SES records the second-lowest
+stockout component (21.00, after Croston at 20.28) with the third-highest service level (93.6\%), after Croston and Seasonal Naive;
+Croston records the highest service level (93.9\%) at intermediate cost.
+LSTM's cost margin over Moving Average (approximately 6 units) indicates that the inventory policy can amplify relatively small forecast differences into larger cost differences when demand is sparse.
 
 \begin{table}[H]
 \centering
@@ -219,22 +219,22 @@ TES & 346.67 & 304.28 & 42.40 & 88.0 & 10.87 \\
 
 \subsection{Store inventory results}
 \label{sec:store-inv}
-\Cref{tab:storeinv} ranks Store decision quality --- and upends the forecast
-board. Moving Average wins (2,084.50); SES (2,113.83) and Seasonal Naive
-(2,128.15) complete a podium with no LSTM on it; LSTM (2,247.45) sits fourth,
-SARIMA (2,282.31) fifth, ARIMA (2,320.87) sixth; Naive (2,700.37), DES
-(2,779.64), TES (3,419.88) trail. The anatomy flips versus M5: Naive holds the
-least stock (28.38) but pays a catastrophic stockout bill (1,905.74) at 43.2\%
-service; DES/TES drown in inventory (76.07 / 88.77) yet still pay mid-range
-stockouts --- overstocking without protection. Moving Average's virtue is
-balance: moderate stock (45.58), the lowest stockout frequency (10.72), and no
-extreme in either column. \textbf{This ranking is policy-contingent} ---
-section 4.16 shows the crown moves --- and must never be quoted without
-that caveat.
+\Cref{tab:storeinv} ranks Store decision cost and differs from the forecast
+board. Moving Average is lowest (2,084.50); SES (2,113.83) and Seasonal Naive
+(2,128.15) complete the lowest three with no LSTM among them; LSTM (2,247.46)
+ranks fourth, SARIMA (2,282.31) fifth, ARIMA (2,320.87) sixth; Naive
+(2,700.37), DES (2,779.64), and TES (3,419.88) follow. Cost composition
+reverses the M5 pattern: Naive holds the least stock (28.38) but incurs the
+highest stockout component (1,905.74) at 43.2\% service; DES and TES carry
+high inventory (76.07 and 88.77) while still incurring mid-range stockouts.
+Moving Average is comparatively balanced: moderate stock (45.58), a low
+stockout frequency (10.72, fourth-lowest), and no extreme in either column. This ranking
+holds under the default policy and is conditional on it; section 4.16
+tests its stability and must be read alongside any citation of this table.
 
 \begin{table}[H]
 \centering
-\caption{Store inventory ranking under the shared policy. Bold: best. Caution: fragile across policies (section 4.16).}
+\caption{Store inventory ranking under the shared policy. Bold: best. Stability across policies is tested in section 4.16.}
 \label{tab:storeinv}
 \begin{tabular}{lccccc}
 \toprule
@@ -243,7 +243,7 @@ Model & Total & Holding & Stockout & Service (\%) & Avg.\ inv.\ \\
 \textbf{Moving Average} & \textbf{2,084.50} & 1,276.10 & 808.40 & 61.7 & 45.58 \\
 SES & 2,113.83 & 1,155.60 & 958.24 & 56.1 & 41.27 \\
 Seasonal Naive & 2,128.15 & 1,281.05 & 847.10 & 62.0 & 45.75 \\
-LSTM & 2,247.45 & 1,157.70 & 1,089.76 & 53.1 & 41.35 \\
+LSTM & 2,247.46 & 1,157.70 & 1,089.76 & 53.1 & 41.35 \\
 SARIMA & 2,282.31 & 1,307.78 & 974.53 & 59.2 & 46.71 \\
 ARIMA & 2,320.87 & 1,076.48 & 1,244.40 & 52.4 & 38.45 \\
 Naive & 2,700.37 & 794.63 & 1,905.74 & 43.2 & 28.38 \\
@@ -257,205 +257,210 @@ TES & 3,419.88 & 2,485.65 & 934.23 & 69.1 & 88.77 \\
 \centering
 \includegraphics[width=0.95\textwidth]{01_total_cost_comparison.png}
 \caption{Total inventory cost by model and dataset under the shared policy.
-M5: LSTM leads. Store: Moving Average leads, LSTM fourth. Source: unified
+M5: LSTM lowest. Store: Moving Average lowest, LSTM fourth. Source: unified
 simulation (notebook inventory layer).}
 \label{fig:totalcost}
 \end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.95\textwidth]{02_service_level_comparison.png}
-\caption{Service level by model: Croston buys M5's best service (93.9\%);
-Store service sits far lower for all models (43--74\%), reflecting denser,
+\caption{Service level by model: Croston highest on M5 (93.9\%); all models
+record lower service on Store demand (43--74\%), reflecting denser,
 higher-volume exposure. Same source as figure 15.}
 \label{fig:service}
 \end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.95\textwidth]{03_cost_breakdown_stacked.png}
-\caption{Holding vs.\ stockout composition. Naive's Store bar is almost entirely
-stockout; DES/TES bars are holding-heavy everywhere --- two different ways to
-waste money. Same source as figure 15.}
+\caption{Holding versus stockout composition. Naive's Store cost is almost
+entirely stockout; DES and TES costs are holding-heavy on both datasets.
+Same source as figure 15.}
 \label{fig:costsplit}
 \end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.95\textwidth]{04_inventory_levels_by_model.png}
-\caption{Average inventory and reorder frequency: DES/TES carry roughly double
-the stock of the leaders. Same source as figure 15.}
+\caption{Average inventory and reorder frequency: DES and TES carry roughly
+double the stock of the leading methods. Same source as figure 15.}
 \label{fig:invlevels}
 \end{figure}
 
 \subsection{Forecast accuracy vs.\ inventory decision quality}
 \label{sec:paradox}
-\Cref{fig:scatter} is the report's center of gravity. Each point is a model:
-horizontal position is forecast error, vertical is inventory cost. On M5 the
-cloud slopes sensibly --- better forecasts, cheaper shelves, LSTM at the good
-corner. On Store the relationship breaks: LSTM sits leftmost (best error) but
-mid-pack vertically, while Moving Average, SES, and Seasonal Naive sit to its
-right and \emph{below} it. The mechanism is cost asymmetry: the policy charges
-under-prediction (lost sales at $P=5$) five times harder than over-prediction
-(holding at $H=1$), and safety stock scales with each model's own error
-volatility. A slightly biased-toward-averaging forecaster that rarely
-under-shoots can out-stock a sharper but occasionally short one. Accuracy is a
-symmetric ruler; the shelf is not symmetric.
+\Cref{fig:scatter} plots forecast error against inventory cost per model. On
+M5 the association runs in the expected direction: lower error accompanies
+lower cost, with LSTM at the favorable corner. On Store demand it does not:
+LSTM is leftmost (lowest error) but mid-ranked vertically, while Moving
+Average, SES, and Seasonal Naive sit to its right and below it. The
+mechanism is cost asymmetry. The policy charges under-prediction (lost sales
+at $P=5$) five times the rate of over-prediction (holding at $H=1$), and
+safety stock scales with each model's own error volatility. A forecaster that
+averages toward the middle and rarely under-shoots can therefore record lower
+cost than a sharper forecaster with occasional shortfalls. Accuracy is a
+symmetric criterion; the inventory objective is not.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{05_forecast_vs_inventory_scatter.png}
-\caption{Forecast error vs.\ inventory cost per model. M5: aligned (better
-forecasts, cheaper shelves). Store: broken (LSTM leftmost but mid-cost).
-Same source as figure 15.}
+\caption{Forecast error versus inventory cost per model. M5: lower error
+accompanies lower cost. Store: LSTM records the lowest error but
+mid-ranking cost. Same source as figure 15.}
 \label{fig:scatter}
 \end{figure}
 
 \subsection{Croston-family findings}
 \label{sec:croston-find}
-The specialists justify their rung. On M5, TSB is the family's best forecaster
-(MAE 1.010, MASE 1.369 --- fourth overall), SBA second (1.066), Croston third
-(1.082): adaptivity beats bias-correction beats the original on accuracy. On
-cost, the order reverses its head: SBA (160.66) $<$ TSB (165.13) $<$ Croston
-(174.81). SBA's debiasing trims exactly the over-forecast that holding cost
-punishes, while TSB's responsiveness costs a little extra stock. Two lessons:
-even inside one family, accuracy rank $\neq$ cost rank; and the family as a
-whole validates the design choice --- on intermittent demand, models that
-refuse to fit zeros belong in the comparison.
+The specialists support their inclusion. On M5, TSB records the family's
+lowest forecast error (MAE 1.010, MASE 1.369; fourth overall), followed by SBA
+(1.066) and Croston (1.082): adaptivity ranks ahead of bias correction, which
+ranks ahead of the original, on accuracy. On cost the order differs: SBA
+(160.66), TSB (165.13), Croston (174.81). SBA's debiasing trims the
+over-forecast that holding cost penalizes, while TSB's responsiveness carries
+somewhat higher stock. Within a single family, then, accuracy and cost
+already rank methods differently. Substantively, the family validates the
+design choice: on intermittent demand, methods that decline to fit zeros
+belong in the comparison.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{01_croston_intuition.png}
-\caption{Croston intuition: split sparse demand into \emph{how much when it
-happens} and \emph{how long between happenings}, smooth each separately.
+\caption{Croston intuition: sparse demand is separated into nonzero demand
+size and interval between nonzero demands, each smoothed independently.
 Teaching figure from notebook 06c.}
 \label{fig:croston-intuition}
 \end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.95\textwidth]{01_comparison_MAE_with_croston.png}
-\caption{M5 MAE with the Croston family: TSB leads the family at 1.010.
+\caption{M5 MAE with the Croston family: TSB lowest in the family at 1.010.
 Source: notebook 06c.}
 \label{fig:croston-mae}
 \end{figure}
 
 \subsection{Demand-archetype findings}
 \label{sec:arch-find}
-\Cref{fig:arch-mae,fig:arch-wape} break M5 accuracy by demand shape (pooled
-WAPE/sMAPE; per-series ratios would let one near-zero series dominate).
-LSTM wins Highly Intermittent (MAE 0.416) and Intermittent (0.989) outright.
-In Variable demand the top three --- SES (1.799), Moving Average (1.804), LSTM
-(1.806) --- sit within 0.007 of each other: a genuine three-way tie, honestly
-reported as such. SES takes Moderate (2.634). TES is worst in \emph{every}
-archetype, including the smooth ones its trend-seasonality machinery should
-favor. The Smooth column (single series; LSTM nominally best at forecast MAE
-2.358) is anecdotal and carries no conclusion --- it is shown for completeness,
-not evidence. Inventory-by-archetype (figure 25) splits the crown:
-LSTM is cheapest in Highly Intermittent (64.52) and Intermittent (147.94),
-Moving Average takes Variable (285.93), and SBA takes Moderate (383.59) ---
-the intermittent-demand specialist winning exactly where intermittency bites
-least smoothly. Sparse structure rewards the learner; but no single method
-owns every demand shape, which is itself a finding.
+\Cref{fig:arch-mae,fig:arch-wape} disaggregate M5 accuracy by demand shape
+using pooled WAPE/sMAPE, since per-series ratios would let near-zero series
+dominate the mean. LSTM records the lowest MAE in Highly Intermittent (0.416)
+and Intermittent (0.989) demand. In Variable demand the top three (SES at
+1.799, Moving Average at 1.804, LSTM at 1.806) lie within 0.007 of each
+other, a difference without practical content. SES records the lowest MAE in
+Moderate demand (2.634). TES records the highest error in every archetype,
+including the smoother shapes its trend-seasonality specification might be
+expected to fit. The Smooth column rests on a single series (LSTM nominally
+lowest at forecast MAE 2.358) and is shown for completeness without
+supporting conclusions. Inventory cost by archetype (figure 25)
+distributes the lowest cost across methods: LSTM in Highly Intermittent
+(64.52) and Intermittent (147.94), Moving Average in Variable (285.93), and
+SBA in Moderate (383.59). No single method records the lowest cost in every
+demand shape.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.95\textwidth]{mae_by_archetype.png}
-\caption{M5 MAE by archetype: LSTM leads sparse shapes; Variable is a
-three-way tie; TES trails everywhere. Pooled-metric figure (notebook
+\caption{M5 MAE by archetype: LSTM lowest on sparse shapes; Variable is
+effectively tied; TES highest throughout. Pooled-metric figure (notebook
 archetype layer).}
 \label{fig:arch-mae}
 \end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.95\textwidth]{wape_by_archetype.png}
-\caption{M5 pooled WAPE by archetype: the ratio-of-sums construction keeps
-near-zero series from exploding the mean. Same source as
+\caption{M5 pooled WAPE by archetype: the ratio-of-sums construction prevents
+near-zero series from dominating the mean. Same source as
 figure 22.}
 \label{fig:arch-wape}
 \end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{03_arima_by_archetype_m5.png}
-\caption{ARIMA error by M5 archetype: degradation concentrates where demand is
-sparsest --- the visual companion to the 22.65\% fallback rate. Source:
-notebook 07.}
+\caption{ARIMA error by M5 archetype: error increases where demand is
+sparsest, consistent with the 22.65\% fallback rate. Source: notebook 07.}
 \label{fig:arima-arch}
 \end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{06_cost_by_archetype_m5.png}
-\caption{M5 inventory cost by archetype: LSTM cheapest on sparse shapes;
-Moving Average takes Variable, SBA takes Moderate. Same source as figure 15.}
+\caption{M5 inventory cost by archetype: lowest cost by method and shape
+(LSTM on sparse shapes; Moving Average on Variable; SBA on Moderate). Same
+source as figure 15.}
 \label{fig:arch-cost}
 \end{figure}
 
 \subsection{LSTM findings}
 \label{sec:lstm-find}
-The neural rung half-validates its thesis. As a forecaster the global LSTM is
-untouchable: best MAE and MASE on both datasets, best archetype MAE on sparse
-shapes, sub-1.0 MASE on Store (the only model to beat the training benchmark).
-As an inventory driver it splits: best on M5 (152.83, robust at 25/27) but
-fourth on Store (2,247.45), where its sharper forecasts carry an
-under-prediction profile the $P/H=5$ cost ratio punishes. The hardening note
-matters here: the LSTM was revalidated on chronological per-series splits
-after overlapping-window leakage was found in the first validation design, so
-these numbers reflect genuine generalization, not validation peeking.
-Bottom line for practitioners: buy the LSTM for forecast quality with
-confidence; for shelf decisions, check your cost ratio first.
+The neural rung partly confirms its premise. As a forecaster, the global LSTM
+records the lowest MAE and MASE on both datasets, the lowest archetype MAE on
+sparse shapes, and the only sub-1.0 MASE on Store demand. As an inventory
+input it is split: lowest cost on M5 (152.83, first in 25 of 27 policies) but
+fourth on Store (2,247.46), where its sharper forecasts include
+under-predictions that the $P/H=5$ cost ratio penalizes heavily. On
+provenance: the LSTM was revalidated on chronological per-series splits after
+overlapping-window leakage was identified in the first validation design, so
+these figures reflect generalization under the corrected protocol rather than
+validation leakage. For practice, the implication is conditional: forecast
+quality is established across both environments, while inventory value should
+be assessed against the applicable cost ratio.
 
 \subsection{ARIMA findings}
 \label{sec:arima-find}
-ARIMA is the fragile linear middle. On dense Store data it fits cleanly
-(4,000/4,000, zero fallbacks) yet finishes sixth on both boards (MASE 1.452;
-cost 2,320.87) --- linear memory adds little where weekly structure dominates.
-On sparse M5 data, 906 of 4,000 fits (22.65\%) trip the $>85\%$-zero pre-check
-and defer to Naive, concentrated in Highly Intermittent series
-(figure 24); crucially, there are zero optimizer failures ---
-every non-skipped fit converges. The pre-check is a designed guardrail, not a
-crash log, and its asymmetry (22.65\% vs.\ 0\%) is itself a measurement of how
-demand structure dictates statistical feasibility.
+ARIMA occupies an unstable middle position. On dense Store data it estimates
+cleanly (4,000 of 4,000 fits, zero fallbacks) yet ranks sixth on both boards
+(MASE 1.452; cost 2,320.87), indicating that linear memory contributes little
+where weekly structure dominates. On sparse M5 data, 906 of 4,000 estimations
+(22.65\%) trigger the greater-than-85\%-zero pre-check and defer to Naive,
+concentrated in Highly Intermittent series (figure 24); there are
+zero optimizer failures, so every non-skipped estimation converges. The
+pre-check is a specified guardrail rather than an estimation failure, and its
+asymmetry (22.65\% against 0\%) measures how demand structure conditions
+statistical feasibility.
 
 \subsection{SARIMA full-population findings}
 \label{sec:sarima-find}
-The seasonal challenger delivers. All 4,000 Store fits succeed with zero
-fallbacks in 2,382\,s ($\approx$0.6\,s/fit): seasonal differencing at $m=7$ is
-feasible at full population, not just on the exploratory 100-series subset
-(MAE 8.31) that preceded it. Final full500 accuracy (MAE 8.45, MASE 1.055,
-RMSSE 1.040) shifts slightly from the subset --- a population effect, logged
-openly. Decision quality (2,282.31, fifth) lags accuracy (second): strong
-weekly tracking still under-protects against stockouts at $P/H=5$. SARIMA was
-never run on M5, deliberately: seasonal differencing of mostly-zero series is
-methodologically unsound, and the Croston rung already covers that territory.
+The seasonal challenger performs as specified. All 4,000 Store estimations
+succeed with zero fallbacks in 2,382 seconds (approximately 0.6 seconds per
+fit): seasonal differencing at $m=7$ is feasible at full population, not only
+on the exploratory 100-series subset (MAE 8.31) that preceded it. Final
+full-500 accuracy (MAE 8.45, MASE 1.055, RMSSE 1.040) differs slightly from
+the subset, a population effect recorded without adjustment. Decision quality
+(2,282.31, fifth) lags accuracy (second): improved weekly tracking still
+under-protects against stockouts at $P/H=5$. SARIMA was not estimated on M5,
+deliberately: seasonal differencing of predominantly zero series lacks
+methodological justification, and the Croston rung already addresses that
+setting.
 
 \subsection{Model complexity findings}
 \label{sec:complexity}
-H3 in monotone form is rejected. The most complex classical models are the
-worst performers (TES last everywhere; DES an overstocking liability), the
-mid-complexity linear model sits mid-pack, and only the neural model converts
-complexity into accuracy --- and even then into inventory value on just one of
-two datasets. Meanwhile the simplest rung (Moving Average, SES) wins or
-near-wins three of the four boards. Complexity buys \emph{capability}
-(LSTM's cross-series learning is real), not \emph{value}: value is decided by
-the interaction of capability with demand structure and cost asymmetry.
+H3 in monotone form is rejected. The most complex classical specifications
+record the weakest results (TES last on all boards; DES an overstocking
+liability), the mid-complexity linear model sits mid-table, and only the
+neural model converts complexity into accuracy, and then into inventory value
+on one of two datasets. The simplest rung (Moving Average, SES) wins or
+nearly wins three of the four boards. Complexity purchases capability (the
+LSTM's cross-series learning is measurable), but value is determined jointly
+with demand structure and cost asymmetry.
 
 \subsection{Robustness across inventory policies}
 \label{sec:robust}
-\Cref{tab:robust} with figures 26 and 27 is the trust map.
-M5: LSTM first in 25 of 27 policies --- robust. Its only defeats, both to SES,
-sit in one corner: short lead time ($L=3$) with high stockout penalty
-($P=10$), where SES's conservative level-tracking wastes less on emergency
-cover. Store: fragile --- Moving Average 9, SES 7, Naive 6, DES 5. No model
-reaches even half the grid; the ``winner'' is a property of the policy, not
-the model. This asymmetry is the report's second major device after the
-forecast--decision gap: bank M5-LSTM; rent Store-MA.
+\Cref{tab:robust} with figures 26 and 27 summarizes
+stability. M5: LSTM ranks first in 25 of 27 policies. Its two defeats, both
+to SES, occur in one region: short lead time ($L=3$) with high stockout
+penalty ($P=10$), where SES's conservative level-tracking incurs less
+emergency cover. Store: Moving Average 9, SES 7, Naive 6, DES 5. No model
+reaches half the grid; the lowest-cost model is a function of the policy, not
+a property of any model. M5 conclusions therefore support deployment under
+stated conditions; Store conclusions support policy-conditional selection.
 
 \begin{table}[H]
 \centering
-\caption{Robustness verdict: policy wins across the 27-policy grid. M5 robust; Store fragile.}
+\caption{Robustness summary: policy wins across the 27-policy grid. M5 stable; Store policy-sensitive.}
 \label{tab:robust}
 \begin{tabular}{lll}
 \toprule
-Dataset & Wins (of 27) & Verdict \\
+Dataset & Wins (of 27) & Assessment \\
 \midrule
-M5 & LSTM 25, SES 2 (both at $L{=}3$, $P{=}10$) & \textbf{Robust} \\
-Store & MA 9, SES 7, Naive 6, DES 5 & \textbf{Fragile / policy-sensitive} \\
+M5 & LSTM 25, SES 2 (both at $L{=}3$, $P{=}10$) & \textbf{Stable} \\
+Store & MA 9, SES 7, Naive 6, DES 5 & \textbf{Policy-sensitive} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -463,47 +468,47 @@ Store & MA 9, SES 7, Naive 6, DES 5 & \textbf{Fragile / policy-sensitive} \\
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{rank_heatmap_m5.png}
-\caption{M5 rank heatmap across 27 policies: an unbroken LSTM band with two
-SES cells in the short-lead/high-penalty corner. Source: sensitivity layer.}
+\caption{M5 rank heatmap across 27 policies: LSTM first throughout except two
+SES cells in the short-lead, high-penalty corner. Source: sensitivity layer.}
 \label{fig:heat-m5}
 \end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{rank_heatmap_store_item_demand.png}
-\caption{Store rank heatmap: leadership fragments across four models as the
-policy moves. Same source as figure 26.}
+\caption{Store rank heatmap: lowest cost moves across four models as the
+policy varies. Same source as figure 26.}
 \label{fig:heat-store}
 \end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{F-NEW-03-sensitivity-winner-share.png}
-\caption{Winner shares across the 27-policy grid: M5 concentration vs.\ Store
-fragmentation. Deterministic rebuild (F-NEW-03).}
+\caption{Winner shares across the 27-policy grid: M5 concentration against
+Store fragmentation. Deterministic rebuild (F-NEW-03).}
 \label{fig:winnershare}
 \end{figure}
 
 \subsection{Sensitivity analysis}
 \label{sec:sens}
-The grid's interior tells managers \emph{when} leadership changes. Longer lead
-times amplify safety-stock differences (volatility-driven models suffer);
-higher $P/H$ punishes under-predictors (Naive collapses everywhere except
-short-lead Store corners where its leanness pays); higher service targets
-reward conservative levels (SES gains). {\sloppy Per-archetype M5 costing (55 rows,
-\texttt{sensitivity\_by\_archetype\_m5.csv}) confirms the structure story:
-sparse archetypes magnify every policy effect.\par} Full matrices are
-appendix G.
+The grid interior indicates where leadership changes. Longer lead times
+amplify safety-stock differences, disadvantaging volatility-sensitive models;
+higher $P/H$ penalizes under-predictors (Naive deteriorates except in
+short-lead Store cells where its leanness helps); higher service targets
+favor conservative levels (SES gains). Per-archetype M5 costing (55 rows,
+\texttt{sensitivity\_by\_archetype\_m5.csv}) confirms the structural pattern:
+sparse archetypes magnify each policy effect. Full matrices are appendix G.
 
 \subsection{Convergence and feasibility}
 \label{sec:conv}
-\Cref{tab:conv} accounts for every fit. M5 ARIMA: 3,094 fits, 906 pre-check
-skips (22.65\%), 0 optimizer failures. Store ARIMA: 4,000/4,000. SARIMA
-subset (exploratory): 800/800. SARIMA full500 (primary): 4,000/4,000 in
-2,382\,s. The feasibility gradient --- dense fits always, sparse fits
-sometimes --- is a result about the world, not about the software.
+\Cref{tab:conv} accounts for every estimation. M5 ARIMA: 3,094 fits, 906
+pre-check deferrals (22.65\%), 0 optimizer failures. Store ARIMA: 4,000 of
+4,000. SARIMA subset (exploratory): 800 of 800. SARIMA full500 (primary):
+4,000 of 4,000 in 2,382 seconds. The feasibility gradient (dense settings
+estimate throughout; sparse settings estimate selectively) describes the
+data, not the software.
 
 \begin{table}[H]
 \centering
-\caption{Convergence accounting. Pre-check skips are by-design guards, not failures.}
+\caption{Convergence accounting. Pre-check deferrals are specified guards, not failures.}
 \label{tab:conv}
 \begin{tabular}{llrrrr}
 \toprule
@@ -519,26 +524,29 @@ Store full500 (primary) & SARIMA & 4,000 & 0 & 0 & 0.00 \\
 
 \subsection{Negative and surprising findings}
 \label{sec:negative}
-Stated plainly, because nulls are findings: (1) TES is worst on all four
-boards and every archetype. (2) DES buys double inventory for worse service
-than SES. (3) Naive --- the dumbest method --- wins 6 Store policies. (4)
-Seasonal Naive is Store's inventory bronze medalist. (5) The LSTM loses Store
-inventory to a moving average. (6) An intermediate WAPE computation exploded to
-$\sim 2\times 10^9$ on near-zero-test-demand series before pooling fixed it
---- a live demonstration of why metric construction needs the same skepticism
-as modeling. (7) MA vs.\ SES on M5 is statistically indistinguishable in
-practice despite $n=112{,}000$.
+Null and negative results are reported explicitly. (1) TES ranks last on all
+(2) DES and TES carry roughly double the
+inventory of the leading methods (1.7$\times$ and 2.2$\times$, respectively) at lower service than SES. (3) Naive, the
+simplest benchmark, wins 6 Store policies. (4) Seasonal Naive is the
+third-lowest-cost Store inventory input. (5) The LSTM trails a moving average
+on Store inventory cost. (6) Archetype-level WAPE and sMAPE required pooled
+construction because per-series averaging is unstable on near-zero-demand
+series; see section 2.8 for the correction and its rationale. (7) MA
+versus SES on M5 is indistinguishable for practical purposes despite
+$n=112{,}000$ paired errors (subject to the dependence qualification in
+section 2.9).
 
 \subsection{Consolidated findings and hypothesis verdicts}
 \label{sec:verdicts}
-\textbf{H1 (accuracy differs): confirmed} --- 91 paired tests, nearly all
-significant with Holm control. \textbf{H2 (accuracy moves inventory):
-confirmed with the central qualification} --- it moves inventory, but not
-monotonically and not always in the same direction (Store paradox).
-\textbf{H3 (monotone sophistication): rejected} --- TES/DES/ARIMA lose to
-simpler methods; only LSTM complexity pays, and only partially. \textbf{H4
-(cross-dataset consistency): rejected in its strong form} --- forecasting
-leadership transfers (LSTM both), decision leadership does not (LSTM vs.\ MA),
-and robustness transfers not at all (robust vs.\ fragile). The qualified
-verdict is the contribution: \emph{what} transfers (forecast skill) and
-\emph{what does not} (decision superiority, policy-stability) are now mapped.
+\textbf{H1 (accuracy differs): confirmed;} 91 paired tests, nearly all
+significant under Holm control. \textbf{H2 (accuracy moves inventory):
+confirmed with qualification;} accuracy moves inventory cost but not
+monotonically and not in the same direction on both datasets. \textbf{H3
+(monotone sophistication): rejected;} TES, DES, and ARIMA trail simpler
+methods, and only LSTM complexity pays, partially. \textbf{H4
+(cross-dataset consistency): rejected in strong form;} forecasting leadership
+transfers (LSTM on both), decision leadership does not (LSTM against Moving
+Average), and policy-stability does not transfer at all (stable against
+fragmented). The qualified verdict is the contribution: which properties
+transfer (forecast skill) and which do not (decision superiority,
+policy-stability) are now mapped.
