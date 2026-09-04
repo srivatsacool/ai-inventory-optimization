@@ -1,0 +1,98 @@
+figure_id,path,class,use,section,caption
+FIG-01,07_figures/eda/02_intermittency_quadrants.png,A,main,2.5,ADI/CV2 intermittency quadrants motivating archetypes and the Croston rung.
+FIG-02,07_figures/eda/03_weekly_seasonality.png,A,main,2.8,Weekly retail seasonality (justifies seasonal period m=7 everywhere).
+FIG-03,07_figures/eda/04_acf_pacf.png,A,main,2.7,Autocorrelation structure (ARIMA premise).
+FIG-04,07_figures/eda/m5/04_representative_series.png,A,main,1.7,Representative sparse M5 series (zero-inflation visible).
+FIG-05,07_figures/eda/store_item_demand/08_representative_series.png,A,main,1.7,Representative dense Store series (sparse-vs-dense contrast).
+FIG-06,07_figures/eda/store_item_demand/11_series_diversity_panel.png,A,main,1.7,Store demand diversity panel.
+FIG-07,07_figures/experimental_design/01_m5_representativeness.png,A,main,2.4,Stratified M5 500-series selection representativeness.
+FIG-08,07_figures/model_explanations/time_series_components/11_forecasting_model_ladder.png,D,main,2.6/3,"Model ladder schematic (teaching figure, main-text allowed)."
+FIG-09,07_figures/model_explanations/time_series_components/12_inventory_connection.png,D,main,2.10,"Forecast-to-inventory connection schematic (teaching, main-text allowed)."
+FIG-10,09_reports/final/figures_new/F-NEW-01-combined-mase-leaderboard.png,A,main,4.1,Combined M5 vs Store MASE leaderboard (SARIMA full-500; deterministic rebuild).
+FIG-11,07_figures/lstm/01_comparison_MAE.png,A,main,4.2/4.3,Full-ladder MAE comparison incl. LSTM (hardened chronological split).
+FIG-12,07_figures/lstm/01_comparison_WAPE.png,A,main,4.2/4.3,Full-ladder WAPE comparison incl. LSTM.
+FIG-13,07_figures/croston/01_comparison_MAE_with_croston.png,A,main,4.10,M5 MAE with Croston/SBA/TSB family (TSB best of family).
+FIG-14,07_figures/archetype_comparison/mae_by_archetype.png,A,main,4.11,M5 MAE by demand archetype (pooled WAPE/sMAPE companion).
+FIG-15,07_figures/archetype_comparison/wape_by_archetype.png,A,main,4.11,M5 pooled WAPE by demand archetype (mean-of-ratios fix applied).
+FIG-16,07_figures/arima/03_arima_by_archetype_m5.png,A,main,4.11/4.13,M5 ARIMA error by archetype (fallback concentration context).
+FIG-17,07_figures/inventory/06_cost_by_archetype_m5.png,A,main,4.11/4.17,M5 inventory cost by demand archetype and model.
+FIG-18,09_reports/final/figures_new/F-NEW-02-store-mae-full500-sarima.png,A,main,4.3/4.14,Store MAE incl. full-500 SARIMA 8.45 (replaces stale subset panels; deterministic rebuild).
+FIG-19,07_figures/model_explanations/croston/01_croston_intuition.png,D,main,4.10,"Croston two-sequence intuition (teaching, main-text allowed)."
+FIG-20,07_figures/model_explanations/lstm/02_lstm_cell_gates.png,D,main,3,"LSTM cell and gates (teaching, main-text allowed)."
+FIG-21,07_figures/inventory/01_total_cost_comparison.png,A,main,4.7/4.8,"Total inventory cost by model and dataset under the shared order-up-to policy (L7, 95%, H1, P5)."
+FIG-22,07_figures/inventory/02_service_level_comparison.png,A,main,4.7/4.8,Cycle service level by model and dataset under the shared policy.
+FIG-23,07_figures/inventory/03_cost_breakdown_stacked.png,A,main,4.7/4.8,Holding vs stockout cost composition by model and dataset.
+FIG-24,07_figures/inventory/04_inventory_levels_by_model.png,A,main,4.7/4.8,"Average inventory and reorder frequency by model (overstocking diagnosis, esp. DES/TES)."
+FIG-25,07_figures/inventory/05_forecast_vs_inventory_scatter.png,A,main,4.9,Forecast error vs inventory cost: the Store paradox (best forecaster not cheapest).
+FIG-26,07_figures/sensitivity/rank_heatmap_m5.png,A,main,4.16,M5 model ranks across the 27-policy sensitivity grid (LSTM robust).
+FIG-27,07_figures/sensitivity/rank_heatmap_store_item_demand.png,A,main,4.16,Store model ranks across the 27-policy grid (fragile leadership).
+FIG-28,09_reports/final/figures_new/F-NEW-03-sensitivity-winner-share.png,A,main,4.16,Sensitivity winner-share bars (M5 LSTM 25/27; Store split; deterministic rebuild).
+E-pool,07_figures/arima/01_comparison_MAE.png,E,reject,4.13/4.14,STALE Store panel (subset SARIMA 8.31); M5 panel numerically valid but superseded by F-NEW-02/L-01. DO NOT USE.
+E-pool,07_figures/arima/01_comparison_WAPE.png,E,reject,4.13/4.14,STALE Store panel (subset SARIMA); DO NOT USE.
+E-pool,07_figures/arima/02_wape_by_origin.png,E,reject,4.13/4.14,STALE Store SARIMA origin curves (subset); DO NOT USE.
+C-pool,07_figures/baselines/01_naive_vs_actual_representative.png,C,appendix,3,Naive mechanism illustration on representative series.
+C-pool,07_figures/baselines/02_snaive_vs_actual_representative.png,C,appendix,3,Seasonal Naive (corrected repeat-last-7) illustration.
+C-pool,07_figures/baselines/03_ma_vs_actual_representative.png,C,appendix,3,Moving Average smoothing illustration.
+C-pool,07_figures/baselines/04_model_comparison_metrics.png,C,appendix,4.2/4.3,Baseline metric comparison (values verified vs hardened files).
+C-pool,07_figures/baselines/05_error_distributions.png,C,appendix,4.2/4.3,Baseline error distributions.
+C-pool,07_figures/baselines/06_performance_by_origin.png,C,appendix,4.2/4.3,Baseline stability across origins.
+C-pool,07_figures/baselines/07_performance_by_archetype_m5.png,C,appendix,4.11,Baseline error by M5 archetype.
+C-pool,07_figures/croston/01_comparison_WAPE_with_croston.png,C,appendix,4.10,M5 WAPE with Croston family.
+C-pool,07_figures/croston/02_mae_by_origin.png,C,appendix,4.10,Croston-family MAE stability across origins.
+C-pool,07_figures/eda/01_demand_distribution.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/eda/05_trend.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/eda/m5/01_demand_distribution.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/eda/m5/02_aggregate_trend.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/eda/m5/03_store_item_heatmap.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/eda/m5/05_series_variability.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/eda/m5/06_weekly_monthly_heatmap.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/eda/store_item_demand/01_overall_demand_distribution.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/eda/store_item_demand/02_weekly_seasonality.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/eda/store_item_demand/03_monthly_annual_patterns.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/eda/store_item_demand/04_aggregate_trend.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/eda/store_item_demand/05_store_comparison.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/eda/store_item_demand/06_item_comparison.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/eda/store_item_demand/07_store_item_heatmap.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/eda/store_item_demand/09_series_variability.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/eda/store_item_demand/10_weekly_monthly_heatmap.png,C,appendix,2,EDA supporting panel (overflow from main-text EDA selection).
+C-pool,07_figures/exponential_smoothing/01_model_comparison.png,C,appendix,4.2/4.3,SES/DES/TES comparison (values verified vs hardened files; SES best).
+C-pool,07_figures/exponential_smoothing/02_error_distributions.png,C,appendix,4.2/4.3,Smoothing error distributions.
+C-pool,07_figures/exponential_smoothing/03_performance_by_origin.png,C,appendix,4.2/4.3,Smoothing stability across origins.
+C-pool,07_figures/exponential_smoothing/04_m5_performance_by_archetype.png,C,appendix,4.11,Smoothing error by M5 archetype.
+C-pool,07_figures/exponential_smoothing/05_representative_forecasts.png,C,appendix,3,Representative SES/DES/TES forecast trajectories.
+C-pool,07_figures/lstm/02_wape_by_origin.png,C,appendix,4.2/4.3,WAPE stability across the 8 rolling origins (LSTM ladder).
+C-pool,07_figures/lstm/03_lstm_by_archetype_m5.png,C,appendix,4.11/4.12,LSTM error by M5 archetype.
+D-pool,07_figures/model_explanations/arima/01_ar_vs_ma.png,D,appendix,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+D-pool,07_figures/model_explanations/arima/02_differencing.png,D,appendix,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+D-pool,07_figures/model_explanations/arima/03_stationarity_example.png,D,appendix,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+D-pool,07_figures/model_explanations/arima/04_acf_pacf_store_item.png,D,appendix,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+D-pool,07_figures/model_explanations/arima/04b_acf_pacf_m5.png,D,appendix,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+D-pool,07_figures/model_explanations/arima/05_arima_architecture.png,D,appendix,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+D-pool,07_figures/model_explanations/arima/06_hand_worked_arima.png,D,appendix,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/baselines/01_naive_mechanism.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/baselines/02_seasonal_naive_mapping.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/baselines/03_moving_average_smoothing.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/baselines/04_baseline_conceptual_comparison.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+D-pool,07_figures/model_explanations/croston/02_croston_sba_tsb.png,D,appendix,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/exponential_smoothing/01_ses_alpha_sensitivity.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/exponential_smoothing/02_des_level_trend.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/exponential_smoothing/03_tes_weekly_component.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/lstm/01_lookback_window.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/lstm/03_toy_direct_forecast.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/01_time_series_basics.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/02_level.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/03_trend.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/04_seasonality.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/04b_weekly_profile.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/05_noise.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/06_components_combined.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/07_additive_vs_multiplicative.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/08_m5_series_1.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/08_m5_series_2.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/08_m5_series_3.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/08_m5_series_4.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/09_store_item_high_demand.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/09_store_item_low_demand.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/09_store_item_median_demand.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/10_dataset_structure_comparison.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."
+F-pool,07_figures/model_explanations/time_series_components/13_hand_worked_example.png,F,omit,3/App,"Teaching figure; appendix-only or omitted (main-text quota: ladder, inventory link, Croston intuition, LSTM cell)."

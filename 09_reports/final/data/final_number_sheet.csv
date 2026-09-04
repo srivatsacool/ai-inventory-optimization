@@ -1,0 +1,189 @@
+metric_id,dataset,model,metric,value,units,population,source_file,source_column,status,report_section,destination,notes
+FC-m5-Moving Average-MAE,m5,Moving Average,MAE,0.999699,units,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-03,
+FC-m5-Moving Average-RMSE,m5,Moving Average,RMSE,1.304474,units,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-03,
+FC-m5-Moving Average-sMAPE,m5,Moving Average,sMAPE,143.50393,pct,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-03,
+FC-m5-Moving Average-WAPE,m5,Moving Average,WAPE,1.310062,ratio,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-03,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-m5-Naive-MAE,m5,Naive,MAE,1.184384,units,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-03,
+FC-m5-Naive-RMSE,m5,Naive,RMSE,1.59832,units,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-03,
+FC-m5-Naive-sMAPE,m5,Naive,sMAPE,160.885135,pct,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-03,
+FC-m5-Naive-WAPE,m5,Naive,WAPE,1.434002,ratio,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-03,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-m5-Seasonal Naive-MAE,m5,Seasonal Naive,MAE,1.186634,units,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-03,
+FC-m5-Seasonal Naive-RMSE,m5,Seasonal Naive,RMSE,1.673649,units,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-03,
+FC-m5-Seasonal Naive-sMAPE,m5,Seasonal Naive,sMAPE,152.72203,pct,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-03,
+FC-m5-Seasonal Naive-WAPE,m5,Seasonal Naive,WAPE,1.4544,ratio,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-03,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-store_item_demand-Moving Average-MAE,store_item_demand,Moving Average,MAE,9.707639,units,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-Moving Average-RMSE,store_item_demand,Moving Average,RMSE,12.075176,units,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-Moving Average-sMAPE,store_item_demand,Moving Average,sMAPE,18.32205,pct,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-Moving Average-WAPE,store_item_demand,Moving Average,WAPE,0.179592,ratio,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-04,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-store_item_demand-Naive-MAE,store_item_demand,Naive,MAE,16.291205,units,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-Naive-RMSE,store_item_demand,Naive,RMSE,18.947481,units,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-Naive-sMAPE,store_item_demand,Naive,sMAPE,33.15894,pct,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-Naive-WAPE,store_item_demand,Naive,WAPE,0.293128,ratio,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-04,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-store_item_demand-Seasonal Naive-MAE,store_item_demand,Seasonal Naive,MAE,9.451241,units,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-Seasonal Naive-RMSE,store_item_demand,Seasonal Naive,RMSE,11.641758,units,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-Seasonal Naive-sMAPE,store_item_demand,Seasonal Naive,sMAPE,19.153065,pct,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-Seasonal Naive-WAPE,store_item_demand,Seasonal Naive,WAPE,0.181715,ratio,500sx8ox28d=112000,06_results/baselines/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-04,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-m5-DES-MAE,m5,DES,MAE,1.513942,units,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-03,
+FC-m5-DES-RMSE,m5,DES,RMSE,3.434341,units,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-03,
+FC-m5-DES-sMAPE,m5,DES,sMAPE,117.830198,pct,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-03,
+FC-m5-DES-WAPE,m5,DES,WAPE,1.182809,ratio,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-03,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-m5-SES-MAE,m5,SES,MAE,0.998209,units,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-03,
+FC-m5-SES-RMSE,m5,SES,RMSE,2.002687,units,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-03,
+FC-m5-SES-sMAPE,m5,SES,sMAPE,145.082274,pct,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-03,
+FC-m5-SES-WAPE,m5,SES,WAPE,0.779878,ratio,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-03,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-m5-TES-MAE,m5,TES,MAE,1.922228,units,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-03,
+FC-m5-TES-RMSE,m5,TES,RMSE,4.39358,units,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-03,
+FC-m5-TES-sMAPE,m5,TES,sMAPE,116.03499,pct,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-03,
+FC-m5-TES-WAPE,m5,TES,WAPE,1.501793,ratio,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-03,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-store_item_demand-DES-MAE,store_item_demand,DES,MAE,13.630705,units,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-DES-RMSE,store_item_demand,DES,RMSE,18.442798,units,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-DES-sMAPE,store_item_demand,DES,sMAPE,25.402823,pct,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-DES-WAPE,store_item_demand,DES,WAPE,0.238318,ratio,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-04,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-store_item_demand-SES-MAE,store_item_demand,SES,MAE,9.921573,units,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-SES-RMSE,store_item_demand,SES,RMSE,13.412207,units,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-SES-sMAPE,store_item_demand,SES,sMAPE,18.619943,pct,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-SES-WAPE,store_item_demand,SES,WAPE,0.173468,ratio,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-04,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-store_item_demand-TES-MAE,store_item_demand,TES,MAE,16.868476,units,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-TES-RMSE,store_item_demand,TES,RMSE,23.387767,units,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-TES-sMAPE,store_item_demand,TES,sMAPE,33.662701,pct,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-TES-WAPE,store_item_demand,TES,WAPE,0.294927,ratio,500sx8ox28d=112000,06_results/exponential_smoothing/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-04,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-m5-TSB-MAE,m5,TSB,MAE,1.009739,units,500sx8ox28d=112000,06_results/croston/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-03,
+FC-m5-TSB-RMSE,m5,TSB,RMSE,2.014889,units,500sx8ox28d=112000,06_results/croston/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-03,
+FC-m5-TSB-sMAPE,m5,TSB,sMAPE,146.311894,pct,500sx8ox28d=112000,06_results/croston/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-03,
+FC-m5-TSB-WAPE,m5,TSB,WAPE,0.788886,ratio,500sx8ox28d=112000,06_results/croston/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-03,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-m5-SBA-MAE,m5,SBA,MAE,1.066475,units,500sx8ox28d=112000,06_results/croston/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-03,
+FC-m5-SBA-RMSE,m5,SBA,RMSE,2.121016,units,500sx8ox28d=112000,06_results/croston/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-03,
+FC-m5-SBA-sMAPE,m5,SBA,sMAPE,148.076389,pct,500sx8ox28d=112000,06_results/croston/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-03,
+FC-m5-SBA-WAPE,m5,SBA,WAPE,0.833213,ratio,500sx8ox28d=112000,06_results/croston/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-03,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-m5-CROSTON-MAE,m5,CROSTON,MAE,1.082101,units,500sx8ox28d=112000,06_results/croston/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-03,
+FC-m5-CROSTON-RMSE,m5,CROSTON,RMSE,2.107916,units,500sx8ox28d=112000,06_results/croston/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-03,
+FC-m5-CROSTON-sMAPE,m5,CROSTON,sMAPE,143.916349,pct,500sx8ox28d=112000,06_results/croston/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-03,
+FC-m5-CROSTON-WAPE,m5,CROSTON,WAPE,0.845421,ratio,500sx8ox28d=112000,06_results/croston/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-03,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-m5-ARIMA-MAE,m5,ARIMA,MAE,1.132419,units,500sx8ox28d=112000,06_results/arima/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-03,
+FC-m5-ARIMA-RMSE,m5,ARIMA,RMSE,2.316913,units,500sx8ox28d=112000,06_results/arima/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-03,
+FC-m5-ARIMA-sMAPE,m5,ARIMA,sMAPE,139.016953,pct,500sx8ox28d=112000,06_results/arima/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-03,
+FC-m5-ARIMA-WAPE,m5,ARIMA,WAPE,0.884733,ratio,500sx8ox28d=112000,06_results/arima/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-03,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-store_item_demand-SARIMA-MAE,store_item_demand,SARIMA,MAE,8.446401,units,500sx8ox28d=112000,06_results/arima/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-SARIMA-RMSE,store_item_demand,SARIMA,RMSE,11.094367,units,500sx8ox28d=112000,06_results/arima/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-SARIMA-sMAPE,store_item_demand,SARIMA,sMAPE,16.854782,pct,500sx8ox28d=112000,06_results/arima/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-SARIMA-WAPE,store_item_demand,SARIMA,WAPE,0.147676,ratio,500sx8ox28d=112000,06_results/arima/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-04,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-store_item_demand-ARIMA-MAE,store_item_demand,ARIMA,MAE,11.899612,units,500sx8ox28d=112000,06_results/arima/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-ARIMA-RMSE,store_item_demand,ARIMA,RMSE,15.981305,units,500sx8ox28d=112000,06_results/arima/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-ARIMA-sMAPE,store_item_demand,ARIMA,sMAPE,22.981537,pct,500sx8ox28d=112000,06_results/arima/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-ARIMA-WAPE,store_item_demand,ARIMA,WAPE,0.208052,ratio,500sx8ox28d=112000,06_results/arima/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-04,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-m5-LSTM-MAE,m5,LSTM,MAE,0.989163,units,500sx8ox28d=112000,06_results/lstm/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-03,
+FC-m5-LSTM-RMSE,m5,LSTM,RMSE,1.949084,units,500sx8ox28d=112000,06_results/lstm/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-03,
+FC-m5-LSTM-sMAPE,m5,LSTM,sMAPE,144.242078,pct,500sx8ox28d=112000,06_results/lstm/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-03,
+FC-m5-LSTM-WAPE,m5,LSTM,WAPE,0.77281,ratio,500sx8ox28d=112000,06_results/lstm/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-03,"per-series-mean; WAPE honest-NaN, no epsilon"
+FC-store_item_demand-LSTM-MAE,store_item_demand,LSTM,MAE,7.873164,units,500sx8ox28d=112000,06_results/lstm/metrics_by_model.csv,MAE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-LSTM-RMSE,store_item_demand,LSTM,RMSE,10.418785,units,500sx8ox28d=112000,06_results/lstm/metrics_by_model.csv,RMSE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-LSTM-sMAPE,store_item_demand,LSTM,sMAPE,15.287919,pct,500sx8ox28d=112000,06_results/lstm/metrics_by_model.csv,sMAPE,FINAL,4.2/4.3,T-04,
+FC-store_item_demand-LSTM-WAPE,store_item_demand,LSTM,WAPE,0.137654,ratio,500sx8ox28d=112000,06_results/lstm/metrics_by_model.csv,WAPE,FINAL,4.2/4.3,T-04,"per-series-mean; WAPE honest-NaN, no epsilon"
+SF-m5-Moving Average-MASE,m5,Moving Average,MASE,1.345821,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-Moving Average-RMSSE,m5,Moving Average,RMSSE,0.86461,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-Naive-MASE,m5,Naive,MASE,1.54634,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-Naive-RMSSE,m5,Naive,RMSSE,1.122906,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-Seasonal Naive-MASE,m5,Seasonal Naive,MASE,1.526172,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-Seasonal Naive-RMSSE,m5,Seasonal Naive,RMSSE,1.139211,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-Moving Average-MASE,store_item_demand,Moving Average,MASE,1.191262,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-Moving Average-RMSSE,store_item_demand,Moving Average,RMSSE,1.181533,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-Naive-MASE,store_item_demand,Naive,MASE,1.97105,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-Naive-RMSSE,store_item_demand,Naive,RMSSE,1.869926,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-Seasonal Naive-MASE,store_item_demand,Seasonal Naive,MASE,1.182503,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-Seasonal Naive-RMSSE,store_item_demand,Seasonal Naive,RMSSE,1.166891,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-DES-MASE,m5,DES,MASE,1.986585,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-DES-RMSSE,m5,DES,RMSSE,1.327171,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-SES-MASE,m5,SES,MASE,1.350799,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-SES-RMSSE,m5,SES,RMSSE,0.858164,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-TES-MASE,m5,TES,MASE,2.599437,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-TES-RMSSE,m5,TES,RMSSE,1.846045,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-DES-MASE,store_item_demand,DES,MASE,1.680754,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-DES-RMSSE,store_item_demand,DES,RMSSE,1.673984,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-SES-MASE,store_item_demand,SES,MASE,1.213569,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-SES-RMSSE,store_item_demand,SES,RMSSE,1.209376,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-TES-MASE,store_item_demand,TES,MASE,2.111143,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-TES-RMSSE,store_item_demand,TES,RMSSE,2.156089,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-ARIMA-MASE,m5,ARIMA,MASE,1.505192,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-ARIMA-RMSSE,m5,ARIMA,RMSSE,1.04902,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-ARIMA-MASE,store_item_demand,ARIMA,MASE,1.451747,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-ARIMA-RMSSE,store_item_demand,ARIMA,RMSSE,1.431524,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-LSTM-MASE,m5,LSTM,MASE,1.3162,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-LSTM-RMSSE,m5,LSTM,RMSSE,0.845826,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-LSTM-MASE,store_item_demand,LSTM,MASE,0.977554,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-LSTM-RMSSE,store_item_demand,LSTM,RMSSE,0.970881,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-04,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-CROSTON-MASE,m5,CROSTON,MASE,1.416791,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-CROSTON-RMSSE,m5,CROSTON,RMSSE,0.867597,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-SBA-MASE,m5,SBA,MASE,1.412814,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-SBA-RMSSE,m5,SBA,RMSSE,0.889195,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-TSB-MASE,m5,TSB,MASE,1.368755,ratio,500 series,06_results/scale_free_metrics/summary.csv,MASE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-m5-TSB-RMSSE,m5,TSB,RMSSE,0.884352,ratio,500 series,06_results/scale_free_metrics/summary.csv,RMSSE,FINAL,4.2/4.3,T-03,"m=7, train-only denom (method_note.txt); n_nan_mase=0"
+SF-store_item_demand-SARIMA-MASE,store_item_demand,SARIMA,MASE,1.054558,ratio,500sx8ox28d=112000,06_results/arima/metrics_by_model.csv,MASE,FINAL,4.3/4.14,T-04,"FULL500 (4000 fits, 0 fallbacks); supersedes summary.csv subset row n=100 (MASE 1.0688)"
+SF-store_item_demand-SARIMA-RMSSE,store_item_demand,SARIMA,RMSSE,1.040142,ratio,500sx8ox28d=112000,06_results/arima/metrics_by_model.csv,RMSSE,FINAL,4.3/4.14,T-04,"FULL500 (4000 fits, 0 fallbacks); supersedes summary.csv subset row n=100 (MASE 1.0688)"
+SF-M5-SARIMA-notrun,m5,SARIMA,not-run,,,,,,FINAL,4.14,,SARIMA never run on M5 by design (seasonal differencing dubious on intermittent demand)
+INV-m5-ARIMA-cost,m5,ARIMA,total_cost,194.59647,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.7,T-06,POLICY_DEFAULT L7/95%/H1/P5; hold=162.62 short=31.98
+INV-m5-ARIMA-sl,m5,ARIMA,service_level,0.895705,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.7,T-06,avg_inv=5.81 reorders=10.72
+INV-m5-CROSTON-cost,m5,CROSTON,total_cost,174.81331,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.7,T-06,POLICY_DEFAULT L7/95%/H1/P5; hold=154.54 short=20.28
+INV-m5-CROSTON-sl,m5,CROSTON,service_level,0.939116,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.7,T-06,avg_inv=5.52 reorders=10.56
+INV-m5-DES-cost,m5,DES,total_cost,268.804928,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.7,T-06,POLICY_DEFAULT L7/95%/H1/P5; hold=235.35 short=33.46
+INV-m5-DES-sl,m5,DES,service_level,0.898821,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.7,T-06,avg_inv=8.41 reorders=15.19
+INV-m5-LSTM-cost,m5,LSTM,total_cost,152.832676,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.7,T-06,POLICY_DEFAULT L7/95%/H1/P5; hold=130.04 short=22.80
+INV-m5-LSTM-sl,m5,LSTM,service_level,0.928277,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.7,T-06,avg_inv=4.64 reorders=15.14
+INV-m5-Moving Average-cost,m5,Moving Average,total_cost,158.825486,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.7,T-06,POLICY_DEFAULT L7/95%/H1/P5; hold=136.30 short=22.52
+INV-m5-Moving Average-sl,m5,Moving Average,service_level,0.930482,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.7,T-06,avg_inv=4.87 reorders=10.38
+INV-m5-Naive-cost,m5,Naive,total_cost,200.752722,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.7,T-06,POLICY_DEFAULT L7/95%/H1/P5; hold=158.25 short=42.50
+INV-m5-Naive-sl,m5,Naive,service_level,0.87167,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.7,T-06,avg_inv=5.65 reorders=9.29
+INV-m5-SBA-cost,m5,SBA,total_cost,160.657335,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.7,T-06,POLICY_DEFAULT L7/95%/H1/P5; hold=128.39 short=32.27
+INV-m5-SBA-sl,m5,SBA,service_level,0.909188,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.7,T-06,avg_inv=4.59 reorders=10.39
+INV-m5-SES-cost,m5,SES,total_cost,159.310886,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.7,T-06,POLICY_DEFAULT L7/95%/H1/P5; hold=138.32 short=21.00
+INV-m5-SES-sl,m5,SES,service_level,0.935696,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.7,T-06,avg_inv=4.94 reorders=10.50
+INV-m5-Seasonal Naive-cost,m5,Seasonal Naive,total_cost,192.553226,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.7,T-06,POLICY_DEFAULT L7/95%/H1/P5; hold=170.73 short=21.82
+INV-m5-Seasonal Naive-sl,m5,Seasonal Naive,service_level,0.9375,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.7,T-06,avg_inv=6.10 reorders=10.16
+INV-m5-TES-cost,m5,TES,total_cost,346.673066,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.7,T-06,POLICY_DEFAULT L7/95%/H1/P5; hold=304.28 short=42.40
+INV-m5-TES-sl,m5,TES,service_level,0.880437,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.7,T-06,avg_inv=10.87 reorders=14.64
+INV-m5-TSB-cost,m5,TSB,total_cost,165.128508,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.7,T-06,POLICY_DEFAULT L7/95%/H1/P5; hold=143.54 short=21.59
+INV-m5-TSB-sl,m5,TSB,service_level,0.931955,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.7,T-06,avg_inv=5.13 reorders=10.38
+INV-store_item_demand-ARIMA-cost,store_item_demand,ARIMA,total_cost,2320.874272,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.8,T-07,POLICY_DEFAULT L7/95%/H1/P5; hold=1076.48 short=1244.40
+INV-store_item_demand-ARIMA-sl,store_item_demand,ARIMA,service_level,0.523893,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.8,T-07,avg_inv=38.45 reorders=22.20
+INV-store_item_demand-DES-cost,store_item_demand,DES,total_cost,2779.639974,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.8,T-07,POLICY_DEFAULT L7/95%/H1/P5; hold=2130.09 short=649.55
+INV-store_item_demand-DES-sl,store_item_demand,DES,service_level,0.734652,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.8,T-07,avg_inv=76.07 reorders=22.36
+INV-store_item_demand-LSTM-cost,store_item_demand,LSTM,total_cost,2247.463483,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.8,T-07,POLICY_DEFAULT L7/95%/H1/P5; hold=1157.70 short=1089.76
+INV-store_item_demand-LSTM-sl,store_item_demand,LSTM,service_level,0.530696,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.8,T-07,avg_inv=41.35 reorders=23.15
+INV-store_item_demand-Moving Average-cost,store_item_demand,Moving Average,total_cost,2084.501383,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.8,T-07,POLICY_DEFAULT L7/95%/H1/P5; hold=1276.10 short=808.40
+INV-store_item_demand-Moving Average-sl,store_item_demand,Moving Average,service_level,0.61708,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.8,T-07,avg_inv=45.58 reorders=22.76
+INV-store_item_demand-Naive-cost,store_item_demand,Naive,total_cost,2700.370608,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.8,T-07,POLICY_DEFAULT L7/95%/H1/P5; hold=794.63 short=1905.74
+INV-store_item_demand-Naive-sl,store_item_demand,Naive,service_level,0.432063,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.8,T-07,avg_inv=28.38 reorders=20.42
+INV-store_item_demand-SARIMA-cost,store_item_demand,SARIMA,total_cost,2282.306431,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.8,T-07,POLICY_DEFAULT L7/95%/H1/P5; hold=1307.78 short=974.53
+INV-store_item_demand-SARIMA-sl,store_item_demand,SARIMA,service_level,0.591911,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.8,T-07,avg_inv=46.71 reorders=22.78
+INV-store_item_demand-SES-cost,store_item_demand,SES,total_cost,2113.833944,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.8,T-07,POLICY_DEFAULT L7/95%/H1/P5; hold=1155.60 short=958.24
+INV-store_item_demand-SES-sl,store_item_demand,SES,service_level,0.561268,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.8,T-07,avg_inv=41.27 reorders=22.85
+INV-store_item_demand-Seasonal Naive-cost,store_item_demand,Seasonal Naive,total_cost,2128.152363,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.8,T-07,POLICY_DEFAULT L7/95%/H1/P5; hold=1281.05 short=847.10
+INV-store_item_demand-Seasonal Naive-sl,store_item_demand,Seasonal Naive,service_level,0.619563,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.8,T-07,avg_inv=45.75 reorders=23.10
+INV-store_item_demand-TES-cost,store_item_demand,TES,total_cost,3419.879493,cost-units,4000 series-origins,06_results/inventory/inventory_by_model.csv,total_cost,FINAL,4.8,T-07,POLICY_DEFAULT L7/95%/H1/P5; hold=2485.65 short=934.23
+INV-store_item_demand-TES-sl,store_item_demand,TES,service_level,0.69067,fraction,4000 series-origins,06_results/inventory/inventory_by_model.csv,service_level,FINAL,4.8,T-07,avg_inv=88.77 reorders=22.06
+PW-COUNT,both,all,n_pairs,91.0,count,paired forecast errors,06_results/statistical_tests/pairwise_tests.csv,,FINAL,4.5,App-F,91 pairs (55 M5 + 36 Store); Wilcoxon+DM+Holm+bootstrap500+dz+r
+SPOT-m5-LSTM-vs-TSB-dz,m5,LSTM vs TSB,cohen_dz,-0.031191,,n=112000,06_results/statistical_tests/pairwise_tests.csv,cohen_dz,FINAL,4.4/4.5,T-05,"Holm p=2.02e-10 r=-0.020 CI=[-0.0244,-0.0168]"
+SPOT-m5-LSTM-vs-Moving Average-dz,m5,LSTM vs Moving Average,cohen_dz,-0.015383,,n=112000,06_results/statistical_tests/pairwise_tests.csv,cohen_dz,FINAL,4.4/4.5,T-05,"Holm p=1.78e-03 r=-0.010 CI=[-0.0144,-0.0066]"
+SPOT-m5-LSTM-vs-SES-dz,m5,LSTM vs SES,cohen_dz,-0.014177,,n=112000,06_results/statistical_tests/pairwise_tests.csv,cohen_dz,FINAL,4.4/4.5,T-05,"Holm p=5.11e-04 r=-0.011 CI=[-0.0128,-0.0051]"
+SPOT-store_item_demand-LSTM-vs-Moving Average-dz,store_item_demand,LSTM vs Moving Average,cohen_dz,-0.294784,,n=112000,06_results/statistical_tests/pairwise_tests.csv,cohen_dz,FINAL,4.4/4.5,T-05,"Holm p=0.00e+00 r=-0.282 CI=[-1.8683,-1.8002]"
+SPOT-store_item_demand-LSTM-vs-SARIMA-dz,store_item_demand,LSTM vs SARIMA,cohen_dz,-0.117944,,n=112000,06_results/statistical_tests/pairwise_tests.csv,cohen_dz,FINAL,4.4/4.5,T-05,"Holm p=0.00e+00 r=-0.128 CI=[-0.5993,-0.5485]"
+SPOT-store_item_demand-LSTM-vs-SES-dz,store_item_demand,LSTM vs SES,cohen_dz,-0.335749,,n=112000,06_results/statistical_tests/pairwise_tests.csv,cohen_dz,FINAL,4.4/4.5,T-05,"Holm p=0.00e+00 r=-0.311 CI=[-2.0854,-2.0138]"
+SPOT-m5-Moving Average-vs-SES-dz,m5,Moving Average vs SES,cohen_dz,0.0057,,n=112000,06_results/statistical_tests/pairwise_tests.csv,cohen_dz,FINAL,4.4/4.5,T-05,"Holm p=1.75e-12 r=-0.022 CI=[-0.0001,0.0030]"
+SENS-m5-LSTM-wins,m5,LSTM,n_policy_wins,25.0,policies,27 policies,06_results/sensitivity/sensitivity_grid.csv,total_cost,FINAL,4.16,T-08,"grid L{3,7,14}xsvc{.90,.95,.99}xP{3,5,10},H=1"
+SENS-m5-SES-wins,m5,SES,n_policy_wins,2.0,policies,27 policies,06_results/sensitivity/sensitivity_grid.csv,total_cost,FINAL,4.16,T-08,"grid L{3,7,14}xsvc{.90,.95,.99}xP{3,5,10},H=1"
+SENS-store_item_demand-Moving Average-wins,store_item_demand,Moving Average,n_policy_wins,9.0,policies,27 policies,06_results/sensitivity/sensitivity_grid.csv,total_cost,FINAL,4.16,T-08,"grid L{3,7,14}xsvc{.90,.95,.99}xP{3,5,10},H=1"
+SENS-store_item_demand-SES-wins,store_item_demand,SES,n_policy_wins,7.0,policies,27 policies,06_results/sensitivity/sensitivity_grid.csv,total_cost,FINAL,4.16,T-08,"grid L{3,7,14}xsvc{.90,.95,.99}xP{3,5,10},H=1"
+SENS-store_item_demand-Naive-wins,store_item_demand,Naive,n_policy_wins,6.0,policies,27 policies,06_results/sensitivity/sensitivity_grid.csv,total_cost,FINAL,4.16,T-08,"grid L{3,7,14}xsvc{.90,.95,.99}xP{3,5,10},H=1"
+SENS-store_item_demand-DES-wins,store_item_demand,DES,n_policy_wins,5.0,policies,27 policies,06_results/sensitivity/sensitivity_grid.csv,total_cost,FINAL,4.16,T-08,"grid L{3,7,14}xsvc{.90,.95,.99}xP{3,5,10},H=1"
+ARCH-Highly Intermittent-bestMAE,m5,LSTM,MAE,0.416435,units,n=194 series,06_results/archetype_comparison/archetype_metrics.csv,MAE,FINAL,4.11,App-G,pooled WAPE/sMAPE
+ARCH-Intermittent-bestMAE,m5,LSTM,MAE,0.989084,units,n=199 series,06_results/archetype_comparison/archetype_metrics.csv,MAE,FINAL,4.11,App-G,pooled WAPE/sMAPE
+ARCH-Moderate-bestMAE,m5,SES,MAE,2.633708,units,n=26 series,06_results/archetype_comparison/archetype_metrics.csv,MAE,FINAL,4.11,App-G,pooled WAPE/sMAPE
+ARCH-Smooth-bestMAE,m5,LSTM,MAE,2.358068,units,n=1 series,06_results/archetype_comparison/archetype_metrics.csv,MAE,FINAL,4.11,App-G,pooled WAPE/sMAPE; Smooth n=1 ANECDOTAL
+ARCH-Variable-bestMAE,m5,SES,MAE,1.799179,units,n=80 series,06_results/archetype_comparison/archetype_metrics.csv,MAE,FINAL,4.11,App-G,pooled WAPE/sMAPE
+ARCH-COUNT,m5,all,n_rows,55.0,rows,11 models x 5 archetypes,06_results/archetype_comparison/archetype_metrics.csv,,FINAL,4.11,App-G,M5 only
+CONV-store_item_demand-SARIMA,store_item_demand,SARIMA,fallback_pct,0.0,pct,n=4000 fits,06_results/arima/convergence_report.csv,fallback_pct,FINAL,4.18,T-09,scope=full500_primary fails=0 fb=0
+CONV-m5-ARIMA,m5,ARIMA,fallback_pct,22.65,pct,n=3094 fits,06_results/arima/convergence_report.csv,fallback_pct,FINAL,4.18,T-09,scope=subset100_exploratory fails=0 fb=906
+CONV-store_item_demand-ARIMA,store_item_demand,ARIMA,fallback_pct,0.0,pct,n=4000 fits,06_results/arima/convergence_report.csv,fallback_pct,FINAL,4.18,T-09,scope=subset100_exploratory fails=0 fb=0
+CONV-store_item_demand-SARIMA,store_item_demand,SARIMA,fallback_pct,0.0,pct,n=800 fits,06_results/arima/convergence_report.csv,fallback_pct,FINAL,4.18,T-09,scope=subset100_exploratory fails=0 fb=0
+PROTO-train,,,days,1034.0,days,common window,05_experiments/config.json,,FINAL,2.3,T-01,2013-01-01..2015-10-31
+PROTO-val,,,days,121.0,days,common window,05_experiments/config.json,,FINAL,2.3,T-01,2015-11-01..2016-02-29 incl leap day
+PROTO-test,,,days,83.0,days,common window,05_experiments/config.json,,FINAL,2.3,T-01,2016-03-01..2016-05-22; 8 weekly origins H28 seed42
