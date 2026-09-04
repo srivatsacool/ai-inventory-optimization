@@ -4,60 +4,60 @@
 
 \subsection{Empirical contribution}
 \label{sec:c-emp}
-The study demonstrates the forecast--decision gap in both directions inside one
-controlled design: alignment on intermittent M5 demand, divergence on dense
-Store demand, with the paradoxical Store podium (MA $>$ SES $>$ SNaive $>$
-LSTM) as its sharpest exhibit. It also maps exactly where sophistication pays
-(LSTM accuracy everywhere; LSTM cost on sparse demand) and where it bills
-without benefit (TES/DES; ARIMA on dense demand).
+The study measures the forecast-decision relationship in both directions
+within one controlled design: correspondence on intermittent M5 demand and
+divergence on dense Store demand, with the Store podium (Moving Average,
+SES, Seasonal Naive ahead of LSTM) as the sharpest case. It records where
+sophistication pays (LSTM accuracy on both datasets; LSTM cost on sparse
+demand) and where it does not (TES and DES; ARIMA on dense demand).
 
 \subsection{Methodological contribution}
 \label{sec:c-meth}
-Three reusable instruments: (1) a shared-policy evaluation harness that makes
-cross-model inventory comparison fair by construction --- one module, every
-model, no per-model tuning; (2) a leakage-safe rolling protocol (history
-strictly before origin, validation-only selection, honest-NaN scale-free
-metrics with pooled archetype ratios); (3) sensitivity-as-verdict: headline
-rankings are published with their 27-policy stability record, separating
-bankable conclusions from conditional ones.
+Three reusable instruments. First, a shared-policy evaluation harness that
+holds the inventory treatment constant across models: one module, every
+model, no per-model tuning. Second, a leakage-safe rolling protocol (history
+strictly before origin, validation-only selection, honest missing-value
+handling in scale-free metrics with pooled archetype ratios). Third, a
+stability discipline in which headline rankings are published together with
+their 27-policy record, separating stable conclusions from conditional ones.
 
 \subsection{Analytical contribution}
 \label{sec:c-anal}
 Ninety-one Holm-corrected paired comparisons with effect sizes and bootstrap
-intervals, reported with the explicit doctrine that $p$-values never travel
-without $d_z$. The MA--SES ``honest null'' shows the machinery can exonerate
-as well as convict.
+intervals, reported under the rule that $p$-values do not travel without
+$d_z$. The MA-SES reference null shows the procedure returning equivalence
+as well as difference.
 
 \subsection{Inventory-management implications}
 \label{sec:c-inv}
-For intermittent catalogs: invest in learned or specialist forecasting (LSTM,
-TSB/SBA) and expect the forecast win to reach the shelf. For dense,
-fast-moving catalogs: pilot simple averaging methods against the neural option
-\emph{under your own cost ratio} before committing engineering budget; the
-cheapest stocker may already be in production. In both worlds, distrust any
-vendor leaderboard that stops at accuracy.
+For intermittent catalogs, learned or specialist forecasting (LSTM, TSB/SBA)
+is supported, and the forecast advantage reaches the shelf. For dense,
+fast-moving catalogs, simple averaging methods should be piloted against the
+neural option under the applicable cost ratio before engineering investment;
+the lowest-cost input may already be in production. In both settings,
+leaderboards that stop at accuracy are insufficient evidence for procurement.
 
 \subsection{Model-selection implications}
 \label{sec:c-select}
-Select conditional on three answers: What is my demand structure (sparse or
-dense)? What is my cost asymmetry ($P/H$)? What is my lead time? The report's
-tables answer the rest: sparse + any reasonable policy $\rightarrow$ LSTM;
-dense + default policy $\rightarrow$ Moving Average with SES as backup; dense
-+ short-lead/high-penalty $\rightarrow$ re-run, leadership is fluid.
+Selection is conditional on three answers: the demand structure (sparse or
+dense), the cost asymmetry ($P/H$), and the lead time. The report's tables
+cover the remainder: sparse demand with standard policies favors LSTM; dense
+demand under the default policy favors Moving Average with SES as the
+alternative; dense demand with short leads and high penalties requires a
+fresh comparison, since leadership is fluid there.
 
 \subsection{Reproducibility contribution}
 \label{sec:c-repro}
-The frozen package (number sheet, audits, traceability, validation log with 0
-FAIL, pre-hardening backup, seeds, manifests) means any number in this report
-resolves to a source file in one lookup. Reproducibility here is not a claim
-but an address book (\cref{app:repro}).
+The frozen package (number sheet, audits, traceability, validation log with
+0 FAIL, pre-hardening backup, seeds, manifests) maps every reported number
+to a source file in one lookup. Provenance details are in \cref{app:repro}.
 
 \subsection{Research-hardening lessons}
 \label{sec:c-harden}
-The most expensive errors were methodological, not algorithmic: an unassigned
-leap day, overlapping validation windows, a subset presented at full weight, a
-mean-of-ratios that exploded to $10^9$. Each was caught by an audit that
-assumed nothing --- row counts, date containment, denominator discipline,
-population labels. The lesson for any analytics team: validate the experiment
-with the same paranoia you apply to the model, because the experiment is what
-you actually conclude from.
+The costliest errors found were methodological rather than algorithmic: an
+unassigned leap day, overlapping validation windows, a subset result carried
+at full weight, and a mean-of-ratios construction unstable on near-zero
+series. Each was identified by audits that assumed nothing (row counts, date
+containment, denominator discipline, population labels). The general lesson
+is that the experiment requires the same scrutiny as the model, since
+conclusions are drawn from the former.

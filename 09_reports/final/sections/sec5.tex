@@ -4,86 +4,92 @@
 
 \subsection{Forecast accuracy is not decision quality}
 \label{sec:d-acc-dec}
-The executive summary of this entire report is one asymmetry. Accuracy metrics
-are symmetric, per-unit, and policy-free; inventory costs are asymmetric,
-thresholded, and policy-defined. Safety stock transforms error \emph{volatility}
-into money; the order-up-to rule transforms error \emph{bias} into money; the
-$P/H$ ratio decides the exchange rate. Any evaluation that stops at the
-forecast has measured the ingredient, not the dish.
+Accuracy metrics are symmetric, per-unit, and policy-free; inventory costs
+are asymmetric, thresholded, and policy-defined. Safety stock converts error
+volatility into money; the order-up-to rule converts error bias into money;
+and the $P/H$ ratio sets the exchange rate. An evaluation that stops at the
+forecast therefore measures only part of a model's economic effect.
 
 \subsection{Why LSTM wins forecasting but not always inventory}
 \label{sec:d-lstm}
-The global LSTM learns shapes no per-series linear model can: zero-inflated
-regimes, cross-item weekly patterns, nonlinear rebounds. That buys the best
-point forecasts on both datasets. But inventory does not buy point forecasts;
-it buys a distribution summary (error volatility for safety stock) plus a level
-(the next-$L$ sum). On dense Store demand, the LSTM's sharpness comes with
-occasional confident under-predictions --- cheap under MAE, ruinous at $P=5$.
-The moving average, by construction, rarely under-shoots violently. Precision
-without caution is a fast car with weak brakes: brilliant on the track (error
-metrics), expensive in traffic (asymmetric costs).
+The global LSTM captures patterns unavailable to per-series linear models:
+zero-inflated regimes, cross-item weekly structure, and nonlinear rebounds.
+That accounts for its forecast lead on both datasets. Inventory, however,
+purchases neither point forecasts nor patterns directly. It purchases a
+dispersion summary (error volatility, via safety stock) and a level (the
+next-$L$ sum). On dense Store demand, the LSTM's sharpness includes
+occasional confident under-predictions: inexpensive under MAE, expensive at
+$P=5$. The moving average, by construction, rarely under-shoots by large
+amounts. The relevant distinction is therefore between precision and caution
+under asymmetric cost, not between intelligence and simplicity.
 
 \subsection{Why simple models remain competitive}
 \label{sec:d-simple}
-Moving Average and SES do two things right. First, averaging is the optimal
-response to noise-dominated demand: most daily variation is unpredictable, and
-the mean of recent days is the minimum-variance guess. Second, their errors
-are symmetric and stable, which is exactly what safety-stock formulas assume.
-Simplicity aligns with the policy's assumptions; sophistication violates them
-profitably only when the demand signal is strong enough to repay the violation
---- true on sparse M5, false on dense Store.
+Moving Average and SES satisfy two conditions the policy rewards. First,
+averaging is close to optimal when most daily variation is unpredictable
+noise; the recent mean is then a minimum-variance guess. Second, their
+errors are approximately symmetric and stable, which is what safety-stock
+formulas assume. Simplicity aligns with the policy's assumptions.
+Sophistication improves on it only where the demand signal is strong enough
+to repay the departure, which holds on sparse M5 demand but not on dense
+Store demand under the default cost ratio.
 
 \subsection{Demand structure and model suitability}
 \label{sec:d-structure}
-Intermittency decides which machinery is legitimate. Where zeros dominate,
-refuse-to-fit-zeros methods (Croston family, Naive-fallback ARIMA) and
-cross-series learners (LSTM) win; linear autoregression starves. Where demand
-is dense and weekly, seasonal structure (SARIMA, Seasonal Naive) pays and
-trend machinery (DES/TES) overfits noise into inventory. The archetype tables
-are the suitability map; the Store--M5 contrast is its validation.
+Intermittency determines which machinery is legitimate. Where zeros
+dominate, methods that decline to fit them (the Croston family, the
+Naive-fallback ARIMA guardrail) and learners that pool across series (the
+LSTM) perform best, while linear autoregression lacks estimable structure.
+Where demand is dense and weekly, seasonal specifications (SARIMA, Seasonal
+Naive) contribute and trend specifications (DES, TES) overfit noise into
+stock. The archetype tables constitute the suitability map; the Store-M5
+contrast corroborates it.
 
 \subsection{Inventory policy as the effective loss function}
 \label{sec:d-policy-loss}
-A useful reframe: the choice of $(L, z, P/H)$ \emph{is} the choice of loss
-function, and forecasters are implicitly optimized for the wrong one (symmetric
-error). The sensitivity grid makes this visible: move $P$ from 3 to 10 and the
-optimal forecaster changes. Practitioners should therefore select models
-\emph{conditional} on their policy, and researchers reporting accuracy-only
-leaderboards should attach a warning label.
+The policy parameters $(L, z, P/H)$ function as the effective loss: forecasters
+are implicitly optimized for symmetric error but scored on asymmetric cost.
+The sensitivity grid makes this visible, with the lowest-cost model changing
+as $P$ moves from 3 to 10. Model selection should therefore be conditional on
+the policy, and accuracy-only leaderboards should be read with that
+conditionality stated.
 
 \subsection{Statistical significance vs.\ practical importance}
 \label{sec:d-sig}
-At $n=112{,}000$, significance is nearly free and therefore nearly meaningless
-alone. The M5 LSTM--TSB pair ($p \approx 2\times10^{-10}$, $d_z=-0.031$) would
-headline a naive report as ``highly significant superiority''; the honest
-headline is ``indistinguishable for any business purpose.'' Effect sizes,
-intervals, and the MA--SES disagreement between tests are the report's immune
-system against $p$-value theater.
+At $n=112{,}000$ paired errors, significance is inexpensive and consequently
+uninformative on its own. The M5 LSTM-TSB pair ($p \approx 2\times 10^{-10}$,
+$d_z=-0.031$) is significant in the formal sense and negligible for any
+business purpose. Effect sizes, intervals, and the MA-SES test disagreement
+are what prevent overinterpretation. This qualification is strengthened, not
+weakened, by the dependence structure noted in \cref{sec:stats-method}:
+correlated observations inflate nominal precision further, which is an
+additional reason to weight $d_z$ over $p$.
 
 \subsection{Complexity vs.\ value}
 \label{sec:d-complex}
-Capability and value parted ways. The ladder's complexity order (Naive $<$ MA
-$<$ SES $<$ DES $<$ TES $<$ ARIMA $<$ SARIMA $<$ LSTM) predicts neither the
-accuracy order nor the cost order. The only complexity that paid was the
-neural kind, and only in accuracy everywhere and cost in one world. Budget
-accordingly: a moving average costs nothing to run and nearly wins; an LSTM
-costs real engineering and wins sometimes.
+The ladder's complexity order predicts neither the accuracy order nor the
+cost order. The only complexity that pays is the neural kind, and only in
+accuracy everywhere and in cost in one environment. The practical reading is
+budgetary: a moving average costs nothing to operate and nearly leads; an
+LSTM costs substantial engineering and leads conditionally.
 
 \subsection{Robust vs.\ fragile conclusions}
 \label{sec:d-robust}
-Robustness is a property of the \emph{conclusion under policy variation}, not
-of the model. M5-LSTM is robust (25/27, losses confined to one explicable
-corner). Store-MA is fragile (9/27) --- and so is every Store alternative.
-Fragile does not mean wrong: under the stated default policy MA genuinely wins.
-It means conditional: change the lead time or cost ratio and re-run the
-comparison before spending money.
+Stability is a property of conclusions under policy variation, not of
+models. M5-LSTM is stable (25 of 27, with losses confined to one explicable
+region). Store-MA is policy-sensitive (9 of 27), as is every Store
+alternative. Policy-sensitivity does not invalidate the default-policy
+result: under the stated policy, Moving Average genuinely records the lowest
+cost. It conditions the result: changing lead time or cost ratio requires
+re-running the comparison before acting on it.
 
 \subsection{What can and cannot be generalized}
 \label{sec:d-general}
-Transferable: the forecast--decision gap mechanism, the significance-vs-size
-discipline, the sensitivity-as-verdict method, LSTM forecast superiority on
-both structures, TES/DES failure modes. Not transferable: the specific winner
-of any board (policy- and structure-contingent), anything about the Smooth
-archetype ($n=1$), anything about LLMs (unexecuted), anything beyond $h=28$ or
-univariate demand. The contribution is a map with marked hazards, not a
-universal champion.
+Transferable findings concern mechanisms and methods: the forecast-decision
+gap and its cost-asymmetry mechanism, the significance-versus-size
+discipline, the sensitivity-as-stability method, LSTM forecast performance
+across both structures, and the TES/DES failure modes. Not transferable are
+the specific board winners (policy- and structure-contingent), anything about
+the Smooth archetype ($n=1$), anything about LLMs (unexecuted), and anything
+beyond $h=28$ or univariate demand. The contribution is a map with stated
+boundaries rather than a universal ranking.

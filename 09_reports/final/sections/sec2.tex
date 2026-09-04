@@ -4,40 +4,39 @@
 
 \subsection{End-to-end research workflow}
 \label{sec:workflow}
-The study runs as a notebook ladder: a research map (00) fixes the question;
-environment control (01) freezes seeds and software; acquisition and audit
-notebooks (02a, 02b) verify both datasets; exploratory analysis (03)
-characterizes demand before any model is chosen; experimental design (04) locks
-the protocol; a teaching notebook (05a) establishes time-series vocabulary;
-then the model rungs execute in order --- baselines (05b), exponential
-smoothing (06), Croston specialists (06c), ARIMA/SARIMA (07), LSTM (08). A
-post-hoc hardening pass corrected nine classes of issues (leap-day calendar
-gap, LSTM validation leakage, subset-comparability, metric methodology, shared
-policy) and froze the evidence; see \cref{sec:hardening}. Every notebook maps
-to report sections in the traceability matrix
+The study is organized as a notebook sequence: a research map (00) states the
+question; environment control (01) fixes seeds and software; acquisition and
+audit notebooks (02a, 02b) verify both datasets; exploratory analysis (03)
+characterizes demand before model selection; experimental design (04) locks
+the protocol; a teaching notebook (05a) sets out time-series vocabulary; then
+the model rungs run in order (baselines in 05b, exponential smoothing in 06,
+Croston specialists in 06c, ARIMA/SARIMA in 07, LSTM in 08). A subsequent
+hardening pass corrected calendar, validation, comparability, metric, and
+policy issues and froze the evidence; see \cref{sec:hardening}. Each
+notebook's role in the report is recorded in the traceability matrix
 (\texttt{traceability/notebook\_traceability.csv}).
 
 \subsection{Data acquisition and audit}
 \label{sec:acquisition}
 M5 source files (\texttt{sales\_train\_evaluation.csv}, \texttt{calendar.csv})
-were audited for dimensions (30,490 item--store series, day columns d\_1 onward
-with a verified d-index alignment), and the Store file (\texttt{train.csv}) was
-verified as a complete panel: every store--item--date combination present, no
-duplicates, a single zero-sales entry. Both datasets were reindexed onto one
-common calendar so that cross-dataset comparison never confounds ``model
-effect'' with ``different history lengths.''
+were audited for dimensions (30,490 item-store series; day columns d\_1 onward
+with verified date-index alignment), and the Store file (\texttt{train.csv})
+was verified as a complete panel: every store-item-date combination present,
+no duplicates, a single zero-sales entry. Both datasets were reindexed onto
+one common calendar so that cross-dataset comparison does not confound model
+effects with differences in history length.
 
 \subsection{Temporal experimental protocol}
 \label{sec:protocol}
-\Cref{tab:protocol} is the frozen design. Time-based splits only --- no
-shuffling, ever. Training covers 2013-01-01 to 2015-10-31 (1,034 days);
-validation 2015-11-01 to 2016-02-29 (121 days, leap day included after the
-hardening correction); testing 2016-03-01 to 2016-05-22 (83 days). Forecasts
-span $h=28$ days from each of 8 weekly rolling origins under an expanding
-window: every model sees strictly the history before each origin, asserted in
-code. All selection (windows, smoothing weights, ARIMA orders, Croston
-alphas, LSTM stopping) uses validation data only; the test window is touched
-once for final scoring. Global seed 42 governs all stochastic steps.
+\Cref{tab:protocol} states the frozen design. Splits are time-based only.
+Training covers 2013-01-01 to 2015-10-31 (1,034 days); validation 2015-11-01
+to 2016-02-29 (121 days, leap day included after the hardening correction);
+testing 2016-03-01 to 2016-05-22 (83 days). Forecasts span $h=28$ days from
+each of 8 weekly rolling origins under an expanding window, with each model
+restricted strictly to history preceding each origin (asserted in code). All
+model selection (averaging windows, smoothing weights, ARIMA orders, Croston
+parameters, LSTM stopping) uses validation data only; the test window is used
+once for final scoring. The global seed is 42 throughout.
 
 \begin{table}[H]
 \centering
@@ -52,20 +51,21 @@ Train / validation / test & 1,034 / 121 / 83 days (validation includes 2016-02-2
 Horizon $h$ & 28 days, 8 weekly rolling origins, expanding window \\
 M5 sample & 500 series, stratified by archetype $\times$ department \\
 Store sample & All 500 series (complete panel) \\
-Evaluation population & $500 \times 8 \times 28 = 112{,}000$ forecasts per model--dataset \\
-Seed & 42 everywhere \\
+Evaluation population & $500 \times 8 \times 28 = 112{,}000$ forecasts per model-dataset \\
+Seed & 42 throughout \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Series selection}
 \label{sec:selection}
-Store demand uses all 500 series --- no sampling needed. M5 contributes a
-stratified sample of 500 (recorded in
+Store demand uses all 500 series, so no sampling was required. M5 contributes
+a stratified sample of 500 (recorded in
 \texttt{05\_experiments/m5\_series\_selection.json}) covering all demand
-archetypes and departments, because random sampling could miss rare but
-important demand shapes and full-catalog deep learning was computationally
-prohibitive. \Cref{fig:representativeness} documents representativeness.
+archetypes and departments. Random sampling risked omitting rare but
+substantively important demand shapes, while full-catalog deep learning was
+computationally infeasible. Representativeness is documented in
+\Cref{fig:representativeness}.
 
 \begin{figure}[H]
 \centering
@@ -77,166 +77,182 @@ departments. Source: notebook 04.}
 
 \subsection{Demand characterization and archetypes}
 \label{sec:archetypes-method}
-Following the Syntetos--Boylan tradition \citep{syntetos2005}, intermittency is
+Following the Syntetos-Boylan tradition \citep{syntetos2005}, intermittency is
 characterized per series by average demand interval (ADI) and squared
-coefficient of variation (CV$^2$), yielding quadrants labeled here as Smooth,
-Intermittent, Erratic/Variable, and Lumpy/Highly Intermittent, plus a Moderate
-band. Volume terciles add a second axis. The resulting M5 archetype counts are
-194 highly intermittent, 199 intermittent, 26 moderate, 80 variable, and 1
-smooth --- the last being anecdotal by construction (\cref{sec:smooth-cap}).
+coefficient of variation (CV$^2$). The resulting quadrants are labeled here as
+Smooth, Intermittent, Erratic/Variable, and Lumpy/Highly Intermittent, with an
+additional Moderate band; volume terciles provide a second axis. M5 archetype
+counts are 194 highly intermittent, 199 intermittent, 26 moderate, 80
+variable, and 1 smooth. The single smooth series is reported for completeness
+but supports no inference (\cref{sec:smooth-cap}).
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{02_intermittency_quadrants.png}
-\caption{Intermittency quadrants (ADI vs.\ CV$^2$): the map that motivates both
-the archetype analysis and the Croston rung. Source: notebook 03.}
+\caption{Intermittency quadrants (ADI versus CV$^2$), which motivate the
+archetype analysis and the Croston rung. Source: notebook 03.}
 \label{fig:quadrants}
 \end{figure}
 
 \subsection{Model-ladder design}
 \label{sec:ladder}
-Models ascend in complexity while the evaluation stays fixed: baselines (Naive,
-Seasonal Naive, Moving Average) set the ``beat this to matter'' bar; SES, DES
-(Holt), and additive TES add memory for level, trend, and seasonality; ARIMA
-adds autocorrelation modeling and SARIMA seasonal autocorrelation; the
-Croston family specializes in intermittent demand; the global LSTM learns
-nonlinear patterns across all series of a dataset. Complexity is the
-independent variable; value is what is measured. \Cref{fig:ladder} sketches the
-ladder.
+Models are ordered by complexity while evaluation is held constant: baselines
+(Naive, Seasonal Naive, Moving Average) define the threshold any method must
+clear; SES, DES (Holt), and additive TES add memory for level, trend, and
+seasonality; ARIMA adds autocorrelation modeling and SARIMA seasonal
+autocorrelation; the Croston family specializes in intermittent demand; the
+global LSTM learns nonlinear patterns pooled across all series of a dataset.
+Complexity is the independent variable; whether it produces value is the
+empirical question. \Cref{fig:ladder} summarizes the arrangement.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{11_forecasting_model_ladder.png}
-\caption{The model ladder: complexity rises rung by rung; whether value rises
-with it is the empirical question (it does not, monotonically). Teaching
-figure from notebook 05a.}
+\caption{The model ladder: complexity increases by rung. Whether value
+increases with it is tested in \cref{sec:findings}. Teaching figure from
+notebook 05a.}
 \label{fig:ladder}
 \end{figure}
 
 \subsection{Forecasting models}
 \label{sec:forecast-models}
-Naive repeats the last observed day; Seasonal Naive repeats the last seven
-observed days (an early implementation that peeked beyond the seasonal window
-was caught and corrected to repeat only observed values); Moving Average uses
-validation-selected global windows (M5: 14 days; Store: 7 days). SES (level,
-$\alpha=0.1$), DES (level $+$ trend, $0.2/0.2$), and additive TES (level $+$
-trend $+$ weekly season, $0.3/0.3/0.3$) use transparent implementations with
-validation-grid selection. ARIMA(1,1,0) runs on both datasets with a sparse-data
-pre-check (series with $>85\%$ zeros fall back to Naive rather than fitting
-noise). SARIMA(1,1,0)(0,1,1)$_7$ runs Store-only: seasonal differencing on
-mostly-zero series is methodologically dubious, and the Croston family already
-covers the M5 specialty. Croston/SBA/TSB (validation alphas 0.1 / 0.5 /
-0.1--0.3) run M5-only, since a flat intermittent-demand forecast has no premise
-on dense data. The LSTM is one global network per dataset (28-day lookback,
-per-series history-only scaling, chronological per-series validation), so it
-learns cross-series patterns rather than memorizing individual items. Full
-configurations live in \cref{app:configs}.
+Naive carries the last observed day forward 28 days. Seasonal Naive repeats
+the last seven observed days (an early implementation that reached beyond the
+seasonal window was identified and corrected to use observed values only).
+Moving Average uses validation-selected global windows (M5: 14 days; Store: 7
+days; validation MAE 0.9206 and 7.4057 respectively). SES tracks a moving
+level ($\alpha=0.1$), DES adds trend ($\alpha=\beta=0.2$), and additive TES
+adds a weekly seasonal component ($0.3/0.3/0.3$); all use transparent
+implementations with validation-grid selection. ARIMA(1,1,0) runs on both
+datasets with a sparse-data pre-check (series with more than 85\% zeros fall
+back to Naive rather than fitting noise); per-series order search was
+rejected as overfitting-prone and computationally out of scope.
+SARIMA(1,1,0)(0,1,1)$_7$ runs Store-only, since seasonal differencing of
+predominantly zero series lacks methodological justification and the Croston
+family already covers the M5 specialty. Croston, SBA, and TSB run M5-only
+(validation parameters 0.1, 0.5, and 0.1--0.3), as flat intermittent-demand
+forecasts have no applicability to dense data. The LSTM is one global network
+per dataset with a 28-day lookback, per-series history-only scaling, and
+chronological per-series validation (rebuilt during hardening to remove
+overlapping-window leakage), seeded at 42. Full configurations are in
+\cref{app:configs}.
 
 \subsection{Forecast evaluation metrics}
 \label{sec:metrics}
 Headline accuracy is mean absolute error (MAE); the primary scale-free metric
-is MASE with seasonal period $m=7$ (weekly retail rhythm,
+is MASE with seasonal period $m=7$ (the weekly retail rhythm shown in
 \cref{fig:weekly}), whose denominator is the in-sample one-step seasonal-naive
-error on training data only --- validation and test never enter it. RMSE,
-RMSSE, WAPE, and sMAPE are reported alongside; no metric is cherry-picked.
-Two disciplined choices matter. First, denominators that hit zero (constant
-training history) stay honest NaNs instead of epsilon-guarded fakes (zero
-occurred nowhere: $n_{\text{NaN}}=0$ everywhere). Second, archetype-level WAPE
-and sMAPE are \emph{pooled} ratios over each cell, because averaging per-series
-ratios lets one near-zero-demand series explode the mean (an intermediate
-computation hit $\sim 2\times10^9$ before the fix); model-level WAPE columns
-remain per-series means and were verified consistent across files. sMAPE is
-reported with its known zero-demand distortions documented, not hidden.
-Definitions are formalized in \cref{app:metrics}.
+error computed on training data only. Validation and test data never enter
+the denominator. RMSE, RMSSE, WAPE, and sMAPE are reported alongside; no
+metric is selected after seeing results. Two conventions matter for
+interpretation. First, zero denominators (constant training history) are left
+as honest missing values rather than epsilon-adjusted (no such cases
+occurred: $n_{\text{NaN}}=0$ throughout). Second, archetype-level WAPE and
+sMAPE are pooled ratios over each cell, because averaging per-series ratios
+allows a single near-zero-demand series to dominate the mean; model-level
+WAPE columns remain per-series means and were verified consistent across
+files. sMAPE is reported with its known distortions on near-zero demand
+documented. Definitions are formalized in \cref{app:metrics}.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{03_weekly_seasonality.png}
-\caption{Weekly seasonality in retail demand: the business-week rhythm that
-justifies seasonal period $m=7$ in MASE/RMSSE, Seasonal Naive, and SARIMA.
-Source: notebook 03.}
+\caption{Weekly seasonality in retail demand, supporting seasonal period
+$m=7$ in MASE/RMSSE, Seasonal Naive, and SARIMA. Source: notebook 03.}
 \label{fig:weekly}
 \end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{04_acf_pacf.png}
-\caption{Autocorrelation structure: demand remembers its recent past, which is
-the premise ARIMA-style models exploit. Source: notebook 03.}
+\caption{Autocorrelation structure: demand covaries with its recent past,
+which is the property ARIMA-style models exploit. Source: notebook 03.}
 \label{fig:acf}
 \end{figure}
 
 \subsection{Statistical comparison}
 \label{sec:stats-method}
-Ninety-one paired comparisons (55 M5 $+$ 36 Store) combine the Wilcoxon
-signed-rank test (normal approximation) with the Diebold--Mariano test
+Ninety-one paired comparisons (55 M5 and 36 Store) combine the Wilcoxon
+signed-rank test (normal approximation) with the Diebold-Mariano test
 \citep{diebold1995}, Holm correction \citep{holm1979} for multiplicity,
-500-replication bootstrap confidence intervals \citep{efron1993}, Cohen's paired $d_z$, and the
-Wilcoxon rank-biserial $r$. With 112,000 paired errors, nearly everything is
-``significant'' --- which is exactly why every $p$-value travels with an effect
-size. Methodology detail is in \cref{app:stats}.
+500-replication bootstrap confidence intervals \citep{efron1993}, paired
+Cohen $d_z$, and the Wilcoxon rank-biserial $r$. With 112,000 paired errors,
+tests have high power to detect small differences, so each $p$-value is
+reported together with an effect size. A qualification on the observation
+count is required: the 112,000 paired errors per comparison arise from 500
+series observed across 8 rolling origins and 28 horizon steps, with
+overlapping estimation windows. They are repeated, dependent observations, not
+112,000 independent draws, and the nominal count should not be read as an
+effective independent sample size. The paired tests were preregistered on
+this structure and remain the reported inference; series-level or
+block-bootstrap inference that respects the dependence explicitly is
+identified as a robustness extension in \cref{sec:l-future}. Methodological
+detail is in \cref{app:stats}.
 
 \subsection{Inventory policy}
 \label{sec:policy}
-All forecasts drive one shared ordering engine
+All forecasts pass through one shared ordering implementation
 (\texttt{11\_src/inventory\_policy.py}), identical for every model by
 construction: a daily-review order-up-to (base-stock) policy with lost sales.
-Per series--origin instance, safety stock is $z$ times the forecast-error
-standard deviation (floored) times $\sqrt{L}$; the order-up-to level is the sum
-of the next $L$ forecasts plus safety stock; unmet demand is lost at penalty
-$P$ per unit; end-of-day stock accrues holding cost $H$ per unit. The default
-ranking policy is $L=7$, 95\% service target ($z\approx1.645$), $H=1$, $P=5$.
-Costs decompose into holding $+$ stockout, with service level, average
-inventory, and reorder counts as diagnostics. \Cref{fig:invlink} shows how
-forecasts become orders.
+For each series-origin instance, safety stock equals $z$ times the
+forecast-error standard deviation (floored) times $\sqrt{L}$; the order-up-to
+level is the sum of the next $L$ forecasts plus safety stock; unmet demand is
+lost at penalty $P$ per unit; end-of-day stock accrues holding cost $H$ per
+unit. The default ranking policy is $L=7$, 95\% service target ($z\approx
+1.645$), $H=1$, $P=5$. Total cost decomposes into holding and stockout
+components, with service level, average inventory, and reorder frequency as
+diagnostics. \Cref{fig:invlink} illustrates how forecasts enter ordering
+decisions.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{12_inventory_connection.png}
-\caption{From forecast to shelf: forecasts feed safety stock and order-up-to
-levels; the policy --- not the error metric --- decides what an error costs.
+\caption{From forecast to order: forecasts determine safety stock and
+order-up-to levels, so the policy governs what each unit of error costs.
 Teaching figure from notebook 05a.}
 \label{fig:invlink}
 \end{figure}
 
 \subsection{Robustness and sensitivity analysis}
 \label{sec:sens-method}
-Headline rankings use the default policy, but trust requires more: a 27-policy
-grid ($L \in \{3,7,14\} \times$ service $\in \{90\%,95\%,99\%\} \times P \in
-\{3,5,10\}$, $H=1$) replays every model--dataset through 540 costing runs. A
-model first across nearly all policies is \emph{robust}; one whose crown moves
-with the policy is \emph{fragile}. Per-archetype M5 costing adds the
-demand-structure dimension.
+Headline rankings use the default policy. Their stability is then tested on a
+27-policy grid ($L \in \{3,7,14\}$, service $\in \{90\%,95\%,99\%\}$,
+$P \in \{3,5,10\}$, $H=1$), replaying every model-dataset through 540 costing
+runs. A model ranked first across nearly all policies is described as robust;
+one whose rank moves with the policy is described as policy-sensitive.
+Per-archetype M5 costing adds the demand-structure dimension.
 
 \subsection{Convergence and feasibility}
 \label{sec:conv-method}
-Every ARIMA/SARIMA fit is logged per series--origin
-(\texttt{convergence\_details\_*.csv}) with a scope column separating the
-exploratory 100-series SARIMA subset from the primary full-500 run. A
-16-fit feasibility probe (0.62\,s/fit) preceded the 4,000-fit full-500 SARIMA
-run (2,382\,s, 4,000/4,000 successful). Zero-failure convergence on dense data
-is itself a finding when contrasted with the sparse-data fallback rate.
+Every ARIMA/SARIMA estimation is logged per series-origin
+(\texttt{convergence\_details\_*.csv}), with a scope column separating the
+exploratory 100-series SARIMA subset from the primary full-500 run. A 16-fit
+feasibility probe (0.62\,s per fit) preceded the 4,000-fit full-500 SARIMA run
+(2,382\,s; 4,000 of 4,000 successful). The contrast between complete
+convergence on dense data and partial pre-check fallback on sparse data is
+itself an empirical result about estimation feasibility under demand
+structure.
 
 \subsection{Validation and reproducibility}
 \label{sec:validation}
-An independent validator re-checks row counts (112,000 per model--dataset),
-duplicate keys (zero), origin coverage (1--8), horizon length (28 everywhere),
-test-window containment, forecast finiteness/non-negativity, and cross-family
-actuals identity (max spread 0.0): 0 FAIL
+An independent validator re-checks row counts (112,000 per model-dataset),
+duplicate keys (zero), origin coverage (1--8), horizon length (28 throughout),
+test-window containment, forecast finiteness and non-negativity, and
+cross-family actuals identity (maximum spread 0.0): 0 FAIL
 (\texttt{06\_results/validation\_report.json}). Seeds (42), manifests, run
-logs, and a pre-hardening backup make every step replayable; provenance is
+logs, and a pre-hardening backup make each step replayable; provenance is
 inventoried in \cref{app:repro}.
 
 \subsection{Research hardening and final evidence freeze}
 \label{sec:hardening}
 Before reporting, the evidence passed a hardening audit that corrected the
-calendar (leap day 2016-02-29 assigned to validation: 1,034/121/83),
-revalidated the LSTM on chronological per-series splits, fixed a Seasonal Naive
-lookahead, unified all models onto one inventory module, corrected MASE
+calendar (leap day 2016-02-29 assigned to validation, giving 1,034/121/83),
+revalidated the LSTM on chronological per-series splits, fixed a Seasonal
+Naive lookahead, unified all models onto one inventory module, corrected MASE
 grouping and Wilcoxon effect sizes, pooled archetype WAPE/sMAPE, replaced the
 SARIMA subset with the full-500 run as the primary result, and repaired
 identifiers. Pre-hardening originals are preserved untouched in
-\texttt{06\_results/\_pre\_hardening\_backup/} and never used as report
-sources. The freeze (commits 53c8343 through edb42ad) generated the number
-sheet, figure/table audits, and claim traceability programmatically --- no
-headline number in this report was typed by hand. Hardening is reported to
-explain why the evidence can be trusted, not as a debugging diary.
+\texttt{06\_results/\_pre\_hardening\_backup/} and are not report sources.
+The freeze (commits 53c8343 through edb42ad) generated the number sheet,
+figure and table audits, and claim traceability programmatically; no headline
+number in this report was entered by hand. Hardening is documented here to
+establish the provenance of the evidence.

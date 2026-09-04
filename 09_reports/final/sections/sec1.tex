@@ -4,37 +4,36 @@
 
 \subsection{Problem context}
 \label{sec:problem}
-Every retailer runs the same daily gamble. Order too much and cash sits on
-shelves gathering dust; order too little and customers walk away empty-handed,
-taking their money to a competitor. The first mistake shows up as holding cost,
-the second as stockout cost, and the optimal order sits somewhere between them.
-Getting that balance right starts with predicting demand --- but it does not end
-there. A forecast is a number on a screen; an order is money in motion. This
-study is about the full journey from number to money.
+Retail inventory decisions balance two costs. Ordering too much ties up cash
+in holding cost; ordering too little forfeits margin through stockouts. The
+preferred order quantity lies between these extremes, and locating it begins
+with demand prediction but does not end there. A forecast is an estimate; an
+order commits resources. This study covers the full path from estimate to
+committed cost.
 
-Two demand worlds make the problem interesting. In the first, captured by the
-Walmart M5 data, most items on most days sell nothing at all: demand is sparse,
-spiky, and intermittent, with a 64.5\% zero rate across the studied series.
-Classical forecasting tools were built for smooth, every-day demand and often
-stumble here. In the second world, a store-item demand dataset, nearly every
-item sells every day (zero rate 0.02\%): demand is dense and comparatively
-smooth. A method that shines in one world may embarrass itself in the other,
-and any serious claim about ``the best model'' must survive both.
+Two demand environments frame the analysis. The first, captured by the Walmart
+M5 data, is sparse and intermittent: most items sell nothing on most days,
+with a 64.5\% zero rate across the studied series. Classical forecasting tools
+were developed largely for smooth, continuous demand and are poorly suited to
+this setting. The second, a store-item demand dataset, is dense: nearly every
+item sells every day (zero rate 0.02\%). A method that performs well in one
+environment may perform poorly in the other, so any comparative claim is
+tested in both.
 
 \subsection{Why forecast accuracy alone is insufficient}
 \label{sec:why-not-accuracy}
-Consider two forecasters. Forecaster A misses by two units on average;
-forecaster B misses by three. By any accuracy metric, A wins. But suppose A's
-errors are all under-predictions on high-margin rush days, while B's errors are
-harmless over-predictions on quiet Tuesdays. Fed into a real ordering rule,
-B can easily produce the cheaper shelf. Accuracy metrics weight every unit of
-error equally; inventory costs do not. They punish stockouts and overstocks
-asymmetrically, filter forecasts through safety-stock formulas, and interact
-with lead times and reorder rhythms. Judging a forecasting model without running
-its forecasts through an inventory policy is like judging an engine without
-putting it in a car. This study therefore evaluates every model twice: once as
-a forecaster, once as a driver of inventory decisions under one shared,
-identical ordering policy.
+Forecast accuracy and inventory cost weight errors differently. Consider two
+forecasters where A has lower average error than B. If A's errors concentrate
+in under-prediction on high-volume days while B's errors are modest
+over-predictions on quiet days, B can produce the lower inventory cost under a
+real ordering rule. Accuracy metrics treat each unit of error symmetrically,
+while inventory costs penalize stockouts and overstocks asymmetrically, filter
+forecasts through safety-stock formulas, and interact with lead times and
+review rhythms. Evaluating a forecasting model without passing its forecasts
+through an inventory policy therefore measures only part of its economic
+effect. Every model in this study is evaluated twice: once as a forecaster
+and once as an input to inventory decisions under a single shared ordering
+policy.
 
 \subsection{Research question}
 \label{sec:rq}
@@ -47,91 +46,93 @@ forecast errors alone?
 \label{sec:hypotheses}
 The study tests four neutrally framed claims so that any outcome is
 informative: \textbf{H1,} accuracy differs significantly across model
-generations; \textbf{H2,} accuracy differences move inventory outcomes under a
-common policy; \textbf{H3,} sophistication improves inventory outcomes
-monotonically (the claim under test --- its rejection would be the finding, not
-a failure); \textbf{H4,} patterns hold across both retail environments.
-Verdicts appear in \cref{sec:verdicts}.
+generations; \textbf{H2,} accuracy differences produce measurable inventory
+differences under a common policy; \textbf{H3,} sophistication improves
+inventory outcomes monotonically (the claim under test; its rejection would be
+the finding, not a failure); \textbf{H4,} patterns hold across both retail
+environments. Verdicts appear in \cref{sec:verdicts}.
 
 \subsection{Objectives}
 \label{sec:objectives}
 \begin{enumerate}
-\item Compare twelve forecasting approaches --- baselines, exponential
-smoothing, ARIMA/SARIMA, Croston-family specialists, and a global LSTM --- on
+\item Compare twelve forecasting approaches (baselines, exponential
+smoothing, ARIMA/SARIMA, Croston-family specialists, and a global LSTM) on
 identical footing across two demand environments.
-\item Evaluate each model twice: on forecast accuracy and on the inventory cost
-its forecasts generate under a shared ordering policy.
-\item Separate statistical significance from practical importance using paired
-tests, effect sizes, and confidence intervals.
-\item Separate robust conclusions from policy-sensitive ones using a 27-policy
-sensitivity grid.
-\item Publish a frozen, traceable evidence base any reader can audit.
+\item Evaluate each model on forecast accuracy and on the inventory cost its
+forecasts generate under a shared ordering policy.
+\item Distinguish statistical significance from practical importance using
+paired tests, effect sizes, and confidence intervals.
+\item Distinguish policy-stable conclusions from policy-sensitive ones using a
+27-policy sensitivity grid.
+\item Publish a frozen, traceable evidence base that supports independent
+audit of every reported number.
 \end{enumerate}
 
 \subsection{Scope}
 \label{sec:scope}
 The study covers univariate daily demand forecasting (no prices, promotions, or
-calendar features), a 28-day horizon over eight rolling origins, and a single
+calendar features), a 28-day horizon over eight rolling origins, and one
 family of inventory policies (daily-review order-up-to, lost sales). The M5
-analysis uses a stratified sample of 500 series, not the full 30,490 catalog.
-SARIMA runs Store-only and the Croston family M5-only, each for documented
-methodological reasons. The planned large-language-model phase is designed but
-deliberately unexecuted; it appears only as future work (\cref{sec:llm-future}).
+analysis uses a stratified sample of 500 series rather than the full 30,490
+catalog. SARIMA runs Store-only and the Croston family M5-only, each for
+documented methodological reasons. The planned large-language-model phase was
+designed but not executed; it appears only as future work (\cref{sec:llm-future}).
 
 \subsection{Research contributions}
 \label{sec:contributions}
-Empirically, the study demonstrates the forecast--decision gap in both
-directions within one controlled design: alignment on M5, divergence on Store
-demand. Methodologically, it contributes a shared-policy evaluation harness
-that makes cross-model inventory comparison fair by construction, a leakage-safe
-rolling protocol with scale-free metrics, and a sensitivity-as-verdict
-discipline for robustness claims. Analytically, it pairs every significance
-statement with an effect size and every headline ranking with a policy-stability
-verdict. For reproducibility, the frozen evidence package (number sheet, figure
-and table audits, claim traceability) lets a skeptical reader check any number
-in this report back to its source file.
+The empirical contribution is a measurement of the forecast-decision
+relationship in both directions within one controlled design: correspondence
+on M5 demand and divergence on Store demand. The methodological contribution
+comprises a shared-policy evaluation harness that holds the inventory
+treatment constant across models, a leakage-safe rolling protocol with
+scale-free metrics, and a sensitivity discipline in which headline rankings
+are reported together with their stability across policies. The analytical
+contribution pairs each significance statement with an effect size and each
+headline ranking with a policy-stability assessment. For reproducibility, the
+frozen evidence package (number sheet, figure and table audits, claim
+traceability) maps every reported number to its source file.
 
 \subsection{Datasets at a glance}
 \label{sec:datasets-glance}
-\textbf{M5 (primary).} Walmart M5 competition data \citep{makridakis2022m5}: thousands of item--store
-daily series, 2011--2016. This study uses 500 stratified series over the common
-window 2013-01-01 to 2016-05-22. Sparse and intermittent: the archetype split
-is 194 highly intermittent, 199 intermittent, 26 moderate, 80 variable, and 1
-smooth series. \textbf{Store Item Demand (secondary robustness environment).}
-Kaggle Store Item Demand Forecasting Challenge: 10 stores $\times$ 50 items =
-500 series, complete panel of 913,000 rows, 2013-01-01 to 2017-12-31, analyzed
-over the same common window. Dense: essentially no zero-demand days.
-\Cref{fig:rep-m5,fig:rep-store,fig:diversity} show the contrast.
+\textbf{M5 (primary).} Walmart M5 competition data \citep{makridakis2022m5}:
+thousands of item-store daily series, 2011 to 2016. This study uses 500
+stratified series over the common window 2013-01-01 to 2016-05-22. The
+archetype split is 194 highly intermittent, 199 intermittent, 26 moderate, 80
+variable, and 1 smooth series. \textbf{Store Item Demand (secondary robustness
+environment).} Kaggle Store Item Demand Forecasting Challenge: 10 stores by 50
+items (500 series), a complete panel of 913,000 rows from 2013-01-01 to
+2017-12-31, analyzed over the same common window. Demand is dense, with
+essentially no zero-demand days. \Cref{fig:rep-m5,fig:rep-store,fig:diversity}
+illustrate the contrast.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{04_representative_series.png}
-\caption{Representative sparse M5 series: long stretches of zero demand broken
-by spikes. Source: 07\_figures/eda/m5 (notebook 03).}
+\caption{Representative sparse M5 series: extended zero-demand intervals
+punctuated by spikes. Source: 07\_figures/eda/m5 (notebook 03).}
 \label{fig:rep-m5}
 \end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{08_representative_series.png}
-\caption{Representative dense Store series: demand every day with weekly rhythm.
-Source: 07\_figures/eda/store\_item\_demand (notebook 03).}
+\caption{Representative dense Store series: nonzero demand each day with a
+weekly rhythm. Source: 07\_figures/eda/store\_item\_demand (notebook 03).}
 \label{fig:rep-store}
 \end{figure}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.9\textwidth]{11_series_diversity_panel.png}
-\caption{Store demand diversity: level and volatility vary widely even in a
-dense environment, so one fixed model cannot fit all. Source: notebook 03.}
+\caption{Store demand diversity: level and volatility differ widely across
+series within a dense environment. Source: notebook 03.}
 \label{fig:diversity}
 \end{figure}
 
 \subsection{What the study establishes}
 \label{sec:establishes}
-Three things. First, a credible forecast leaderboard on both datasets with
-uncertainty properly quantified. Second, a decision-level leaderboard showing
-where forecasting skill converts into money and where it does not. Third, a
-robustness map telling the reader which conclusions survive contact with
-different lead times, service targets, and cost ratios --- and which do not.
-The short version is the at-a-glance panel: on M5 the smartest forecaster is
-also the cheapest stocker and stays there; on Store demand it is not, and
-leadership depends on the policy.
+First, a forecast leaderboard for both datasets with uncertainty quantified.
+Second, a decision-level leaderboard showing where forecasting skill reduces
+cost and where it does not. Third, a robustness map recording which
+conclusions hold across lead times, service targets, and cost ratios, and
+which vary with them. In summary: on M5 demand the lowest-error forecaster is
+also the lowest-cost inventory input and remains so across policies; on Store
+demand it is not, and the lowest-cost input depends on the policy.

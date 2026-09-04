@@ -1,166 +1,165 @@
 % Section 3 — Models used
 \section{Models Used}
 \label{sec:models}
-Each rung below states what the method does in one breath, why it earned a
-place, how it was actually run here, and what job it does on the ladder.
-Textbook derivations are omitted; implementation truth is in \cref{app:configs}.
+Each subsection states what the method assumes, how it was configured in this
+study, and what comparison it supports. Textbook derivations are omitted;
+implementation truth is in \cref{app:configs}.
 
 \subsection{Naive}
 \label{sec:m-naive}
-\emph{Does:} tomorrow equals today. \emph{Why:} the irreducible baseline ---
-any method that cannot beat ``repeat yesterday'' adds no value.
-\emph{Implementation:} last observed value carried forward 28 days; history
-strictly before each origin. \emph{Role:} reference floor. It is a weak floor
-(M5 MAE 1.18; Store 16.29) but, remarkably, wins 6 of 27 Store inventory
-policies --- a first hint that accuracy and cost diverge.
+Naive repeats the last observed value across the 28-day horizon, using only
+history preceding each origin. It is the reference floor: a method that cannot
+improve on repeating yesterday adds no value. Its accuracy is modest (M5 MAE
+1.18; Store 16.29), yet it wins 6 of 27 Store inventory policies, an early
+indication that accuracy and cost can diverge.
 
 \subsection{Seasonal Naive}
 \label{sec:m-snaive}
-\emph{Does:} tomorrow equals the same weekday last week. \emph{Why:} retail
-demand has a weekly heartbeat (\cref{fig:weekly}); this is the cheapest way to
-use it. \emph{Implementation:} repeats only the last seven \emph{observed}
-values (a lookahead bug reaching past the seasonal window was found and fixed
-during hardening). \emph{Role:} seasonal reference line run in every phase. It
-is Store's third-cheapest inventory driver (2,128.14) despite middling
-accuracy --- weekly rhythm, it turns out, stocks shelves well.
+Seasonal Naive repeats the same weekday from the preceding week, the cheapest
+use of retail's weekly rhythm (\cref{fig:weekly}). The implementation repeats
+only the last seven observed values; an earlier version that reached beyond
+the seasonal window was identified and corrected during hardening. It serves
+as the seasonal reference run in every phase. Despite middling accuracy, it is
+the third-lowest-cost Store inventory input (2,128.14), which suggests weekly
+structure stocks shelves effectively even when point accuracy is unremarkable.
 
 \subsection{Moving Average}
 \label{sec:m-ma}
-\emph{Does:} forecasts the average of the last $w$ days --- a low-pass filter
-on noisy demand. \emph{Why:} the classic practitioner workhorse: no parameters
-to break, no trends to chase. \emph{Implementation:} global window chosen on
-validation (M5: $w=14$; Store: $w=7$; per-series counts favored 28 on M5 and 7
-on Store, but the global rule won on validation MAE). \emph{Role:} the simple
-method the fancy ones must justify themselves against. It nearly tops M5
-forecasting (MASE 1.346 vs.\ LSTM 1.316) and \emph{wins} Store inventory
-(2,084.49).
+The moving average forecasts the mean of the last $w$ days, a low-pass filter
+on noisy demand and the standard practitioner baseline: no estimated dynamics
+to break. The global window was selected on validation (M5: $w=14$ at MAE
+0.9206, against 0.9236 for $w=7$ and 0.9282 for $w=28$; Store: $w=7$ at 7.4057,
+against 7.5113 and 7.9132), with seed 42. It is the simple method the
+remaining rungs must justify themselves against. It nearly leads M5
+forecasting (MASE 1.346 against LSTM's 1.316) and records the lowest Store
+inventory cost (2,084.49).
 
 \subsection{Simple Exponential Smoothing}
 \label{sec:m-ses}
-\emph{Does:} tracks a slowly moving level, weighting recent days more
-($\alpha=0.1$ selected on validation). \emph{Why:} the minimal model with
-memory --- level without trend or seasonality \citep{hyndman2018}. \emph{Implementation:}
-transparent SES, grid-searched $\alpha$. \emph{Role:} smoothing-rung anchor.
-SES is the quiet overachiever: second-cheapest on M5 inventory (159.31),
-second-cheapest on Store (2,113.82), and winner of 2 M5 sensitivity policies
-at short lead with high stockout penalty.
+SES tracks a slowly moving demand level with higher weight on recent days
+\citep{hyndman2018}; it is the minimal model with memory, estimating level
+without trend or seasonality. The transparent implementation uses
+validation-selected $\alpha=0.1$. SES performs consistently well without
+leading any forecast board: second-lowest cost on M5 inventory (159.31) and
+on Store inventory (2,113.82), and winner of 2 M5 sensitivity policies at
+short lead with high stockout penalty.
 
 \subsection{Double Exponential Smoothing}
 \label{sec:m-des}
-\emph{Does:} SES plus a trend component ($\alpha=\beta=0.2$). \emph{Why:} to
-test whether explicit trend modeling helps. \emph{Implementation:} Holt's
-method, grid-searched. \emph{Role:} cautionary tale. DES over-stocks badly
-(average inventory 8.41 on M5, 76.07 on Store) and lands mid-pack or worse on
-cost --- trend extrapolation on noisy retail data buys inventory, not accuracy.
-It nonetheless wins 5 Store sensitivity policies, which says more about Store
-fragility than DES quality.
+DES (Holt's method) extends SES with a trend component
+($\alpha=\beta=0.2$, grid-selected), testing whether explicit trend modeling
+helps. It does not help here. DES carries roughly double the inventory of the
+leading methods (average stock 8.41 on M5 and 76.07 on Store) while recording
+mid-range or worse costs, indicating that trend extrapolation on noisy retail
+data accumulates stock without commensurate accuracy. Its 5 Store sensitivity
+wins reflect Store leadership fragmentation rather than DES strength.
 
 \subsection{Triple Exponential Smoothing}
 \label{sec:m-tes}
-\emph{Does:} DES plus a weekly seasonal component (additive Holt--Winters,
-$0.3/0.3/0.3$). \emph{Why:} the full classical toolkit in one model.
-\emph{Implementation:} transparent additive form. \emph{Role:} the negative
-finding. TES is worst almost everywhere: M5 MASE 2.60 and cost 346.68; Store
-MASE 2.11 and cost 3,419.88; worst in every archetype. Complexity without
-discipline is just expensive noise.
+TES (additive Holt-Winters, $0.3/0.3/0.3$) adds a weekly seasonal component to
+DES, completing the classical toolkit in one model. It records the weakest
+results in the study: M5 MASE 2.60 with cost 346.68, Store MASE 2.11 with cost
+3,419.88, and the highest error in every archetype. The finding is that
+combined trend-seasonality structure, as implemented here, overfits the
+available signal.
 
 \subsection{ARIMA}
 \label{sec:m-arima}
-\emph{Does:} models tomorrow as a linear mix of recent values and recent
-shocks after differencing to stationarity \citep{box1970,hyndman2018}. \emph{Why:} the
-statistical view of autocorrelation that smoothing cannot express.
-\emph{Implementation:} fixed ARIMA(1,1,0) after a validation sanity check
-(per-series search rejected as overfitting-prone and over-budget); series with
-$>85\%$ zeros skip fitting and fall back to Naive. \emph{Role:} linear-memory
-representative. Mid-pack accuracy (M5 MASE 1.51; Store 1.45) with a striking
-fallback asymmetry: 22.65\% on sparse M5 vs.\ 0\% on dense Store.
+ARIMA models the next value as a linear combination of recent values and
+recent shocks after differencing toward stationarity
+\citep{box1970,hyndman2018}, providing the statistical treatment of
+autocorrelation that smoothing lacks. A fixed ARIMA(1,1,0) was adopted after
+a validation sanity check; per-series order search was rejected as
+overfitting-prone and computationally out of scope. Series with more than 85\%
+zeros skip estimation and fall back to Naive rather than fitting noise. ARIMA
+is the linear-memory representative: mid-range accuracy on both datasets (M5
+MASE 1.51; Store 1.45) with a marked feasibility asymmetry discussed in
+\cref{sec:arima-find} (22.65\% pre-check fallback on sparse M5 demand against
+zero fallbacks on dense Store demand).
 
 \subsection{SARIMA}
 \label{sec:m-sarima}
-\emph{Does:} ARIMA plus seasonal autoregression and moving averages.
-\emph{Why:} to test whether explicit weekly autocorrelation beats SES-style
-seasonality on dense data. \emph{Implementation:} SARIMA(1,1,0)(0,1,1)$_7$,
-Store-only, full 500 series $\times$ 8 origins (4,000 fits, 4,000 successes,
-2,382\,s). An earlier 100-series subset exists but is exploratory-only and
-never the headline. \emph{Role:} seasonal-statistical challenger. Store MASE
-1.055 --- second-best forecaster --- yet fifth-cheapest on cost (2,282.31):
-exhibit B of the forecast--decision gap.
+SARIMA adds seasonal autoregression and moving-average terms, testing whether
+explicit weekly autocorrelation improves on SES-style seasonality for dense
+data. The configuration is SARIMA(1,1,0)(0,1,1)$_7$, Store-only, estimated on
+the full 500 series by 8 origins (4,000 estimations, 4,000 successful, 2,382
+seconds total). A prior 100-series subset is retained as an exploratory record
+but is not the headline result. SARIMA was not estimated on M5: seasonal
+differencing of predominantly zero series lacks justification, and the
+Croston rung already addresses that setting. It is the second-ranked Store
+forecaster (MASE 1.055) but ranks fifth on Store inventory cost (2,282.31).
 
 \subsection{LSTM}
 \label{sec:m-lstm}
-\emph{Does:} a recurrent network with gating that learns nonlinear, long-range
-temporal patterns across all series jointly \citep{hochreiter1997}.
-\emph{Why:} the neural rung: can shared structure beat per-series statistics?
-\emph{Implementation:} one global model per dataset, 28-day lookback,
-history-only per-series scaling, chronological per-series validation (rebuilt
-during hardening to remove overlapping-window leakage), seed 42.
-\emph{Role:} the complexity thesis. It wins forecasting on both datasets and
-M5 inventory, but loses Store inventory --- the most important single-model
-story in the report (\cref{sec:lstm-find}).
+The LSTM is a recurrent network with gating that carries signal across long,
+noisy sequences \citep{hochreiter1997}. Estimated globally (one network per
+dataset, 28-day lookback, per-series history-only scaling, chronological
+per-series validation rebuilt during hardening to remove overlapping-window
+leakage, seed 42), it tests whether pooled cross-series learning outperforms
+per-series statistics. Within the evaluated model set it records the lowest
+forecast error on both datasets and the lowest M5 inventory cost, but ranks
+fourth on Store inventory cost; \cref{sec:lstm-find} examines this split in
+detail.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{02_lstm_cell_gates.png}
-\caption{The LSTM cell: gates decide what to remember, forget, and output,
-letting the network carry useful signal across weeks of noisy demand. Teaching
-figure from notebook 08.}
+\caption{The LSTM cell: gates control what is retained, discarded, and
+emitted at each step, allowing information to persist across weeks of noisy
+demand. Teaching figure from notebook 08.}
 \label{fig:lstmcell}
 \end{figure}
 
 \subsection{Croston}
 \label{sec:m-croston}
-\emph{Does:} splits intermittent demand into two hidden sequences --- demand
-size when it occurs, and interval between occurrences --- smoothing each
-separately \citep{croston1972}. \emph{Why:} general models assume every day
-carries signal; on sparse data most days carry none, and Croston refuses to
-fit noise to zeros. \emph{Implementation:} M5-only, $\alpha=0.1$
-validation-selected, flat 28-day rate forecast. \emph{Role:} intermittency
-specialist baseline. Respectable accuracy (MAE 1.08) and the best service level
-on M5 (93.9\%), but out-stocked on cost (174.81) by its own corrected
-siblings.
+Croston's method \citep{croston1972} separates intermittent demand into two
+sequences (nonzero demand size and interval between nonzero demands) and
+smooths each independently, avoiding fitting zeros as signal. Estimated
+M5-only with validation-selected $\alpha=0.1$; the 28-day forecast is flat at
+the estimated rate. Accuracy is respectable (MAE 1.08) and its M5 service
+level is the highest recorded (93.9\%), but its cost (174.81) exceeds its
+bias-corrected variants below.
 
 \subsection{SBA}
 \label{sec:m-sba}
-\emph{Does:} Croston with the Syntetos--Boylan debiasing factor
-\citep{syntetos2005}: multiplies the rate by $(1-\alpha/2)$ to correct
-Croston's over-forecast bias. \emph{Why:} the standard bias-corrected
-intermittent-demand method. \emph{Implementation:} M5-only, $\alpha=0.5$.
-\emph{Role:} best cost performer of the family (160.66) --- a small algebraic
-correction worth real money.
+The Syntetos-Boylan approximation \citep{syntetos2005} multiplies the Croston
+rate by $(1-\alpha/2)$ to correct its over-forecast bias. Estimated M5-only
+with $\alpha=0.5$. It is the lowest-cost member of the family (160.66): a
+small algebraic correction with measurable inventory value.
 
 \subsection{TSB}
 \label{sec:m-tsb}
-\emph{Does:} replaces Croston's interval smoothing with direct probability-of-demand
-updating, reacting faster when demand patterns shift \citep{teunter2011}.
-\emph{Why:} the modern intermittent-demand alternative. \emph{Implementation:}
-M5-only, $(\alpha,\beta)=(0.1,0.3)$. \emph{Role:} best accuracy of the family
-(MAE 1.010, MASE 1.369) but second on cost (165.13): within one family, the
-accuracy--cost ranking already flips.
+The Teunter-Syntetos-Babai method \citep{teunter2011} replaces Croston's
+interval smoothing with direct updating of demand-occurrence probability,
+responding faster when demand patterns shift. Estimated M5-only at
+$(\alpha,\beta)=(0.1,0.3)$. It records the family's lowest forecast error
+(MAE 1.010, MASE 1.369) but the family's second-lowest cost (165.13): accuracy
+and cost rank the family differently.
 
 \subsection{Model-ladder comparison}
 \label{sec:ladder-compare}
-\Cref{tab:taxonomy} compresses the ladder to one page: twelve methods, five
-rungs, two datasets with deliberate scope exceptions (SARIMA Store-only,
-Croston family M5-only). The pattern to carry into \cref{sec:findings}: the
-ladder predicts complexity, not value.
+\Cref{tab:taxonomy} compresses the ladder: twelve methods on five rungs
+across two datasets, with the two deliberate scope exceptions (SARIMA
+Store-only, Croston family M5-only). The ladder orders complexity; whether
+value follows is resolved empirically in \cref{sec:findings}.
 
 \begin{table}[H]
 \centering
-\caption{Model taxonomy: purpose, scope, and rung. Full configurations in \cref{app:configs}.}
+\caption{Model taxonomy: purpose, scope, and comparative role. Full configurations in \cref{app:configs}.}
 \label{tab:taxonomy}
 \begin{tabular}{llll}
 \toprule
-Model & Rung & Scope & Job on the ladder \\
+Model & Rung & Scope & Comparative role \\
 \midrule
 Naive & Baseline & Both & Reference floor \\
 Seasonal Naive & Baseline & Both & Weekly-rhythm reference \\
-Moving Average & Baseline & Both & Practitioner workhorse \\
+Moving Average & Baseline & Both & Practitioner benchmark \\
 SES & Smoothing & Both & Level memory \\
-DES & Smoothing & Both & Trend test (fails expensively) \\
-TES & Smoothing & Both & Full classical kit (worst) \\
+DES & Smoothing & Both & Trend specification (records overstocking) \\
+TES & Smoothing & Both & Full classical specification (weakest results) \\
 ARIMA(1,1,0) & Statistical & Both & Linear memory \\
-SARIMA(1,1,0)(0,1,1)$_7$ & Statistical & Store only & Seasonal challenge \\
-LSTM (global) & Neural & Both & Complexity thesis \\
+SARIMA(1,1,0)(0,1,1)$_7$ & Statistical & Store only & Seasonal challenger \\
+LSTM (global) & Neural & Both & Pooled nonlinear learning \\
 Croston & Intermittent & M5 only & Sparse-data specialist \\
 SBA & Intermittent & M5 only & Debiased specialist \\
 TSB & Intermittent & M5 only & Adaptive specialist \\
