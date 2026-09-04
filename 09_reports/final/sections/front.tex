@@ -17,7 +17,7 @@ On sparse M5 demand, the LSTM records the lowest forecast error (mean absolute
 scaled error, MASE, of 1.316) and the lowest inventory cost (152.83), ranking
 first under 25 of 27 tested inventory policies. On dense store demand, the
 LSTM again records the lowest forecast error (MASE 0.978) but ranks fourth on
-inventory cost (2,247.46), behind a moving average (2,084.49); policy
+inventory cost (2,247.46), behind a moving average (2,084.50); policy
 leadership there is fragmented across moving average, SES, naive, and DES
 (9, 7, 6, and 5 policies of 27, respectively). The implication is that lower
 forecast error does not necessarily produce lower inventory cost. Ninety-one
@@ -58,7 +58,7 @@ finding, not a failure.)
  & \textbf{M5 (sparse, intermittent)} & \textbf{Store (dense, smooth)} \\
 \midrule
 Lowest forecast error & LSTM (MASE 1.316) & LSTM (MASE 0.978) \\
-Lowest inventory cost & LSTM (cost 152.83) & Moving average (cost 2,084.49) \\
+Lowest inventory cost & LSTM (cost 152.83) & Moving average (cost 2,084.50) \\
 Stability & \textbf{Stable:} LSTM first in 25/27 policies & \textbf{Policy-dependent:} lead shared 9 / 7 / 6 / 5 \\
 Correspondence & Lowest error $\rightarrow$ lowest cost & Lowest error $\not\rightarrow$ lowest cost \\
 \bottomrule
