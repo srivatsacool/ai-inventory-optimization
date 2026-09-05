@@ -10,26 +10,16 @@ import streamlit as st
 from lib import frozen_loader as F
 from lib.lab import (
     FROZEN, STEEL, STEEL_L, TEAL, TEAL_L, INDIGO_L, MUTED, WHITE,
-    badges, meta_rail, metric_card, chart_panel, insight_panel, flow_diagram,
+    badges, hero, meta_rail, metric_card, chart_panel, insight_panel, flow_diagram,
     glossary, inject_theme, lab_footer, fig_base, mono_annotation, empty_state,
+    section_head, thesis_statement,
 )
 
 inject_theme()
 badges(("Locked / Published", "frozen"), ("Evidence · read only", "dim"), ("v1.0", "ver"))
-st.title("Frozen Results")
-st.markdown(
-    '<p class="sub" style="color:#9AA4B5;font-size:15px;max-width:880px;margin-top:2px;">'
-    'Forecast accuracy and inventory performance from the final verified research run — '
-    'nothing on this page is recomputed. Interrogate the "why" in the interactive sections.</p>',
-    unsafe_allow_html=True,
-)
-meta_rail([
-    ("Train", "2013-01-01 → 2015-10-31", "1,034 days"),
-    ("Validation", "2015-11-01 → 2016-02-29", "121 d · incl. leap day"),
-    ("Test", "2016-03-01 → 2016-05-22", "83 d · 8 origins · H28"),
-    ("Dataset", "M5 + Store", "500 series each · seed 42"),
-    ("Policy", "L7 · 95% · H=1 · P=5", "common policy, all models"),
-], cols=5)
+hero("Frozen Results",
+     "Forecast accuracy and inventory performance from the final verified research run — "
+     'nothing on this page is recomputed. Interrogate the "why" in the interactive sections.')
 ok = {k: v for k, v in F.verify_thesis().items()}
 missing = [k for k, v in F.check_all_present().items() if not v]
 if missing:
@@ -52,24 +42,44 @@ fc_win = mase.loc[mase.groupby("dataset")["value"].idxmin()].set_index("dataset"
 inv_win = inv.loc[inv.groupby("dataset")["total_cost"].idxmin()].set_index("dataset")
 store_lstm = float(inv.loc[(inv["dataset"] == "store_item_demand") & (inv["model"] == "LSTM"), "total_cost"].iloc[0])
 
-# ---------- thesis in numbers ----------
-st.subheader("Thesis in numbers")
-c1, c2, c3, c4 = st.columns(4)
+# ---------- dominant thesis statement (same verified numbers, no card) ----------
+thesis_statement(
+    "<b>LSTM</b> wins forecast quality on both datasets — MASE "
+    f'<span class="num">{fc_win.loc["m5", "value"]:.3f}</span> / '
+    f'<span class="num">{fc_win.loc["store_item_demand", "value"]:.3f}</span> — '
+    "but <b>Moving Average</b> wins Store inventory cost, "
+    f'<span class="num">{inv_win.loc["store_item_demand", "total_cost"]:.2f}</span> '
+    f"vs LSTM {store_lstm:.2f}."
+)
+meta_rail([
+    ("Train", "2013-01-01 → 2015-10-31", "1,034 days"),
+    ("Validation", "2015-11-01 → 2016-02-29", "121 d · incl. leap day"),
+    ("Test", "2016-03-01 → 2016-05-22", "83 d · 8 origins · H28"),
+    ("Dataset", "M5 + Store", "500 series each · seed 42"),
+    ("Policy", "L7 · 95% · H=1 · P=5", "common policy, all models"),
+], cols=5)
+
+# ---------- thesis in numbers: forecast pair, then inventory pair ----------
+section_head("Evidence · forecast", "Forecast quality")
+c1, c2 = st.columns(2)
 metric_card(c1, "M5 · forecast quality", fc_win.loc["m5", "model"], f"{fc_win.loc['m5', 'value']:.3f}", "MASE · lower is better",
-            "Lowest forecast error on sparse, intermittent demand.")
+            "Lowest forecast error on sparse, intermittent demand.", tone="forecast")
 metric_card(c2, "Store · forecast quality", fc_win.loc["store_item_demand", "model"], f"{fc_win.loc['store_item_demand', 'value']:.3f}", "MASE · lower is better",
-            "Lowest forecast error on dense, smooth demand.")
+            "Lowest forecast error on dense, smooth demand.", tone="forecast")
+section_head("Evidence · inventory", "Inventory performance")
+c3, c4 = st.columns(2)
 metric_card(c3, "M5 · inventory performance", inv_win.loc["m5", "model"], f"{inv_win.loc['m5', 'total_cost']:.2f}", "simulated cost · lower is better",
-            "Lowest simulated inventory cost under the common policy.")
+            "Lowest simulated inventory cost under the common policy.", tone="inventory")
 metric_card(c4, "Store · inventory performance", inv_win.loc["store_item_demand", "model"], f"{inv_win.loc['store_item_demand', 'total_cost']:.2f}", "simulated cost · lower is better",
-            "Lowest simulated inventory cost under the common policy.")
+            "Lowest simulated inventory cost under the common policy.", tone="inventory")
 glossary("MASE", "Inventory cost")
 
-# ---------- charts A/B: model ranking ----------
+# ---------- chart A: model ranking (primary visual anchor) ----------
+section_head("Forecast evidence", "Accuracy ranking by environment")
 ds_pick = st.segmented_control("Demand environment", ["M5", "Store"], default="M5", key="fr_ds") or "M5"
 ds_key = "m5" if ds_pick == "M5" else "store_item_demand"
 rank = mase[mase["dataset"] == ds_key].sort_values("value")
-fig = fig_base(height=max(300, 34 * len(rank) + 90))
+fig = fig_base(height=max(320, 40 * len(rank) + 100))
 colors = [TEAL if m == rank["model"].iloc[0] else STEEL_L for m in rank["model"]]
 fig.add_bar(x=rank["value"], y=rank["model"], orientation="h", marker_color=colors, width=.62,
             hovertemplate="%{y}<br>MASE %{x:.4f}<extra></extra>")
@@ -77,12 +87,12 @@ fig.update_layout(
     title=dict(text=f"MASE by model · lower is better — {ds_pick}", font=dict(size=16, color=WHITE), x=.01),
     xaxis_title="MASE",
 )
-fig.add_annotation(mono_annotation(rank["value"].iloc[0], 0.6, "winner", color=TEAL_L, xanchor="left"))
+fig.add_annotation(mono_annotation(rank["value"].iloc[0] * 1.015, 0, "winner", color=TEAL_L, xanchor="left"))
 chart_panel(fig, "", "Frozen forecast accuracy over 500 series × 8 origins, test window only.")
 
 # ---------- chart D: forecast vs inventory outcome ----------
-st.subheader("Forecast winner ≠ inventory winner")
-fig2 = fig_base(height=430)
+section_head("Decision outcome", "Forecast winner ≠ inventory winner")
+fig2 = fig_base(height=560)
 for i, (ds, label) in enumerate([("m5", "M5 · sparse"), ("store_item_demand", "Store · dense")]):
     sub = inv[inv["dataset"] == ds].sort_values("total_cost")
     fig2.add_bar(
@@ -106,10 +116,11 @@ insight_panel(
     "but on Store demand <b>Moving Average wins inventory cost</b> "
     f"({inv_win.loc['store_item_demand', 'total_cost']:.2f} vs LSTM {store_lstm:.2f}).",
     "Inventory performance depends on how forecast <i>behavior</i> interacts with the common policy — "
-    "uncertainty, lead time, service level, and cost structure — not on point accuracy alone. A smoother, "
-    "slightly less accurate forecast can order more economically.",
+    "not on point accuracy alone.",
+    tone="frozen",
 )
 
+section_head("Thesis logic", "From forecast quality to inventory outcome")
 flow_diagram([
     ("Forecast quality", "MASE · MAE · RMSE · sMAPE measured on identical test windows"),
     ("Forecast behavior", "level, noise, and bias each model feeds forward"),
@@ -117,15 +128,16 @@ flow_diagram([
     ("Simulated inventory outcome", "holding + stockout cost · fill rate · average inventory"),
 ])
 
-# ---------- supporting tables + figures ----------
-st.subheader("Exact evidence — audit view")
+# ---------- supporting tables + figures (all collapsed) ----------
+section_head("Audit", "Exact evidence")
 SHOW = ["model", "total_cost", "total_holding_cost", "total_stockout_cost", "service_level", "average_inventory"]
-t1, t2 = st.columns(2)
-for col, (ds, label) in zip([t1, t2], [("m5", "M5"), ("store_item_demand", "Store Item Demand")]):
-    with col:
-        tab = inv[inv["dataset"] == ds].sort_values("total_cost")[SHOW].round(2)
-        st.dataframe(tab, use_container_width=True, hide_index=True)
-        st.caption(f"{label} · cheapest: {tab.iloc[0]['model']} at {tab.iloc[0]['total_cost']:.2f} · mean of 500 series × 8 origins")
+with st.expander("Evidence tables — exact values"):
+    t1, t2 = st.columns(2)
+    for col, (ds, label) in zip([t1, t2], [("m5", "M5"), ("store_item_demand", "Store Item Demand")]):
+        with col:
+            tab = inv[inv["dataset"] == ds].sort_values("total_cost")[SHOW].round(2)
+            st.dataframe(tab, use_container_width=True, hide_index=True)
+            st.caption(f"{label} · cheapest: {tab.iloc[0]['model']} at {tab.iloc[0]['total_cost']:.2f} · mean of 500 series × 8 origins")
 with st.expander("Frozen published figures (tracked PNGs)"):
     st.image(str(F.frozen_path("fig_cost")), caption="Total cost comparison — 07_figures/inventory", use_container_width=True)
     st.image(str(F.frozen_path("fig_service")), caption="Service level comparison — 07_figures/inventory", use_container_width=True)

@@ -66,7 +66,7 @@ p, span, div, label, li, h1, h2, h3, h4, .stMarkdown {
   color: #F7F8FA;
 }
 [data-testid="stSidebar"] { background: #0A0F1B; border-right: 1px solid #273246; }
-.block-container { max-width: 1560px; padding-top: 1.8rem; padding-bottom: 3rem; }
+.block-container { max-width: 1560px; padding-top: 1.1rem; padding-bottom: 3rem; }
 
 h1 { font-size: 34px; line-height: 1.15; font-weight: 650; letter-spacing: -0.02em; color: #F7F8FA; }
 h2 { font-size: 24px; line-height: 1.25; font-weight: 650; letter-spacing: -0.015em; color: #F7F8FA; margin-top: 2.2rem; }
@@ -91,21 +91,40 @@ p, li, .stMarkdown { color: #C6CEDB; }
 .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .badge.ver { margin-left: auto; border: none; color: #626B7A; background: none; letter-spacing: .06em; }
 
-/* ---------- hero + meta rail ---------- */
-.lab-hero { margin: 2px 0 6px; }
+/* ---------- hero + thesis statement ---------- */
+.lab-hero { margin: 2px 0 4px; }
 .lab-hero .sub { color: #9AA4B5; font-size: 15px; line-height: 1.55; max-width: 860px; }
-.lab-rail { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; margin: 20px 0 8px; }
+.lab-thesis { font-size: clamp(23px, 2.6vw, 31px); line-height: 1.32; font-weight: 600;
+  letter-spacing: -0.015em; color: #F7F8FA; max-width: 980px; margin: 14px 0 4px; }
+.lab-thesis b { color: #FFFFFF; font-weight: 700; }
+.lab-thesis .num { font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+  font-weight: 600; letter-spacing: -0.02em; }
+
+/* ---------- section primitives (dividers, not boxes) ---------- */
+.lab-sec { margin-top: 2.1rem; }
+.lab-kicker { font-size: 11px; font-weight: 650; letter-spacing: .15em; text-transform: uppercase;
+  color: #626B7A; margin: 0 0 6px; }
+.lab-sec-title { font-size: 24px; line-height: 1.25; font-weight: 650; letter-spacing: -0.015em;
+  color: #F7F8FA; margin: 0; }
+.lab-sec-sub { font-size: 13px; color: #8B94A5; margin-top: 5px; max-width: 900px; }
+.rule { border: none; border-top: 1px solid #273246; margin: 12px 0 0; }
+
+/* ---------- evidence rail (flat mono rows, hairline rules) ---------- */
+.lab-rail { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 4px 18px;
+  margin: 16px 0 4px; border-top: 1px solid #273246; padding-top: 12px; }
 .lab-rail.c4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
-.rail-cell { background: #0E1422; border: 1px solid #273246; border-radius: 10px; padding: 11px 14px; min-width: 0; }
+.rail-cell { background: none; border: none; border-radius: 0; padding: 2px 0; min-width: 0; }
 .rail-cell .k { font-size: 10px; font-weight: 650; letter-spacing: .14em; text-transform: uppercase; color: #626B7A; }
 .rail-cell .v { font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace; font-size: 12.5px; font-weight: 600; color: #DCE3EE; margin-top: 5px; letter-spacing: -0.01em; }
 .rail-cell .s { font-size: 11px; color: #8B94A5; margin-top: 2px; }
 
-/* ---------- metric cards ---------- */
-.mc { background: #131B2B; border: 1px solid #273246; border-radius: 14px; padding: 22px 24px 20px;
-  height: 100%; display: flex; flex-direction: column;
-  box-shadow: 0 12px 40px rgba(0,0,0,.18); transition: border-color .2s var(--e, ease); }
+/* ---------- metric cards (the single bordered card; flat, top-accented) ---------- */
+.mc { background: #0E1422; border: 1px solid #273246; border-top: 2px solid #273246; border-radius: 14px;
+  padding: 20px 22px 18px; height: 100%; display: flex; flex-direction: column;
+  transition: border-color .2s ease; }
 .mc:hover { border-color: #3A4A66; }
+.mc.tone-forecast { border-top-color: #5B56A0; }
+.mc.tone-inventory { border-top-color: #27757A; }
 .mc-k { font-size: 10px; font-weight: 650; letter-spacing: .14em; text-transform: uppercase; color: #8B94A5; }
 .mc-model { font-size: 16px; font-weight: 650; color: #F7F8FA; margin-top: 12px; }
 .mc-value { font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
@@ -114,32 +133,37 @@ p, li, .stMarkdown { color: #C6CEDB; }
 .mc-unit { font-size: 11px; font-weight: 650; letter-spacing: .14em; text-transform: uppercase; color: #8B94A5; margin-top: 10px; }
 .mc-note { font-size: 13px; line-height: 1.5; color: #97A1B3; margin-top: 10px; }
 
-/* ---------- panels / charts ---------- */
-.panel { background: #0E1422; border: 1px solid #273246; border-radius: 14px; padding: 18px 20px; margin: 14px 0; }
-.panel-title { font-size: 16px; font-weight: 650; color: #F7F8FA; }
-.panel-int { font-size: 13px; color: #97A1B3; margin-top: 4px; }
-.panel-tag { float: right; }
+/* ---------- figure headers + captions (borderless; the chart is the surface) ---------- */
+.fig-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  margin: 6px 0 2px; }
+.fig-title { font-size: 16px; font-weight: 650; color: #F7F8FA; }
+.fig-cap { font-size: 13px; line-height: 1.55; color: #8B94A5; margin: 8px 0 0; max-width: 920px; }
 
-/* ---------- insight ---------- */
-.insight { background: #0E1422; border: 1px solid #273246; border-radius: 14px; padding: 18px 22px; margin: 14px 0; }
+/* ---------- insight (borderless + semantic left rule) ---------- */
+.insight { background: transparent; border: none; border-left: 2px solid #273246; border-radius: 0;
+  padding: 2px 0 2px 18px; margin: 18px 0; max-width: 960px; }
+.insight.tone-frozen { border-left-color: #C59B52; }
+.insight.tone-live { border-left-color: #4FA6D8; }
 .insight .w { font-size: 15px; line-height: 1.55; color: #DCE3EE; }
 .insight .w b { color: #F7F8FA; }
 .insight .h { font-size: 10px; font-weight: 650; letter-spacing: .14em; text-transform: uppercase; color: #626B7A; margin: 2px 0 6px; }
 .insight .why { border-top: 1px solid #273246; margin-top: 14px; padding-top: 12px; }
 
-/* ---------- flow diagram ---------- */
-.flow { display: flex; align-items: stretch; flex-wrap: wrap; margin: 18px 0; }
-.flow-node { flex: 1 1 0; background: #131B2B; border: 1px solid #273246; padding: 14px 12px; min-width: 0; }
-.flow.compact .flow-node { padding: 12px 10px; }
-.flow.compact .flow-node .t { font-size: 10.5px; letter-spacing: .06em; }
-.flow.compact .flow-arrow { padding: 0 5px; font-size: 15px; }
-.flow-node:first-child { border-radius: 14px 0 0 14px; }
-.flow-node:last-child { border-radius: 0 14px 14px 0; }
-.flow-node.single:first-child:last-child { border-radius: 14px; }
+/* ---------- flow stepper (numbered mono rail, no boxes) ---------- */
+.flow { display: flex; align-items: stretch; margin: 16px 0 4px; counter-reset: labstep; }
+.flow-node { flex: 1 1 0; background: transparent; border: none; border-top: 1px solid #273246;
+  border-radius: 0 !important; padding: 12px 10px 2px 0; margin-right: 14px; min-width: 0; }
+.flow-node.hit { border-top-color: rgba(63,147,152,.7); }
+.flow.compact .flow-node { padding: 10px 6px 2px 0; margin-right: 8px; }
 .flow-node .t { font-size: 12px; font-weight: 650; letter-spacing: .1em; text-transform: uppercase; color: #DCE3EE; }
+.flow-node .t::before { counter-increment: labstep; content: "0" counter(labstep);
+  display: block; font-family: 'JetBrains Mono', Consolas, monospace; font-size: 11px; font-weight: 600;
+  letter-spacing: .08em; color: #626B7A; margin-bottom: 5px; }
+.flow.compact .flow-node .t { font-size: 10.5px; letter-spacing: .06em; }
 .flow-node .d { font-size: 12.5px; color: #8B94A5; margin-top: 6px; line-height: 1.5; }
-.flow-node.hit { border-color: rgba(63,147,152,.55); }
-.flow-arrow { display: flex; align-items: center; padding: 0 12px; color: #3F9398; font-size: 20px; font-weight: 600; }
+.flow-arrow { display: flex; align-items: flex-start; padding: 26px 10px 0 0; color: #3A4A66;
+  font-size: 15px; font-weight: 600; }
+.flow.compact .flow-arrow { padding: 24px 4px 0 0; font-size: 13px; }
 
 /* ---------- method steps ---------- */
 .mstep { display: flex; gap: 16px; padding: 14px 0; border-top: 1px solid #273246; }
@@ -151,21 +175,59 @@ p, li, .stMarkdown { color: #C6CEDB; }
 .mstep .tags span { display: inline-block; font-family: 'JetBrains Mono', Consolas, monospace; font-size: 11px;
   color: #B8C2D2; background: #131B2B; border: 1px solid #273246; border-radius: 4px; padding: 2px 8px; margin: 2px 4px 2px 0; }
 
+/* ---------- scenario readout (experiment hero: one number, mono context) ---------- */
+.lab-scenario { margin: 2px 0 4px; max-width: 900px; }
+.lab-scenario .w { font-size: clamp(22px, 2.4vw, 29px); line-height: 1.3; font-weight: 600;
+  letter-spacing: -0.015em; color: #F7F8FA; }
+.lab-scenario .w b { color: #FFFFFF; font-weight: 700; }
+.lab-scenario .ctx { font-family: 'JetBrains Mono', Consolas, monospace; font-size: 12px; color: #8B94A5;
+  margin-top: 6px; letter-spacing: .02em; }
+
 /* ---------- misc ---------- */
 .gloss { font-size: 12.5px; color: #97A1B3; line-height: 1.6; margin: 4px 0; }
 .gloss b { color: #DCE3EE; }
-.empty { background: #0E1422; border: 1px dashed #273246; border-radius: 14px; padding: 26px; color: #8B94A5; font-size: 14px; }
-.kpi-strip { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; margin-top: 12px; }
-.kpi { background: #131B2B; border: 1px solid #273246; border-radius: 10px; padding: 12px 14px; min-width: 0; }
+.empty { background: transparent; border: 1px dashed #273246; border-radius: 10px; padding: 26px; color: #8B94A5; font-size: 14px; }
+.kpi-strip { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 4px 18px;
+  margin-top: 14px; border-top: 1px solid #273246; padding-top: 12px; }
+.kpi-strip.c4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+.kpi { background: none; border: none; border-radius: 0; padding: 2px 0; min-width: 0; }
 .kpi .k { font-size: 10px; font-weight: 650; letter-spacing: .13em; text-transform: uppercase; color: #8B94A5; }
 .kpi .v { font-family: 'JetBrains Mono', Consolas, monospace; font-size: 17px; font-weight: 600; color: #F7F8FA; margin-top: 5px; }
 .kpi .s { font-size: 11px; color: #626B7A; margin-top: 2px; }
 
+/* ---------- unified control rail: divided, sticky, clearly one instrument ---------- */
+div[data-testid="stHorizontalBlock"]:has([data-testid="stSegmentedControl"]) {
+  position: sticky; top: 0; z-index: 50; background: #080C16;
+  border-top: 1px solid #273246; border-bottom: 1px solid #273246;
+  padding: 10px 0 12px; margin-top: 14px;
+}
+div[data-testid="stHorizontalBlock"]:has([data-testid="stSegmentedControl"]) [data-testid="stWidgetLabel"] span {
+  color: #626B7A !important;
+}
+div[data-testid="stSegmentedControl"] button { transition: background .18s ease, color .18s ease, border-color .18s ease; }
+
+/* ---------- sidebar: kill material-icon bleed completely ---------- */
+[data-testid="stSidebarNav"] [data-testid="stNavIcon"],
+[data-testid="stSidebarNav"] .material-icons,
+[data-testid="stSidebarNav"] .material-symbols-outlined,
+[data-testid="stSidebarNav"] .material-symbols-rounded,
+[data-testid="stSidebarNav"] [class*="material-symbols"],
+[data-testid="stSidebarNavLink"] [data-testid="stNavIcon"] { display: none !important; width: 0 !important; font-size: 0 !important; }
+[data-testid="stSidebarNavLink"] { gap: 0 !important; }
+
+/* ---------- accessibility: visible focus ---------- */
+a:focus-visible, button:focus-visible, input:focus-visible,
+[role="tab"]:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid #4FA6D8 !important; outline-offset: 2px;
+}
+
 .stTabs [data-bid="stTab"] { font-weight: 600; }
-section[data-testid="stExpander"] { border: 1px solid #273246 !important; border-radius: 10px !important; background: rgba(14,20,34,.6); }
+div[data-testid="stExpander"] { background: transparent !important; }
+div[data-testid="stExpander"] > details { border: none !important; border-top: 1px solid #273246 !important;
+  border-radius: 0 !important; background: transparent !important; margin: 0 !important; }
+div[data-testid="stExpander"] > details > summary { padding-left: 0 !important; }
 [data-testid="stToolbar"], [data-testid="stAppDeployButton"], [data-testid="stMainMenu"] { display: none !important; }
 [data-testid="stHeader"] { background: transparent; }
-[data-testid="stNavIcon"] { display: none !important; }
 .rail-cell .v { white-space: nowrap; }
 [data-testid="stSidebarNav"] a { border-radius: 8px; margin: 1px 8px; }
 [data-testid="stSidebarNavLink"][aria-current="page"], [data-testid="stSidebarNavLink"][data-active="true"] {
@@ -174,16 +236,21 @@ section[data-testid="stExpander"] { border: 1px solid #273246 !important; border
 [data-testid="stAlert"] { border-radius: 10px; }
 
 @media (max-width: 900px) {
-  .lab-rail, .lab-rail.c4, .kpi-strip { grid-template-columns: 1fr 1fr; }
+  .lab-rail, .lab-rail.c4, .kpi-strip, .kpi-strip.c4 { grid-template-columns: 1fr 1fr; }
   .rail-cell .v { white-space: normal; overflow-wrap: anywhere; font-size: 11.5px; }
   .mc-value { font-size: 38px; }
+  .lab-thesis { font-size: 23px; }
   h1 { font-size: 27px; }
+  div[data-testid="stHorizontalBlock"] { flex-wrap: wrap; }
+  div[data-testid="stHorizontalBlock"] > div[data-testid="column"] { min-width: min(230px, 100%); }
 }
 @media (max-width: 560px) {
-  .lab-rail, .lab-rail.c4, .kpi-strip { grid-template-columns: 1fr; }
+  .lab-rail, .lab-rail.c4, .kpi-strip, .kpi-strip.c4 { grid-template-columns: 1fr; }
   .flow { flex-direction: column; }
-  .flow-node { border-radius: 10px !important; }
-  .flow-arrow { transform: rotate(90deg); padding: 4px 0; justify-content: center; }
+  .flow-node { border-top: 1px solid #273246; margin-right: 0; padding-bottom: 10px; }
+  .flow-arrow { transform: rotate(90deg); padding: 2px 0; margin: 0; justify-content: flex-start; align-items: center; height: 22px; }
+  div[data-testid="stHorizontalBlock"] > div[data-testid="column"] { min-width: 100%; }
+  div[data-testid="stHorizontalBlock"]:has([data-testid="stSegmentedControl"]) { position: static; }
 }
 """
 
@@ -224,10 +291,28 @@ def meta_rail(items: Iterable[tuple[str, str, str]], cols: int = 5) -> None:
     st.markdown(f'<div class="lab-rail{" c4" if cols == 4 else ""}">{cells}</div>', unsafe_allow_html=True)
 
 
-def metric_card(col, kicker: str, model: str, value: str, unit: str, note: str = "") -> None:
+def section_head(kicker: str, title: str, sub: str = "") -> None:
+    """Section header: mono kicker + title + hairline rule. Never a box."""
+    st.markdown(
+        f'<div class="lab-sec"><div class="lab-kicker">{kicker}</div>'
+        f'<h2 class="lab-sec-title">{title}</h2>'
+        + (f'<div class="lab-sec-sub">{sub}</div>' if sub else "")
+        + '<hr class="rule"></div>',
+        unsafe_allow_html=True,
+    )
+
+
+def thesis_statement(html: str) -> None:
+    """Dominant research statement. Large type only — no card, no border."""
+    st.markdown(f'<div class="lab-thesis">{html}</div>', unsafe_allow_html=True)
+
+
+def metric_card(col, kicker: str, model: str, value: str, unit: str, note: str = "",
+                tone: str = "") -> None:
+    """tone: '' | 'forecast' (indigo top rule) | 'inventory' (teal top rule)."""
     with col:
         st.markdown(
-            f"""<div class="mc"><div class="mc-k">{kicker}</div>
+            f"""<div class="mc{f' tone-{tone}' if tone else ''}"><div class="mc-k">{kicker}</div>
             <div class="mc-model">{model}</div>
             <div class="mc-value">{value}</div>
             <div class="mc-unit">{unit}</div>
@@ -237,18 +322,32 @@ def metric_card(col, kicker: str, model: str, value: str, unit: str, note: str =
 
 
 def chart_panel(fig, title: str, interpretation: str = "", tag: str = "") -> None:
-    st.markdown(
-        f'<div class="panel"><div class="panel-title">{title}</div>'
-        + (f'<span class="badge {tag[1]} panel-tag">{tag[0]}</span>' if tag else "")
-        + (f'<div class="panel-int">{interpretation}</div>' if interpretation else "")
-        + "</div>",
-        unsafe_allow_html=True,
-    )
+    """Borderless figure: header row, the chart as the surface, caption below.
+
+    A tag with no title joins the caption line instead of orphaning a header row.
+    """
+    if title:
+        st.markdown(
+            f'<div class="fig-head"><span class="fig-title">{title}</span>'
+            + (f'<span class="badge {tag[1]}">{tag[0]}</span>' if tag else "")
+            + "</div>",
+            unsafe_allow_html=True,
+        )
     st.plotly_chart(fig, use_container_width=True, config={"displaylogo": False, "displayModeBar": False})
+    if interpretation or (tag and not title):
+        st.markdown(
+            '<div class="fig-cap">'
+            + (f'<span class="badge {tag[1]}" style="margin-right:10px;">{tag[0]}</span>' if (tag and not title) else "")
+            + (interpretation or "")
+            + "</div>",
+            unsafe_allow_html=True,
+        )
 
 
-def insight_panel(what: str, why: str = "", header: str = "WHAT THIS SHOWS", why_header: str = "WHY IT MATTERS") -> None:
-    html = f'<div class="insight"><div class="h">{header}</div><div class="w">{what}</div>'
+def insight_panel(what: str, why: str = "", header: str = "WHAT THIS SHOWS", why_header: str = "WHY IT MATTERS",
+                  tone: str = "") -> None:
+    """tone: '' | 'frozen' (amber rule) | 'live' (blue rule)."""
+    html = f'<div class="insight{f" tone-{tone}" if tone else ""}"><div class="h">{header}</div><div class="w">{what}</div>'
     if why:
         html += f'<div class="why"><div class="h">{why_header}</div><div class="w">{why}</div></div>'
     st.markdown(html + "</div>", unsafe_allow_html=True)
@@ -266,13 +365,13 @@ def flow_diagram(nodes: Iterable[tuple[str, str]], last_highlight: bool = True, 
     st.markdown(html, unsafe_allow_html=True)
 
 
-def kpi_strip(items: Iterable[tuple[str, str, str]]) -> None:
+def kpi_strip(items: Iterable[tuple[str, str, str]], cols: int = 5) -> None:
     cells = "".join(
         f'<div class="kpi"><div class="k">{k}</div><div class="v">{v}</div>'
         + (f'<div class="s">{s}</div>' if s else "") + "</div>"
         for k, v, s in items
     )
-    st.markdown(f'<div class="kpi-strip">{cells}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="kpi-strip{" c4" if cols == 4 else ""}">{cells}</div>', unsafe_allow_html=True)
 
 
 def empty_state(msg: str) -> None:

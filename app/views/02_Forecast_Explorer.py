@@ -14,19 +14,15 @@ from lib import appdata_loader as A
 from lib import frozen_loader as F
 from lib.lab import (
     INDIGO, INDIGO_L, MUTED, STEEL_L, TEAL, TEAL_L, VIOLET_L, WHITE,
-    badges, chart_panel, empty_state, fig_base, glossary, inject_theme,
-    insight_panel, kpi_strip, lab_footer, mono_annotation,
+    badges, chart_panel, empty_state, fig_base, glossary, hero, inject_theme,
+    insight_panel, kpi_strip, lab_footer, mono_annotation, section_head,
 )
 
 inject_theme()
 badges(("Interactive / Experimental", "live"), ("Sample data · derived", "dim"), ("v1.0", "ver"))
-st.title("Forecast Explorer")
-st.markdown(
-    '<p class="sub" style="color:#9AA4B5;font-size:15px;max-width:880px;margin-top:2px;">'
-    'Interrogate how each model behaves. Rankings are frozen full-study evidence; '
-    'the trace chart runs on a cached origin-1 sample so you can see the shape of demand.</p>',
-    unsafe_allow_html=True,
-)
+hero("Forecast Explorer",
+     "Interrogate how each model behaves. Rankings are frozen full-study evidence; "
+     "the trace chart runs on a cached origin-1 sample so you can see the shape of demand.")
 
 missing = [k for k, ok in A.check_all_present().items() if not ok]
 if missing:
@@ -44,24 +40,28 @@ SERIES_LABEL = {
     "store_10_item_1": "Store 10 · item 1", "store_10_item_10": "Store 10 · item 10",
 }
 
-# ---------- control bar (only options backed by data) ----------
-st.markdown("### Analysis controls")
-ds = st.segmented_control("Dataset", ["M5", "Store"], default="M5", key="fe_ds") or "M5"
+# ---------- unified control rail (sticky, divided; only options backed by data) ----------
+_rc = st.columns(4)
+with _rc[0]:
+    ds = st.segmented_control("Dataset", ["M5", "Store"], default="M5", key="fe_ds") or "M5"
 ds_key = "m5" if ds == "M5" else "store_item_demand"
 series_opts = sorted(rep.loc[rep["dataset"] == ds_key, "series_id"].unique().tolist())
-series = st.segmented_control("Series", series_opts, default=series_opts[0], key="fe_series",
-                              format_func=lambda s: SERIES_LABEL.get(s, s))
+with _rc[1]:
+    series = st.segmented_control("Series", series_opts, default=series_opts[0], key="fe_series",
+                                  format_func=lambda s: SERIES_LABEL.get(s, s))
 series_id = series or series_opts[0]
 # model list = what the cached sample actually holds for this series
 models_here = [m for m in LADDER if m in fc[(fc["series_id"] == series_id)]["model"].unique().tolist()]
-metric = st.segmented_control("Metric (frozen)", ["MASE", "MAE", "RMSE", "sMAPE"], default="MASE", key="fe_metric") or "MASE"
-view = st.segmented_control("View", ["Ranking", "Forecast vs actual", "Errors"], default="Ranking", key="fe_view") or "Ranking"
+with _rc[2]:
+    metric = st.segmented_control("Metric (frozen)", ["MASE", "MAE", "RMSE", "sMAPE"], default="MASE", key="fe_metric") or "MASE"
+with _rc[3]:
+    view = st.segmented_control("View", ["Ranking", "Forecast vs actual", "Errors"], default="Ranking", key="fe_view") or "Ranking"
 
 # ---------- VIEW: ranking (frozen) ----------
 if view == "Ranking":
     ns = F.load_number_sheet()
     rank = ns[(ns["metric"] == metric) & (ns["dataset"] == ds_key)].sort_values("value")
-    fig = fig_base(height=max(300, 34 * len(rank) + 90))
+    fig = fig_base(height=max(320, 40 * len(rank) + 100))
     colors = [TEAL if m == rank["model"].iloc[0] else STEEL_L for m in rank["model"]]
     fig.add_bar(x=rank["value"], y=rank["model"], orientation="h", marker_color=colors, width=.62,
                 hovertemplate="%{y}<br>" + metric + " %{x:.4f}<extra></extra>")
@@ -69,7 +69,7 @@ if view == "Ranking":
     fig.update_layout(title=dict(text=f"{metric} by model · lower is better — {ds} (frozen full study)",
                                  font=dict(size=16, color=WHITE), x=.01),
                       xaxis_title=f"{metric} ({unit})")
-    fig.add_annotation(mono_annotation(rank["value"].iloc[0], 0.6, "winner", color=TEAL_L, xanchor="left"))
+    fig.add_annotation(mono_annotation(rank["value"].iloc[0] * 1.015, 0, "winner", color=TEAL_L, xanchor="left"))
     chart_panel(fig, "", "500 series × 8 origins × 28 days, identical evaluation windows for every model.",
                 tag=("Frozen evidence", "frozen"))
     w = rank.iloc[0]; worst = rank.iloc[-1]
@@ -78,6 +78,7 @@ if view == "Ranking":
         f"worst is <b>{worst['model']}</b> ({worst['value']:.3f}).",
         "Forecast accuracy is a useful signal, but it does not determine inventory cost by itself — "
         "switch to 03 Inventory Lab to see what each ranking actually buys.",
+        tone="frozen",
     )
 
 # ---------- VIEW: forecast vs actual (derived sample) ----------
@@ -89,7 +90,7 @@ elif view == "Forecast vs actual":
     if not chosen:
         empty_state("Pick at least one model to overlay on actuals.")
         st.stop()
-    fig = fig_base(height=460)
+    fig = fig_base(height=600)
     fig.add_scatter(x=srep["forecast_date"], y=srep["actual"], mode="lines+markers", name="Actual",
                     line=dict(color=WHITE, width=2.4), hovertemplate="actual %{y}<extra></extra>")
     pal = [STEEL_L, TEAL_L, VIOLET_L, INDIGO_L, "#B8956A", "#7FBDE6", "#9AA4B5", "#5F7A9E", "#6FA88F", "#8F7FB8", "#C78B94", "#7C8AA0"]
@@ -127,7 +128,7 @@ else:
         st.stop()
     tab1, tab2 = st.tabs(["Error by day", "Error distribution"])
     with tab1:
-        fig = fig_base(height=440)
+        fig = fig_base(height=520)
         for i, m in enumerate(chosen):
             g = fc[(fc["series_id"] == series_id) & (fc["model"] == m)].sort_values("forecast_date")
             if g.empty:
@@ -143,7 +144,7 @@ else:
         chart_panel(fig, "", "Above the line = over-forecast (extra holding); below = under-forecast (stockout risk).",
                     tag=("Derived sample", "live"))
     with tab2:
-        fig = fig_base(height=440)
+        fig = fig_base(height=520)
         for i, m in enumerate(chosen):
             g = fc[(fc["series_id"] == series_id) & (fc["model"] == m)]
             if g.empty:
@@ -160,6 +161,7 @@ else:
         f"Sample series <b>{SERIES_LABEL.get(series_id, series_id)}</b> — cached forecasts for {len(chosen)} overlay model(s).",
         "The shapes here explain the frozen rankings: models that mis-read zero-demand stretches produce the fat tails "
         "the common policy pays for in holding or stockout cost.",
+        tone="live",
     )
 
 glossary("MASE", "MAE", "RMSE", "sMAPE", "Intermittent demand", "Dense demand")
