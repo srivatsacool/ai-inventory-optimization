@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// HOME owns narrative only. Every number below is frozen published evidence
+// (09_reports/final/data/final_number_sheet.csv); nothing is computed here.
+const MODELS = [
+  ['MA', 'Moving Average', 'Traditional'],
+  ['SES', 'Simple Exponential Smoothing', 'Traditional'],
+  ['DES', 'Double Exponential Smoothing', 'Traditional'],
+  ['TES', 'Triple Exponential Smoothing (Holt-Winters)', 'Traditional'],
+  ['ARIMA', 'Autoregressive Integrated Moving Average', 'Statistical'],
+  ['SARIMA', 'Seasonal ARIMA', 'Statistical'],
+  ['LSTM', 'Long Short-Term Memory network', 'Neural'],
+  ['LLM', 'Large Language Model', 'LLM — design only, phase not executed'],
+];
+const RQS = [
+  ['RQ1', 'How do traditional, statistical, neural-network, and LLM-based approaches differ in demand forecasting performance?'],
+  ['RQ2', 'How do forecasting differences translate into inventory-management outcomes?'],
+  ['RQ3', 'Does increasing model sophistication consistently improve inventory performance?'],
+  ['RQ4', 'Are model-performance patterns consistent across different retail demand environments?'],
+  ['RQ5', 'What trade-offs exist between accuracy, inventory performance, computational requirements, and complexity?'],
+];
+---
+<BaseLayout
+  title="From Traditional Forecasting to Large Language Models"
+  section="home"
+  description="Can more advanced AI actually improve inventory decisions? An empirical study from traditional forecasting to neural approaches."
+>
+  <p class="label">Research publication · v0.1 · SIRP / 2026 · Operations × AI · Empirical study</p>
+  <h1>From Traditional Forecasting to Large Language Models: Evaluating AI-Based Inventory Optimization</h1>
+  <div class="prose">
+    <p><strong>Can more advanced AI actually improve inventory decisions?</strong></p>
+    <p>Better forecast accuracy does not automatically guarantee better inventory decisions. Inventory outcomes also depend on demand variability, lead time, safety stock, service levels, holding costs, stockout costs, and ordering policy.</p>
+  </div>
+
+  <section>
+    <p class="label">The research question</p>
+    <h2>Does forecasting sophistication improve inventory decisions?</h2>
+    <div class="prose">
+      <p>How does the effectiveness of AI-based inventory optimization change from traditional forecasting models to large language model–based approaches?</p>
+      <p>A forecast is not the end of the story. It feeds a decision, and the decision produces the business outcome: forecast → inventory decision → cost, stockout, service level.</p>
+      {RQS.map(([code, q]) => <p><strong>{code}</strong> — {q}</p>)}
+    </div>
+  </section>
+
+  <section>
+    <p class="label">Why inventory</p>
+    <h2>Forecasting is the mechanism. Inventory is the outcome.</h2>
+    <div class="prose">
+      <p>A successful forecast does not create business value by itself — the decision it enables does. Forecast quality is measured with MAE, RMSE, sMAPE, MASE on the same evaluation periods; inventory performance with total cost, holding, stockouts, service level, and average inventory, simulated under one common policy.</p>
+      <p>A forecast that is slightly less accurate can still produce the better inventory decision — and accuracy gains that do not change the decision may not be worth their cost.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="label">Model evolution</p>
+    <h2>Eight approaches, one ladder of increasing complexity</h2>
+    <table>
+      <thead><tr><th>Rung</th><th>Model</th><th>Family</th></tr></thead>
+      <tbody>
+        {MODELS.map(([short, long, fam], i) => <tr><td>{String(i + 1).padStart(2, '0')}</td><td>{short} — {long}</td><td>{fam}</td></tr>)}
+      </tbody>
+    </table>
+    <p><small>LLM is included as a design rung (see 11_src/llm_experiment_design.md); the LLM experimental phase was not executed, so no LLM result appears in the findings.</small></p>
+  </section>
+
+  <section>
+    <p class="label">Demand environments</p>
+    <h2>M5 vs Store: sparse against dense</h2>
+    <div class="prose">
+      <p><strong>Walmart M5</strong> — sparse and intermittent (64.5% zero rate across studied series). <strong>Store Item Demand</strong> — dense, nearly every item sells every day (0.02% zero rate). A method that performs well in one environment may perform poorly in the other, so every claim is tested in both: 500 series each, 8 rolling origins, 28-day horizon, seed 42.</p>
+      <p>Temporal split: train 2013-01-01 → 2015-10-31 (1,034 days) · validation 2015-11-01 → 2016-02-29 (121 days, incl. leap day) · test 2016-03-01 → 2016-05-22 (83 days). Common policy for all models: daily-review order-up-to with lost sales, L7 / 95% / H=1 / P=5.</p>
+    </div>
+  </section>
+
+  <section>
+    <p class="label">Central thesis — frozen evidence</p>
+    <h2>Forecast winner ≠ inventory winner</h2>
+    <div class="card">
+      <p>LSTM wins forecast accuracy on both datasets (M5 MASE 1.316, Store MASE 0.978). Moving Average wins Store inventory cost (2,084.50 vs LSTM 2,247.46) under the default policy.</p>
+      <p><small>Frozen published evidence · tag v1.0-evidence-freeze. Interrogate it in <a href="/lab">the Lab</a>; read it in <a href="/doc">the paper</a>.</small></p>
+    </div>
+  </section>
+
+  <section>
+    <p class="label">Robustness · Integrity</p>
+    <h2>Tested, not assumed</h2>
+    <div class="prose">
+      <p>112,000 forecasts per model-dataset, 91 paired comparisons, validation gates, and a 27-policy sensitivity grid (lead time × service target × stockout penalty). Sophistication was tested as a claim that could be rejected — and on Store inventory, it was. Known limits: smooth archetype n=1, SARIMA Store-only and Croston-family M5-only by design, single policy family and H28 horizon.</p>
+    </div>
+    <p><a href="/lab">Explore the evidence →</a> · <a href="/doc">Read the paper →</a></p>
+  </section>
+</BaseLayout>

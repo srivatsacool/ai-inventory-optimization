@@ -1,0 +1,77 @@
+/* Shared design contract — values transcribed from .impeccable/design.json,
+   the surviving website design-system source of truth. Nothing invented. */
+:root {
+  --paper: #f4f4f1;
+  --paper-dim: #e6e5e1;
+  --ink: #161a22;
+  --ink-soft: #2a303b;
+  --ink-mute: #5a6270;
+  --line: #d0d1ce;
+  --trad: #35618a;
+  --stat: #27757a;
+  --neural: #5b56a0;
+  --llm: #7a53a6;
+  --inventory: #3d7b55;
+  --uncertainty: #8f5619;
+  --lab-bg: #161a22;
+  --radius: 10px;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-label: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 160ms;
+  --dur-med: 320ms;
+  --dur-reveal: 700ms;
+  --measure: 68ch;
+}
+@media (min-width: 48rem) { :root { --measure: 72ch; } }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.65;
+}
+main { max-width: 60rem; margin: 0 auto; padding: 2rem 1.25rem 5rem; }
+h1, h2, h3 { line-height: 1.2; letter-spacing: -0.015em; }
+.label {
+  font-family: var(--font-label);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+a { color: var(--trad); }
+section { margin: 3.5rem 0; }
+.prose { max-width: var(--measure); }
+.card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  background: #fbfbfa;
+  box-shadow: 0 1px 2px rgba(22, 26, 34, 0.05), 0 2px 8px rgba(22, 26, 34, 0.05);
+}
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--line); }
+.site-nav {
+  display: flex; gap: 1.5rem; align-items: baseline;
+  max-width: 60rem; margin: 0 auto; padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--line);
+}
+.site-nav .brand { font-weight: 700; color: var(--ink); text-decoration: none; margin-right: auto; }
+.site-nav a.navlink {
+  font-family: var(--font-label); font-size: 0.78rem; letter-spacing: 0.12em;
+  text-decoration: none; color: var(--ink-mute); padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+}
+.site-nav a.navlink[aria-current="page"] { color: var(--ink); border-bottom-color: var(--trad); }
+footer.site-footer {
+  max-width: 60rem; margin: 0 auto; padding: 2rem 1.25rem 3rem;
+  border-top: 1px solid var(--line); color: var(--ink-mute); font-size: 0.85rem;
+}
+@media (max-width: 40rem) {
+  .site-nav { gap: 1rem; }
+  main { padding-top: 1.25rem; }
+}

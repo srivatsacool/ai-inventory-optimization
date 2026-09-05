@@ -37,10 +37,12 @@ _ARCHIVE_2026-08-27_RESET/
 _ARCHIVE_2026-08-27_FAVORITA/
 
 
-# --- Node / Astro (no longer part of this project) ---
+# --- Node / Astro (Cloudflare Pages static site in site/) ---
 node_modules/
 dist/
 .astro/
+# Generated PDF copy for the /doc page (rebuilt by `npm run copy-pdf`).
+site/public/doc/
 
 # --- Local temp ---
 .tmp/
@@ -56,3 +58,22 @@ RESET_LOG.md
 !/scripts/**
 !/.streamlit/
 !/.streamlit/**
+# The broad !/app/** and !/scripts/** exceptions above would also re-include
+# bytecode caches, so re-exclude them explicitly (must come AFTER the negations).
+app/__pycache__/
+app/**/__pycache__/
+app/**/*.py[cod]
+scripts/__pycache__/
+scripts/**/__pycache__/
+scripts/**/*.py[cod]
+
+# --- Local QA screenshots (regenerable, never committed) ---
+.impeccable/review/
+
+# NOTE: the 9 frozen-evidence files read by app/lib/frozen_loader.py live
+# under the otherwise-excluded 06_results/, 07_figures/, 09_reports/ dirs and
+# are kept tracked by exception (tracked files bypass .gitignore). Do NOT
+# `git rm` them — Streamlit Cloud needs them. Verify with:
+#   git ls-files 09_reports/final/data/final_number_sheet.csv \
+#     06_results/inventory/inventory_by_model.csv \
+#     07_figures/inventory/01_total_cost_comparison.png

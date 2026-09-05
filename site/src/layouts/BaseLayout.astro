@@ -1,0 +1,35 @@
+---
+import '../styles/tokens.css';
+
+interface Props {
+  title: string;
+  section: 'home' | 'lab' | 'doc';
+  description?: string;
+}
+const { title, section, description } = Astro.props;
+const fullTitle = `${title} — AI Inventory Optimization`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {description && <meta name="description" content={description} />}
+    <title>{fullTitle}</title>
+  </head>
+  <body>
+    <nav class="site-nav" aria-label="Primary">
+      <a class="brand" href="/">AI Inventory Optimization</a>
+      <a class="navlink" href="/" aria-current={section === 'home' ? 'page' : undefined}>HOME</a>
+      <a class="navlink" href="/lab" aria-current={section === 'lab' ? 'page' : undefined}>LAB</a>
+      <a class="navlink" href="/doc" aria-current={section === 'doc' ? 'page' : undefined}>DOC</a>
+    </nav>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      AI Inventory Optimization — research publication, interactive laboratory, and paper reader.
+      Frozen evidence · tag v1.0-evidence-freeze.
+    </footer>
+  </body>
+</html>

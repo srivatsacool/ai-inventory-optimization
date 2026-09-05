@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LabEmbed from '../components/LabEmbed.astro';
+import { STREAMLIT_URL } from '../config.mjs';
+---
+<BaseLayout
+  title="Research Lab"
+  section="lab"
+  description="Interactive research laboratory: frozen evidence, forecast explorer, inventory sensitivity, methodology."
+>
+  <p class="label">Interactive research laboratory · Evidence / Interactive</p>
+  <h1>Research Lab</h1>
+  <div class="prose">
+    <p>You entered from <em>what and why</em> — this is the evidence layer. Frozen Results are published and read-only; Forecast Explorer, Inventory / Sensitivity, and Methodology are interactive.</p>
+  </div>
+  <LabEmbed streamlitUrl={STREAMLIT_URL} />
+</BaseLayout>

@@ -1,4 +1,4 @@
-# Streamlit Community Cloud — kept identical to /requirements.txt.
+# Streamlit Community Cloud — install from repo root.
 # Pinned to versions verified locally (Python 3.12, 2026-09-05).
 # Only packages imported by app/**/*.py: streamlit, pandas, plotly, numpy.
 streamlit==1.43.2

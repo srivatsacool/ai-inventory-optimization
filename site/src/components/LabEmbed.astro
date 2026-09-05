@@ -1,0 +1,56 @@
+---
+// LabEmbed — the single Streamlit integration boundary for the /lab surface.
+// Contract: configurable URL, embed chrome, responsive frame, honest fallback.
+// Never renders a fake lab: with no configured URL it shows the fallback only.
+interface Props {
+  streamlitUrl: string;
+  title?: string;
+}
+const { streamlitUrl, title = 'Interactive Research Laboratory' } = Astro.props;
+const src = streamlitUrl ? `${streamlitUrl}?embed=true&toolbarMode=minimal` : '';
+---
+<div class="labembed">
+  {src ? (
+    <iframe
+      src={src}
+      title={title}
+      loading="lazy"
+      allow="clipboard-read; clipboard-write"
+      referrerpolicy="no-referrer"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+    />
+  ) : (
+    <div class="card" role="status">
+      <p class="label">Lab deployment pending</p>
+      <p>
+        The interactive laboratory runs as an independent Streamlit application.
+        Its hosting URL is not configured yet, so there is nothing to embed.
+      </p>
+      <p>
+        Configure <code>ASTRO_STREAMLIT_URL</code> (see
+        <code>site/src/config.mjs</code>) to enable the embedded lab. Until then,
+        run it locally with <code>streamlit run app/streamlit_app.py</code>.
+      </p>
+    </div>
+  )}
+  <p class="labembed-note">
+    <a href={streamlitUrl || '/lab'} target={streamlitUrl ? '_blank' : undefined} rel={streamlitUrl ? 'noopener' : undefined}>
+      Open Research Lab in a new tab
+    </a>
+    {src && ' — the lab is an independent application mounted inside this page.'}
+  </p>
+</div>
+<style>
+  .labembed iframe {
+    width: 100%;
+    height: calc(100vh - 220px);
+    min-height: 640px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fff;
+  }
+  .labembed-note { font-size: 0.85rem; color: var(--ink-mute); }
+  @media (max-width: 40rem) {
+    .labembed iframe { height: calc(100vh - 180px); min-height: 520px; }
+  }
+</style>

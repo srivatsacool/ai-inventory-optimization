@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Chapter list mirrors the actual report structure (report.tex inputs).
+// No page numbers: those belong to a future PDF.js upgrade, not invented here.
+const CHAPTERS = [
+  'Abstract',
+  '1 · Project Overview and Objective',
+  '2 · Research Methodology',
+  '3 · Models Used',
+  '4 · Key Findings and Results',
+  '5 · Discussion',
+  '6 · Contribution and Practical Implications',
+  '7 · Limitations and Future Research',
+  '8 · Conclusion',
+  'Appendices A–L',
+  'References (12)',
+];
+const PDF = '/doc/research-report.pdf';
+---
+<BaseLayout
+  title="Research Paper"
+  section="doc"
+  description="Formal research publication: From Forecasts to Shelf Decisions. Read online or download."
+>
+  <p class="label">Publication · September 2026 · Evidence freeze edb42ad</p>
+  <h1>From Forecasts to Shelf Decisions</h1>
+  <p>Evaluating AI-Based Inventory Optimization from Traditional Methods to Neural Forecasting.</p>
+  <div class="docreader">
+    <aside aria-label="Contents">
+      <p class="label">Contents</p>
+      <ul class="chapters">
+        {CHAPTERS.map((c) => <li>{c}</li>)}
+      </ul>
+      <p>
+        <a href={PDF} download>Download PDF</a><br />
+        <a href={PDF} target="_blank" rel="noopener">Open in new tab</a>
+      </p>
+    </aside>
+    <div class="docreader-main">
+      <object data={PDF} type="application/pdf" title="Research paper PDF" aria-label="Research paper PDF">
+        <p class="card">Your browser cannot display PDFs inline. <a href={PDF} download>Download the paper</a> instead.</p>
+      </object>
+    </div>
+  </div>
+</BaseLayout>
+<style>
+  .docreader { display: grid; grid-template-columns: 240px 1fr; gap: 1.5rem; align-items: start; }
+  .docreader aside ul.chapters { list-style: none; padding-left: 0; font-size: 0.9rem; }
+  .docreader aside li { margin: 0.3rem 0; }
+  .docreader-main object { width: 100%; height: calc(100vh - 240px); min-height: 600px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+  @media (max-width: 48rem) {
+    .docreader { grid-template-columns: 1fr; }
+    .docreader-main object { height: 70vh; min-height: 480px; }
+  }
+</style>
