@@ -58,7 +58,8 @@ python scripts/build_app_data.py
 3. **Main file path:** `app/streamlit_app.py`
 4. Requirements are picked up automatically from `/requirements.txt`
    (pinned: `streamlit`, `pandas`, `plotly`, `numpy` — nothing else).
-5. No secrets or env vars required. Python 3.12 runtime.
+5. No secrets or env vars required. Any Python Cloud offers (3.12 or 3.14):
+   all pins ship wheels for both, and `streamlit==1.43.2` caps pandas to <3.
 6. Click **Deploy**. Page 01 self-verifies the evidence freeze on every load.
 
 ## Data contract (do not break)

@@ -1,7 +1,9 @@
 # Streamlit Community Cloud — install from repo root.
-# Pinned to versions verified locally (Python 3.12, 2026-09-05).
+# streamlit==1.43.2 caps pandas to <3,>=1.4 (pandas 3.x is uninstallable
+# alongside it). pandas==2.3.3 is the newest 2.x: satisfies the cap and ships
+# cp312–cp314 wheels, so Cloud resolves on both Python 3.12 and 3.14.
 # Only packages imported by app/**/*.py: streamlit, pandas, plotly, numpy.
 streamlit==1.43.2
-pandas==3.0.5
+pandas==2.3.3
 plotly==6.3.0
 numpy==2.5.2
