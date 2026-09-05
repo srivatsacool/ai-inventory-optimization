@@ -5,17 +5,12 @@ grid copy) and are labeled INTERACTIVE SENSITIVITY. The frozen default cell
 (L7 / 95% / P=5) is shown for contrast only, read-only via frozen_loader.
 """
 
-import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-
 import pandas as pd
 import streamlit as st
 
-from app.lib import appdata_loader as A
-from app.lib import frozen_loader as F
-from app.lib.lab import (
+from lib import appdata_loader as A
+from lib import frozen_loader as F
+from lib.lab import (
     FROZEN, MUTED, STEEL_L, TEAL, TEAL_L, VIOLET_L, WARNING, WHITE,
     badges, chart_panel, empty_state, fig_base, glossary, inject_theme,
     insight_panel, kpi_strip, lab_footer, meta_rail, mono_annotation,

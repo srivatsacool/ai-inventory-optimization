@@ -4,15 +4,10 @@ Content sources are tracked at v1.0-evidence-freeze (protocol doc, decision
 log, number sheet). No prose walls: each stage is a compact module.
 """
 
-import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-
 import streamlit as st
 
-from app.lib import frozen_loader as F
-from app.lib.lab import (
+from lib import frozen_loader as F
+from lib.lab import (
     badges, flow_diagram, glossary, inject_theme, lab_footer, meta_rail,
 )
 

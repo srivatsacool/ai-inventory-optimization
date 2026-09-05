@@ -5,15 +5,10 @@ at tag v1.0-evidence-freeze. Nothing here recomputes or reinterprets. The one
 derived element (the origin-1 forecast-vs-actual illustration) is labeled.
 """
 
-import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-
 import streamlit as st
 
-from app.lib import frozen_loader as F
-from app.lib.lab import (
+from lib import frozen_loader as F
+from lib.lab import (
     FROZEN, STEEL, STEEL_L, TEAL, TEAL_L, INDIGO_L, MUTED, WHITE,
     badges, meta_rail, metric_card, chart_panel, insight_panel, flow_diagram,
     glossary, inject_theme, lab_footer, fig_base, mono_annotation, empty_state,

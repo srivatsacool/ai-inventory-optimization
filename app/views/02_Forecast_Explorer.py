@@ -6,18 +6,13 @@ Two data layers, clearly separated:
     are labeled as such. Nothing is computed from raw research data here.
 """
 
-import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-
 import numpy as np
 import pandas as pd
 import streamlit as st
 
-from app.lib import appdata_loader as A
-from app.lib import frozen_loader as F
-from app.lib.lab import (
+from lib import appdata_loader as A
+from lib import frozen_loader as F
+from lib.lab import (
     INDIGO, INDIGO_L, MUTED, STEEL_L, TEAL, TEAL_L, VIOLET_L, WHITE,
     badges, chart_panel, empty_state, fig_base, glossary, inject_theme,
     insight_panel, kpi_strip, lab_footer, mono_annotation,

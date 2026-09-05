@@ -23,7 +23,10 @@ via app.lib.frozen_loader; interactive/derived data via app.lib.appdata_loader
 import streamlit as st
 from pathlib import Path
 
-from app.lib.lab import inject_theme
+# NOTE: Streamlit always puts the entrypoint's own directory (app/) on
+# sys.path — locally and on Community Cloud — so `lib` (app/lib/, a proper
+# subpackage) imports with no path hacks and no dependence on the CWD.
+from lib.lab import inject_theme
 
 HERE = Path(__file__).resolve().parent
 PAGES = HERE / "views"  # "views", not "pages": st.navigation owns the nav;
