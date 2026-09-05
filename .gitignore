@@ -46,3 +46,13 @@ dist/
 .tmp/
 TMP_zs.npy
 RESET_LOG.md
+
+# --- Streamlit lab (branch app/streamlit-v1; frozen evidence stays read-only) ---
+!/app/
+!/app/**
+!/app_data/
+!/app_data/**
+!/scripts/
+!/scripts/**
+!/.streamlit/
+!/.streamlit/**

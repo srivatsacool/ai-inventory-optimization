@@ -1,0 +1,13 @@
+model,family,applies
+Naive,Baseline,both
+Seasonal Naive,Baseline,both
+Moving Average,Baseline,both
+SES,Smoothing,both
+DES,Smoothing,both
+TES,Smoothing,both
+ARIMA,Statistical,both
+SARIMA,Statistical,store-only
+CROSTON,Intermittent,m5-only
+SBA,Intermittent,m5-only
+TSB,Intermittent,m5-only
+LSTM,Neural,both

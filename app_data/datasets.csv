@@ -1,0 +1,3 @@
+dataset,label,n_series,origins,horizon,seed
+m5,M5 - sparse / intermittent,500,8,28,42
+store_item_demand,Store Item Demand - dense,500,8,28,42
