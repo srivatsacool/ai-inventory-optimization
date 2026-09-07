@@ -43,6 +43,8 @@ dist/
 .astro/
 # Generated PDF copy for the /doc page (rebuilt by `npm run copy-pdf`).
 site/public/doc/
+# Generated figure copies (rebuilt by `npm run copy-figures` at prebuild).
+site/public/figures/
 
 # --- Local temp ---
 .tmp/

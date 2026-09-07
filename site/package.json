@@ -7,10 +7,13 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "prebuild": "node scripts/copy-pdf.mjs",
-    "copy-pdf": "node scripts/copy-pdf.mjs"
+    "prebuild": "node scripts/copy-pdf.mjs && node scripts/copy-figures.mjs",
+    "copy-pdf": "node scripts/copy-pdf.mjs",
+    "copy-figures": "node scripts/copy-figures.mjs"
   },
   "devDependencies": {
-    "astro": "^5.18.2"
+    "@astrojs/svelte": "^4.0.4",
+    "astro": "^5.18.2",
+    "svelte": "^4.2.20"
   }
 }

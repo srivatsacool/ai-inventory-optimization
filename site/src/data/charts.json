@@ -1,0 +1,236 @@
+{
+  "generated": "frozen-v1.0-evidence-freeze",
+  "inventory": {
+    "m5": [
+      {
+        "model": "LSTM",
+        "holding": 130.04,
+        "stockout": 22.8,
+        "total": 152.83,
+        "service": 92.8,
+        "avgInventory": 4.64
+      },
+      {
+        "model": "Moving Average",
+        "holding": 136.3,
+        "stockout": 22.52,
+        "total": 158.83,
+        "service": 93,
+        "avgInventory": 4.87
+      },
+      {
+        "model": "SES",
+        "holding": 138.32,
+        "stockout": 21,
+        "total": 159.31,
+        "service": 93.6,
+        "avgInventory": 4.94
+      },
+      {
+        "model": "SBA",
+        "holding": 128.39,
+        "stockout": 32.27,
+        "total": 160.66,
+        "service": 90.9,
+        "avgInventory": 4.59
+      },
+      {
+        "model": "TSB",
+        "holding": 143.54,
+        "stockout": 21.59,
+        "total": 165.13,
+        "service": 93.2,
+        "avgInventory": 5.13
+      },
+      {
+        "model": "CROSTON",
+        "holding": 154.54,
+        "stockout": 20.28,
+        "total": 174.81,
+        "service": 93.9,
+        "avgInventory": 5.52
+      },
+      {
+        "model": "Seasonal Naive",
+        "holding": 170.73,
+        "stockout": 21.82,
+        "total": 192.55,
+        "service": 93.8,
+        "avgInventory": 6.1
+      },
+      {
+        "model": "ARIMA",
+        "holding": 162.62,
+        "stockout": 31.98,
+        "total": 194.6,
+        "service": 89.6,
+        "avgInventory": 5.81
+      },
+      {
+        "model": "Naive",
+        "holding": 158.25,
+        "stockout": 42.5,
+        "total": 200.75,
+        "service": 87.2,
+        "avgInventory": 5.65
+      },
+      {
+        "model": "DES",
+        "holding": 235.35,
+        "stockout": 33.46,
+        "total": 268.8,
+        "service": 89.9,
+        "avgInventory": 8.41
+      },
+      {
+        "model": "TES",
+        "holding": 304.28,
+        "stockout": 42.4,
+        "total": 346.67,
+        "service": 88,
+        "avgInventory": 10.87
+      }
+    ],
+    "store_item_demand": [
+      {
+        "model": "Moving Average",
+        "holding": 1276.1,
+        "stockout": 808.4,
+        "total": 2084.5,
+        "service": 61.7,
+        "avgInventory": 45.58
+      },
+      {
+        "model": "SES",
+        "holding": 1155.6,
+        "stockout": 958.24,
+        "total": 2113.83,
+        "service": 56.1,
+        "avgInventory": 41.27
+      },
+      {
+        "model": "Seasonal Naive",
+        "holding": 1281.05,
+        "stockout": 847.1,
+        "total": 2128.15,
+        "service": 62,
+        "avgInventory": 45.75
+      },
+      {
+        "model": "LSTM",
+        "holding": 1157.7,
+        "stockout": 1089.76,
+        "total": 2247.46,
+        "service": 53.1,
+        "avgInventory": 41.35
+      },
+      {
+        "model": "SARIMA",
+        "holding": 1307.78,
+        "stockout": 974.53,
+        "total": 2282.31,
+        "service": 59.2,
+        "avgInventory": 46.71
+      },
+      {
+        "model": "ARIMA",
+        "holding": 1076.48,
+        "stockout": 1244.4,
+        "total": 2320.87,
+        "service": 52.4,
+        "avgInventory": 38.45
+      },
+      {
+        "model": "Naive",
+        "holding": 794.63,
+        "stockout": 1905.74,
+        "total": 2700.37,
+        "service": 43.2,
+        "avgInventory": 28.38
+      },
+      {
+        "model": "DES",
+        "holding": 2130.09,
+        "stockout": 649.55,
+        "total": 2779.64,
+        "service": 73.5,
+        "avgInventory": 76.07
+      },
+      {
+        "model": "TES",
+        "holding": 2485.65,
+        "stockout": 934.23,
+        "total": 3419.88,
+        "service": 69.1,
+        "avgInventory": 88.77
+      }
+    ]
+  },
+  "forecast": {
+    "m5": [
+      {
+        "model": "LSTM",
+        "mae": 0.989,
+        "mase": 1.316,
+        "rmse": 1.949
+      },
+      {
+        "model": "Moving Average",
+        "mae": 1,
+        "mase": 1.346,
+        "rmse": 1.304
+      },
+      {
+        "model": "Seasonal Naive",
+        "mae": 1.187,
+        "mase": 1.526,
+        "rmse": 1.674
+      },
+      {
+        "model": "Naive",
+        "mae": 1.184,
+        "mase": 1.546,
+        "rmse": 1.598
+      }
+    ],
+    "store_item_demand": [
+      {
+        "model": "LSTM",
+        "mae": 7.873,
+        "mase": 0.978,
+        "rmse": 10.419
+      },
+      {
+        "model": "Seasonal Naive",
+        "mae": 9.451,
+        "mase": 1.183,
+        "rmse": 11.642
+      },
+      {
+        "model": "Moving Average",
+        "mae": 9.708,
+        "mase": 1.191,
+        "rmse": 12.075
+      },
+      {
+        "model": "Naive",
+        "mae": 16.291,
+        "mase": 1.971,
+        "rmse": 18.947
+      }
+    ]
+  },
+  "sensitivityWins": {
+    "m5": {
+      "LSTM": 25,
+      "SES": 2
+    },
+    "store_item_demand": {
+      "Moving Average": 9,
+      "DES": 5,
+      "SES": 7,
+      "Naive": 6
+    }
+  },
+  "policies": 54
+}

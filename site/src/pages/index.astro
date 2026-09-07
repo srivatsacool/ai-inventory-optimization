@@ -1,17 +1,23 @@
----
+﻿---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// HOME owns narrative only. Every number below is frozen published evidence
+// OVERVIEW merges the former HOME + RESEARCH FINDINGS + PAPER pages into one
+// page with anchored sections (nav dropdown: Thesis · Key Findings ·
+// Methodology · Paper). Every number below is frozen published evidence
 // (09_reports/final/data/final_number_sheet.csv); nothing is computed here.
 const MODELS = [
+  ['Naive', 'Last observed value carried forward', 'Traditional'],
+  ['SNaive', 'Seasonal Naive — last week repeated', 'Traditional'],
   ['MA', 'Moving Average', 'Traditional'],
   ['SES', 'Simple Exponential Smoothing', 'Traditional'],
-  ['DES', 'Double Exponential Smoothing', 'Traditional'],
+  ['DES', 'Double Exponential Smoothing (Holt)', 'Traditional'],
   ['TES', 'Triple Exponential Smoothing (Holt-Winters)', 'Traditional'],
   ['ARIMA', 'Autoregressive Integrated Moving Average', 'Statistical'],
-  ['SARIMA', 'Seasonal ARIMA', 'Statistical'],
+  ['SARIMA', 'Seasonal ARIMA (Store-only by design)', 'Statistical'],
+  ['Croston', 'Intermittent-demand method (M5-only)', 'Statistical'],
+  ['SBA', 'Syntetos–Boylan Approximation (M5-only)', 'Statistical'],
+  ['TSB', 'Teunter–Syntetos–Babai (M5-only)', 'Statistical'],
   ['LSTM', 'Long Short-Term Memory network', 'Neural'],
-  ['LLM', 'Large Language Model', 'LLM — design only, phase not executed'],
 ];
 const RQS = [
   ['RQ1', 'How do traditional, statistical, neural-network, and LLM-based approaches differ in demand forecasting performance?'],
@@ -20,18 +26,212 @@ const RQS = [
   ['RQ4', 'Are model-performance patterns consistent across different retail demand environments?'],
   ['RQ5', 'What trade-offs exist between accuracy, inventory performance, computational requirements, and complexity?'],
 ];
+const KPIS = [
+  { value: '1.316', metric: 'M5 MASE', model: 'LSTM', interpretation: 'Lowest forecast error', winner: 'Forecast winner' },
+  { value: '0.978', metric: 'Store MASE', model: 'LSTM', interpretation: 'Lowest forecast error', winner: 'Forecast winner' },
+  { value: '152.83', metric: 'M5 inventory cost', model: 'LSTM', interpretation: 'Lowest simulated cost', winner: 'Inventory winner' },
+  { value: '2,084.50', metric: 'Store inventory cost', model: 'Moving Average', interpretation: 'Lowest simulated cost', winner: 'Inventory winner' },
+];
+const FINDINGS = [
+  ['01', 'LSTM leads forecast quality', 'LSTM achieves the strongest forecast accuracy on both M5 (MASE 1.316) and Store (MASE 0.978).'],
+  ['02', 'Forecast accuracy ≠ inventory efficiency', 'The model producing the best forecasts does not universally produce the lowest downstream inventory cost.'],
+  ['03', 'Policy assumptions change the winner', 'Lead time, service target and stockout penalty can alter the economically preferred model.'],
+  ['04', 'Sparse demand changes the trade-off', 'Inventory performance depends heavily on the demand regime and policy configuration.'],
+];
+const PIPELINE = ['DATA', 'EXPLORATION', 'PREPROCESSING', 'FORECASTING', 'FORECAST EVALUATION', 'INVENTORY SIMULATION', 'ROBUSTNESS', 'FINAL COMPARISON'];
+const RESULTS = [
+  ['M5', 'LSTM · MASE 1.316', 'LSTM · cost 152.83', '25 / 27 policies'],
+  ['Store', 'LSTM · MASE 0.978', 'Moving Average · cost 2,084.50 vs LSTM 2,247.46', 'Fragmented'],
+];
+// Paper chapters mirror the actual report structure (report.tex inputs).
+const CHAPTERS = [
+  'Project Overview and Objective',
+  'Research Methodology',
+  'Models Used',
+  'Key Findings and Results',
+  'Discussion',
+  'Contribution and Practical Implications',
+  'Limitations and Future Research',
+  'Conclusion',
+];
+const PDF = '/doc/research-report.pdf';
+const GRID = 'display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;';
 ---
 <BaseLayout
-  title="From Traditional Forecasting to Large Language Models"
-  section="home"
-  description="Can more advanced AI actually improve inventory decisions? An empirical study from traditional forecasting to neural approaches."
+  title="Overview"
+  section="overview"
+  description="AI Inventory Optimization — forecasting accuracy does not necessarily translate into the lowest inventory cost. 12 models, M5 and Store, forecast to shelf decision."
 >
-  <p class="label">Research publication · v0.1 · SIRP / 2026 · Operations × AI · Empirical study</p>
-  <h1>From Traditional Forecasting to Large Language Models: Evaluating AI-Based Inventory Optimization</h1>
-  <div class="prose">
-    <p><strong>Can more advanced AI actually improve inventory decisions?</strong></p>
-    <p>Better forecast accuracy does not automatically guarantee better inventory decisions. Inventory outcomes also depend on demand variability, lead time, safety stock, service levels, holding costs, stockout costs, and ordering policy.</p>
-  </div>
+  <header class="hero">
+      <div class="hero-grid">
+        <div class="hero-main">
+          <p class="label">Research publication · v1.0 · SIRP / 2026</p>
+          <h1>AI Inventory Optimization</h1>
+          <p class="hero-sub">Forecasting accuracy does not necessarily translate into the lowest inventory cost.</p>
+          <p class="hero-desc">A research study comparing 12 forecasting models across M5 and Store demand datasets — from traditional methods to neural approaches.</p>
+          <div class="hero-ctas">
+            <a class="cta-btn primary" href="/lab">Explore the Lab →</a>
+            <a class="cta-btn" href="/research">Read the research →</a>
+            <a class="cta-text" href="#paper">Read the paper →</a>
+          </div>
+        </div>
+        <aside class="hero-flow" aria-label="The chain from forecast to cost">
+          <p class="flow-kicker">Forecast → Cost</p>
+          <ol class="flow">
+            <li><span class="flow-node">Forecast</span></li>
+            <li><span class="flow-node">Model choice</span></li>
+            <li><span class="flow-node">Inventory policy</span></li>
+            <li><span class="flow-node flow-end">Cost</span></li>
+          </ol>
+        </aside>
+      </div>
+    </header>
+
+  <section class="central-finding" id="thesis">
+    <p class="label">The central finding</p>
+    <h2>Forecast quality and inventory economics can point to different winners.</h2>
+    <div class="cf-grid">
+      <div class="card cf-col">
+        <h3>Forecast quality</h3>
+        <div class="cf-row"><span class="cf-ds">M5</span><span class="cf-model">LSTM · MASE <strong>1.316</strong></span></div>
+        <div class="cf-row"><span class="cf-ds">Store</span><span class="cf-model">LSTM · MASE <strong>0.978</strong></span></div>
+      </div>
+      <div class="card cf-col">
+        <h3>Inventory economics</h3>
+        <div class="cf-row"><span class="cf-ds">M5</span><span class="cf-model">LSTM · cost <strong>152.83</strong></span></div>
+        <div class="cf-row"><span class="cf-ds">Store</span><span class="cf-model">Moving Average · cost <strong>2,084.50</strong></span></div>
+      </div>
+    </div>
+    <p class="cf-takeaway">The model that forecasts best does not necessarily produce the cheapest inventory decision.</p>
+  </section>
+
+  <section class="after-finding">
+      <p class="label">At a glance</p>
+    <h2>Key metrics</h2>
+    <div style={GRID}>
+      {KPIS.map((k) => (
+        <div class="card kpi">
+          <div class="kpi-value">{k.value}</div>
+          <div class="kpi-meta">{k.metric}</div>
+          <div class="kpi-model">{k.model}</div>
+          <div class="kpi-context">{k.interpretation}</div>
+          <div class="kpi-winner">{k.winner}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ===== Key Findings (former /research, condensed) ===== -->
+  <section id="findings" class="findings-anchor">
+    <p class="label">Research findings · frozen evidence · v1.0-evidence-freeze</p>
+    <h2>Forecasts are the mechanism. Inventory is the outcome.</h2>
+    <div class="prose">
+      <p><strong>Forecasts are the mechanism. Inventory is the outcome.</strong> The frozen record of the study — the question, the data, the design, the models, and what the evidence actually shows.</p>
+    </div>
+
+    <div class="find-grid">
+      <section class="find-sec" id="findings-question">
+        <p class="label">01 · Research question</p>
+        <blockquote>"How does the effectiveness of AI-based inventory optimization change as we move from traditional forecasting models toward neural-network approaches, when effectiveness is measured at the level of inventory outcomes rather than forecast errors alone?"</blockquote>
+      </section>
+
+      <section class="find-sec">
+        <p class="label">02 · Why this matters</p>
+        <div class="chains" aria-label="Two evaluation chains">
+          <p class="chain"><span class="chain-name">Textbook</span><code>forecast → accuracy</code></p>
+          <p class="chain current"><span class="chain-name">Reality</span><code>forecast → inventory decision → cost · stockout · service</code></p>
+        </div>
+        <div class="prose">
+          <p>A forecast that is slightly less accurate can still produce the better inventory decision — and accuracy gains that do not change the decision may not be worth their cost.</p>
+        </div>
+      </section>
+
+      <section class="find-sec">
+        <p class="label">03 · Experimental design</p>
+        <div class="pipeline" aria-label="Eight experimental stages">
+          {PIPELINE.map((stage, i) => (
+            <>
+              <span class="stage">{stage}</span>
+              {i < PIPELINE.length - 1 && <span class="pipe">→</span>}
+            </>
+          ))}
+        </div>
+        <div class="prose">
+          <p>One common policy for every model: <strong>daily-review order-up-to with lost sales, L7 / 95% / H=1 / P=5</strong>.</p>
+        </div>
+      </section>
+
+      <section class="find-sec">
+        <p class="label">04 · Models</p>
+        <div class="prose">
+          <p>Baselines: Naive · Seasonal Naive · Moving Average — Smoothing: SES · DES · TES — Statistical: ARIMA(1,1,0) · SARIMA (Store-only) — Intermittent: Croston · SBA · TSB (M5-only) — Neural: LSTM (global, one network per dataset). LLM: designed, not executed — no LLM number appears in the findings.</p>
+        </div>
+      </section>
+
+      <section class="find-sec">
+        <p class="label">05 · Forecast evaluation</p>
+        <div class="prose">
+          <p><strong>Primary:</strong> MASE — seasonal period 7. <strong>Secondary:</strong> MAE · RMSE · sMAPE · WAPE. 112,000 forecasts per model-dataset · 91 paired comparisons with Holm correction.</p>
+        </div>
+      </section>
+
+      <section class="find-sec">
+        <p class="label">06 · Inventory simulation</p>
+        <div class="prose">
+          <p>Daily-review order-up-to policy with lost sales.</p>
+          <p class="formula">safety stock = z × σ_forecast × √L</p>
+          <p>Total cost = holding + stockout.</p>
+        </div>
+      </section>
+
+      <section class="find-sec">
+        <p class="label">07 · Results</p>
+        <table>
+          <thead>
+            <tr><th>Dataset</th><th>Forecast winner · MASE</th><th>Inventory winner · cost</th><th>Policy wins</th></tr>
+          </thead>
+          <tbody>
+            {RESULTS.map(([dataset, forecast, inventory, wins]) => (
+              <tr><td>{dataset}</td><td>{forecast}</td><td>{inventory}</td><td>{wins}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    </div>
+
+    <section class="climax" id="findings-key">
+      <p class="label">08 · The key finding</p>
+      <div class="keyfinding-card">
+        <p class="kf-statement">FORECAST ACCURACY <span class="neq">≠</span> INVENTORY COST</p>
+        <p class="kf-thesis">The winning model depends on the decision objective.</p>
+        <hr class="kf-rule" />
+        <ul class="kf-details">
+          <li>A model can produce better forecasts while producing a worse inventory decision.</li>
+          <li>The best forecasting model isn't necessarily the best inventory policy.</li>
+          <li>Inventory performance depends on how forecast behavior interacts with the common policy — not on point accuracy alone.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="find-grid">
+      <section class="find-sec">
+        <p class="label">09 · Limitations</p>
+        <ul class="limits">
+          <li>Smooth archetype n = 1.</li>
+          <li>SARIMA Store-only. Croston family M5-only.</li>
+          <li>Single policy family. H28 horizon.</li>
+        </ul>
+        <div class="prose"><p>Generalizability beyond these datasets and policy framework is not claimed.</p></div>
+      </section>
+      <section class="find-sec">
+        <p class="label">10 · Conclusion</p>
+        <div class="prose">
+          <p>Forecasting performance should be evaluated through its operational consequences, not in isolation.</p>
+          <p>Model sophistication does not universally improve inventory outcomes.</p>
+        </div>
+      </section>
+    </div>
+  </section>
 
   <section>
     <p class="label">The research question</p>
@@ -52,42 +252,304 @@ const RQS = [
     </div>
   </section>
 
-  <section>
-    <p class="label">Model evolution</p>
-    <h2>Eight approaches, one ladder of increasing complexity</h2>
+  <section id="methodology">
+    <p class="label">Methodology</p>
+    <h2>Twelve approaches, one ladder of increasing complexity</h2>
     <table>
       <thead><tr><th>Rung</th><th>Model</th><th>Family</th></tr></thead>
       <tbody>
         {MODELS.map(([short, long, fam], i) => <tr><td>{String(i + 1).padStart(2, '0')}</td><td>{short} — {long}</td><td>{fam}</td></tr>)}
       </tbody>
     </table>
+    <figure class="ladder-fig">
+      <img src="/figures/11_forecasting_model_ladder.png" alt="Ladder of the twelve forecasting approaches, from traditional to neural" loading="lazy" />
+    </figure>
     <p><small>LLM is included as a design rung (see 11_src/llm_experiment_design.md); the LLM experimental phase was not executed, so no LLM result appears in the findings.</small></p>
+    <div class="prose">
+      <p><strong>Walmart M5</strong> — sparse and intermittent (64.5% zero rate). <strong>Store Item Demand</strong> — dense, nearly every item sells every day (0.02%). A method that performs well in one environment may perform poorly in the other, so every claim is tested in both: 500 series each, 8 rolling origins, 28-day horizon, seed 42.</p>
+      <p>Temporal split: train 2013-01-01 → 2015-10-31 (1,034 days) · validation 2015-11-01 → 2016-02-29 (121 days, incl. leap day) · test 2016-03-01 → 2016-05-22 (83 days). Common policy for all models: daily-review order-up-to with lost sales, L7 / 95% / H=1 / P=5.</p>
+    </div>
+    <div class="stats-grid">
+      <div class="card stat">
+        <div class="stat-kicker">M5 · Policy winners</div>
+        <div class="stat-value">25 / 27</div>
+        <div class="stat-detail">LSTM wins 25 of the 27 policy cells in the sensitivity grid.</div>
+      </div>
+      <div class="card stat">
+        <div class="stat-kicker">Store · Policy winners</div>
+        <div class="stat-value">Fragmented</div>
+        <div class="stat-detail">MA 9 · SES 7 · Naive 6 · DES 5 — no dominant model.</div>
+      </div>
+    </div>
   </section>
 
-  <section>
-    <p class="label">Demand environments</p>
-    <h2>M5 vs Store: sparse against dense</h2>
+  <!-- ===== Paper (former /paper landing) ===== -->
+  <section id="paper">
+    <p class="label">Publication · September 2026 · Evidence freeze edb42ad</p>
+    <h2>From Forecasts to Shelf Decisions</h2>
     <div class="prose">
-      <p><strong>Walmart M5</strong> — sparse and intermittent (64.5% zero rate across studied series). <strong>Store Item Demand</strong> — dense, nearly every item sells every day (0.02% zero rate). A method that performs well in one environment may perform poorly in the other, so every claim is tested in both: 500 series each, 8 rolling origins, 28-day horizon, seed 42.</p>
-      <p>Temporal split: train 2013-01-01 → 2015-10-31 (1,034 days) · validation 2015-11-01 → 2016-02-29 (121 days, incl. leap day) · test 2016-03-01 → 2016-05-22 (83 days). Common policy for all models: daily-review order-up-to with lost sales, L7 / 95% / H=1 / P=5.</p>
+      <p>Evaluating AI-Based Inventory Optimization from Traditional Methods to Neural Forecasting. Read online in the <a href="/research">Research reader</a> or download the PDF.</p>
+    </div>
+    <div class="paper-grid">
+      <aside aria-label="Contents">
+        <p class="label">Contents</p>
+        <ul class="chapters">
+          <li class="grp">Abstract</li>
+          {CHAPTERS.map((c, i) => (
+            <li>
+              <span class="num">{String(i + 1).padStart(2, '0')}</span>
+              <span class="dash" aria-hidden="true">·</span>
+              <span>{c}</span>
+            </li>
+          ))}
+          <li class="grp">Appendices A–L</li>
+          <li class="grp">References (12)</li>
+        </ul>
+      </aside>
+      <div class="paper-actions">
+        <div class="doc-head" aria-label="Document status">
+          <span class="doc-file">Document</span>
+          <span class="doc-status">44 Pages · PDF · Verified</span>
+        </div>
+        <a class="cta-btn primary" href="/research">Open the reader →</a>
+        <a class="cta-btn" href={PDF} download>Download PDF ↓</a>
+      </div>
     </div>
   </section>
 
   <section>
     <p class="label">Central thesis — frozen evidence</p>
     <h2>Forecast winner ≠ inventory winner</h2>
-    <div class="card">
+    <div class="card thesis">
+      <p class="thesis-lead">Forecasting accuracy does not necessarily translate into the lowest inventory cost.</p>
       <p>LSTM wins forecast accuracy on both datasets (M5 MASE 1.316, Store MASE 0.978). Moving Average wins Store inventory cost (2,084.50 vs LSTM 2,247.46) under the default policy.</p>
-      <p><small>Frozen published evidence · tag v1.0-evidence-freeze. Interrogate it in <a href="/lab">the Lab</a>; read it in <a href="/doc">the paper</a>.</small></p>
+      <p><small>Frozen published evidence · tag v1.0-evidence-freeze. Interrogate it in <a href="/lab">the Lab</a>; read it in <a href="/research">the research reader</a>.</small></p>
     </div>
   </section>
 
-  <section>
-    <p class="label">Robustness · Integrity</p>
-    <h2>Tested, not assumed</h2>
-    <div class="prose">
-      <p>112,000 forecasts per model-dataset, 91 paired comparisons, validation gates, and a 27-policy sensitivity grid (lead time × service target × stockout penalty). Sophistication was tested as a claim that could be rejected — and on Store inventory, it was. Known limits: smooth archetype n=1, SARIMA Store-only and Croston-family M5-only by design, single policy family and H28 horizon.</p>
+  <section class="connecting">
+    <div class="card connecting-card">
+      <p class="connecting-q">Want to test the result?</p>
+      <a class="cta-btn primary" href="/lab">Explore the Lab →</a>
     </div>
-    <p><a href="/lab">Explore the evidence →</a> · <a href="/doc">Read the paper →</a></p>
   </section>
 </BaseLayout>
+
+<style>
+  .hero { margin: 2.5rem 0 1.25rem; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 3rem; align-items: center; }
+    .hero h1 { font-size: clamp(2.25rem, 5vw, 3.25rem); margin: 0.5rem 0 0.9rem; max-width: 16ch; }
+    .hero-sub { font-size: 1.15rem; font-weight: 600; color: var(--ink-soft); max-width: var(--measure); margin: 0 0 0.5rem; }
+    .hero-desc { color: var(--ink-mute); max-width: var(--measure); margin: 0; }
+    .hero-ctas { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+    .hero-flow {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfbfa;
+      padding: 1.5rem 1.75rem 1.75rem;
+      box-shadow: 0 1px 2px rgba(22, 26, 34, 0.05);
+    }
+    .flow-kicker {
+      margin: 0 0 1.3rem; font-family: var(--font-label);
+      font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--ink-mute); text-align: center;
+    }
+    .flow { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+    .flow li { position: relative; margin: 0; padding: 0 0 1.15rem 1.5rem; }
+    .flow li:last-child { padding-bottom: 0; }
+    .flow li::before {
+      content: ""; position: absolute; left: 3px; top: 0.7rem; bottom: -0.12rem;
+      width: 1px; background: var(--line);
+    }
+    .flow li:last-child::before { display: none; }
+    .flow li::after {
+      content: ""; position: absolute; left: 0; top: 0.5rem;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #fbfbfa; border: 1.5px solid var(--ink-mute);
+    }
+    .flow li:last-child::after { background: var(--ink); border-color: var(--ink); }
+    .flow-node {
+      font-family: var(--font-label); font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-mute);
+    }
+    .flow-end { color: var(--ink); }
+  .cta-btn {
+    font-family: var(--font-label); font-size: 0.78rem; letter-spacing: 0.1em;
+    text-transform: uppercase; text-decoration: none; color: var(--trad);
+    padding: 0.65rem 1.1rem; border: 1px solid var(--trad); border-radius: var(--radius);
+    transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .cta-btn:hover { background: var(--trad); color: var(--paper); }
+  .cta-btn.primary { background: var(--trad); color: var(--paper); padding: 0.8rem 1.4rem; box-shadow: 0 2px 10px rgba(53, 97, 138, 0.28); }
+  .cta-btn.primary:hover { background: var(--ink); border-color: var(--ink); box-shadow: 0 2px 12px rgba(22, 26, 34, 0.3); }
+  .cta-text {
+    font-family: var(--font-label); font-size: 0.78rem; letter-spacing: 0.1em;
+    text-transform: uppercase; text-decoration: none; color: var(--trad);
+    padding: 0.65rem 0.1rem; border-bottom: 1px solid var(--trad);
+    transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+  }
+  .cta-text:hover { color: var(--ink); border-color: var(--ink); }
+
+  .kpi { display: flex; flex-direction: column; gap: 0.35rem; margin: 0; }
+  .kpi-value { font-size: 2.5rem; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+  .kpi-meta { font-size: 0.7rem; text-transform: uppercase; font-family: var(--font-label); letter-spacing: 0.08em; color: var(--ink-mute); }
+  .kpi-context { font-size: 0.85rem; color: var(--ink-soft); }
+  .kpi-model { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+  .kpi-winner { font-size: 0.75rem; color: #10b981; text-transform: uppercase; font-family: var(--font-label); letter-spacing: 0.08em; margin-top: 0.15rem; }
+
+  .ladder-fig { margin: 1.25rem 0 0; }
+  .ladder-fig img { max-width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--line); display: block; background: #fff; }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+  .stat { margin: 0; display: flex; flex-direction: column; gap: 0.3rem; }
+  .stat-kicker { font-size: 0.7rem; text-transform: uppercase; font-family: var(--font-label); letter-spacing: 0.08em; color: var(--ink-mute); }
+  .stat-value { font-size: 1.6rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat-detail { font-size: 0.85rem; color: var(--ink-soft); }
+
+  .thesis { padding: 2rem 2.25rem; }
+  .thesis p { margin: 0; }
+  .thesis .thesis-lead { font-size: 1.2rem; font-weight: 600; color: var(--ink); margin-bottom: 0.75rem; }
+  .thesis p + p { margin-top: 0.6rem; }
+  .thesis small { display: block; margin-top: 1rem; color: var(--ink-mute); }
+
+  .pipeline {
+    display: flex; flex-wrap: wrap; align-items: center;
+    font-family: var(--font-label); font-size: 0.72rem; letter-spacing: 0.1em;
+    margin: 1.1rem 0;
+  }
+  .stage {
+    padding: 0.4rem 0.7rem; border: 1px solid var(--line); border-radius: 6px;
+    background: #fbfbfa; color: var(--ink); margin: 0.15rem 0;
+  }
+  .pipe { color: var(--ink-mute); margin: 0 0.45rem; }
+
+  .central-finding {
+      margin: 0 0 1.25rem;
+      padding: 2rem 0 2.25rem;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      scroll-margin-top: 5.5rem;
+    }
+    .central-finding .label { margin: 0 0 0.5rem; }
+    .central-finding h2 {
+      font-size: clamp(2.125rem, 4.5vw, 2.75rem);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      max-width: 21ch;
+      margin: 0 0 1.5rem;
+    }
+    .after-finding { margin-top: 1.25rem; }
+    .cf-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-top: 1.25rem; }
+  .cf-col { margin: 0; padding: 1.1rem 1.4rem; }
+  .cf-col h3 { margin: 0 0 0.4rem; font-size: 0.72rem; text-transform: uppercase; font-family: var(--font-label); letter-spacing: 0.14em; color: var(--ink-mute); }
+  .cf-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 0.5rem 0; border-top: 1px solid var(--line); }
+  .cf-row:last-child { border-bottom: 1px solid var(--line); }
+  .cf-ds { font-family: var(--font-label); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); white-space: nowrap; }
+  .cf-model { font-size: 0.92rem; color: var(--ink-soft); }
+  .cf-model strong { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .cf-takeaway { margin: 1.25rem 0 0; padding-left: 0.9rem; border-left: 3px solid var(--trad); font-size: 1.05rem; font-weight: 600; color: var(--ink); max-width: var(--measure); }
+
+  .connecting-card { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.25rem; padding: 1.6rem 1.75rem; }
+    .connecting-q { margin: 0; font-size: 1.3rem; font-weight: 700; letter-spacing: -0.015em; }
+
+  /* ===== merged research-findings sections ===== */
+  .findings-anchor { scroll-margin-top: 5.5rem; }
+  .find-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .find-sec { margin: 0; padding: 1.15rem 1.4rem; border: 1px solid var(--line); border-radius: var(--radius); background: #fbfbfa; }
+  .find-sec .label { margin: 0 0 0.5rem; }
+  .find-sec table { margin: 0.75rem 0; width: 100%; }
+  .find-sec th {
+    font-family: var(--font-label); font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-mute); text-align: left;
+  }
+  .find-sec td { padding: 0.35rem 0.75rem 0.35rem 0; font-size: 0.88rem; }
+  .find-sec .prose p { font-size: 0.92rem; }
+  blockquote {
+    margin: 0.9rem 0 0;
+    padding: 0.9rem 1.1rem;
+    border-left: 3px solid var(--trad);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    background: var(--paper);
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  code {
+    font-family: var(--font-label);
+    font-size: 0.82em;
+    background: var(--paper-dim, #f4f4f1);
+    padding: 0.12em 0.4em;
+    border-radius: 4px;
+  }
+  .chains { display: grid; gap: 0.55rem; margin: 0.4rem 0 0.5rem; }
+  .chain { display: flex; align-items: baseline; gap: 0.9rem; margin: 0; font-size: 0.9rem; }
+  .chain-name {
+    flex: 0 0 auto; width: 4.6rem;
+    font-family: var(--font-label);
+    font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .chain.current .chain-name { color: var(--trad); }
+  .chain.current code { color: var(--ink-soft); background: #eef3f8; }
+  .formula {
+    font-family: var(--font-label); font-size: 0.88rem; color: var(--ink-soft);
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 0.75rem 1rem; display: inline-block; margin: 0.6rem 0;
+  }
+  .climax { margin: 2rem 0 0; text-align: center; }
+  .climax h2 { font-size: clamp(1.7rem, 3.2vw, 2.2rem); }
+  .keyfinding-card {
+    max-width: 44rem;
+    margin: 1.25rem auto 0;
+    padding: 2.4rem 2.1rem;
+    background: #eef3f8;
+    border: 1px solid #d5e0ea;
+    border-radius: var(--radius);
+    box-shadow: 0 1px 2px rgba(22, 26, 34, 0.04), 0 10px 28px rgba(53, 97, 138, 0.1);
+  }
+  .kf-statement {
+    margin: 0;
+    font-family: var(--font-label);
+    font-size: clamp(1.2rem, 2.6vw, 1.55rem);
+    font-weight: 700; letter-spacing: 0.03em; line-height: 1.45; color: var(--ink);
+  }
+  .kf-statement .neq { color: var(--trad); }
+  .kf-thesis { margin: 0.9rem auto 0; max-width: 30ch; font-size: 1.12rem; font-weight: 600; color: var(--ink-soft); }
+  .kf-rule { border: 0; border-top: 1px solid #cbd9e6; width: 3.5rem; margin: 1.6rem auto; }
+  .kf-details {
+    margin: 0 auto; padding: 0; list-style: none; max-width: 34rem;
+    display: grid; gap: 0.5rem; font-size: 0.88rem; color: var(--ink-mute);
+  }
+  .limits { margin: 0.4rem 0 0; padding-left: 1.25rem; }
+  .limits li { margin: 0.35rem 0; font-size: 0.9rem; }
+
+  /* ===== merged paper landing ===== */
+  #paper { scroll-margin-top: 5.5rem; }
+  .paper-grid { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 2rem; align-items: start; margin-top: 1.5rem; }
+  .chapters { list-style: none; padding-left: 0; font-size: 0.9rem; margin: 0.6rem 0 0; }
+  .chapters li { margin: 0.28rem 0; color: var(--ink-soft); display: flex; align-items: baseline; gap: 0.45rem; }
+  .chapters .grp { font-family: var(--font-label); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); }
+  .chapters .num { min-width: 1.9em; font-family: var(--font-label); font-size: 0.7rem; color: var(--trad); }
+  .chapters .dash { color: var(--ink-mute); }
+  .paper-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+  .doc-head {
+    display: flex; gap: 1rem; align-items: baseline;
+    font-family: var(--font-label); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .doc-file { color: var(--ink-mute); }
+  .doc-status { color: var(--ink); }
+
+  section { scroll-margin-top: 5.5rem; }
+
+  @media (max-width: 48rem) {
+    .hero { margin: 1.5rem 0 1.25rem; }
+    .hero-grid { grid-template-columns: 1fr; gap: 1.75rem; }
+    .hero-flow { max-width: 22rem; }
+    .paper-grid { grid-template-columns: 1fr; }
+  }
+</style>

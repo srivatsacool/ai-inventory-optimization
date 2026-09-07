@@ -3,11 +3,19 @@ import '../styles/tokens.css';
 
 interface Props {
   title: string;
-  section: 'home' | 'lab' | 'doc';
+  section: 'overview' | 'lab' | 'research';
   description?: string;
 }
 const { title, section, description } = Astro.props;
 const fullTitle = `${title} — AI Inventory Optimization`;
+
+// Overview dropdown submenu — anchors into the merged Overview page.
+const OVERVIEW_MENU = [
+  ['#thesis', 'Thesis'],
+  ['#findings', 'Key Findings'],
+  ['#methodology', 'Methodology'],
+  ['#paper', 'Paper'],
+];
 ---
 <!doctype html>
 <html lang="en">
@@ -20,16 +28,81 @@ const fullTitle = `${title} — AI Inventory Optimization`;
   <body>
     <nav class="site-nav" aria-label="Primary">
       <a class="brand" href="/">AI Inventory Optimization</a>
-      <a class="navlink" href="/" aria-current={section === 'home' ? 'page' : undefined}>HOME</a>
+      <details class="drop" open={section === 'overview' ? true : undefined}>
+        <summary class="navlink" aria-haspopup="true" aria-current={section === 'overview' ? 'page' : undefined}>
+          OVERVIEW
+          <span class="caret" aria-hidden="true">▾</span>
+        </summary>
+        <ul class="drop-menu">
+          <li><a href="/">Overview Home</a></li>
+          {OVERVIEW_MENU.map(([href, label]) => (
+            <li><a href={href}>{label}</a></li>
+          ))}
+        </ul>
+      </details>
       <a class="navlink" href="/lab" aria-current={section === 'lab' ? 'page' : undefined}>LAB</a>
-      <a class="navlink" href="/doc" aria-current={section === 'doc' ? 'page' : undefined}>DOC</a>
+      <a class="navlink" href="/research" aria-current={section === 'research' ? 'page' : undefined}>RESEARCH</a>
     </nav>
     <main>
       <slot />
     </main>
     <footer class="site-footer">
-      AI Inventory Optimization — research publication, interactive laboratory, and paper reader.
+      AI Inventory Optimization — publication overview, interactive laboratory, research findings, and paper reader.
       Frozen evidence · tag v1.0-evidence-freeze.
     </footer>
   </body>
 </html>
+<style>
+  .drop { position: relative; display: inline-block; }
+  .drop > summary {
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+  }
+  .drop > summary[aria-current='page'] { color: var(--ink); border-bottom-color: var(--trad); }
+  .drop > summary::-webkit-details-marker { display: none; }
+  .drop > summary .caret {
+    font-size: 0.55rem;
+    color: var(--ink-mute);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .drop[open] > summary .caret { transform: rotate(180deg); }
+  .drop-menu {
+    position: absolute;
+    top: calc(100% + 0.55rem);
+    left: 0.35rem;
+    z-index: 60;
+    margin: 0;
+    padding: 0.45rem 0;
+    list-style: none;
+    min-width: 11rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 28px rgba(22, 26, 34, 0.12);
+  }
+  .drop-menu a {
+    display: block;
+    padding: 0.42rem 0.95rem;
+    font-family: var(--font-label);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink-soft);
+  }
+  .drop-menu a:hover { color: var(--ink); background: var(--paper-dim, #f4f4f1); }
+  @media (max-width: 48rem) {
+    /* On small screens the absolute menu can overflow the nav; keep it in flow. */
+    .drop-menu { position: static; box-shadow: none; border: none; background: transparent; padding: 0.2rem 0 0.3rem 0.8rem; }
+  }
+</style>
+<script>
+  // Close the dropdown when a submenu item is chosen (native <details> would stay open).
+  document.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest?.('.drop-menu a');
+    if (a) a.closest('details')?.removeAttribute('open');
+  });
+</script>

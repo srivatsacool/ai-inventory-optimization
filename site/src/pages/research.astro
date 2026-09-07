@@ -1,0 +1,269 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Research = the formal publication, read in-browser via PDF.js.
+// The served PDF is site/public/doc/research-report.pdf — identical to the
+// frozen 09_reports/final/report.pdf (v1.0-evidence-freeze). Nothing here
+// computes or reinterprets evidence.
+const PDF = '/doc/research-report.pdf';
+const LAB = '/lab';
+const PDFJS_VERSION = '4.10.38';
+---
+<BaseLayout
+  title="Research"
+  section="research"
+  description="Read the formal research publication — From Forecasts to Shelf Decisions — in the browser. 44 pages, verified, frozen evidence."
+>
+  <div class="reader-head">
+    <p class="label">Publication · September 2026 · 44 pages · PDF · Verified · frozen evidence</p>
+    <h1>From Forecasts to Shelf Decisions</h1>
+    <p class="reader-sub">Evaluating AI-Based Inventory Optimization from Traditional Methods to Neural Forecasting.</p>
+    <div class="reader-actions">
+      <a class="action primary" href={PDF} download>Download PDF <span class="glyph" aria-hidden="true">↓</span></a>
+      <a class="action" href={PDF} target="_blank" rel="noopener">Open in new tab <span class="glyph" aria-hidden="true">↗</span></a>
+      <a class="action" href={LAB}>Open the Lab <span class="glyph" aria-hidden="true">→</span></a>
+    </div>
+  </div>
+
+  <div class="viewer" aria-label="Research paper reader">
+    <div class="toolbar">
+      <button id="prev" class="tbtn" type="button" aria-label="Previous page">‹</button>
+      <span class="page-indicator">
+        <input id="page-num" type="number" min="1" value="1" aria-label="Page number" />
+        <span id="page-count" class="page-count">/ –</span>
+      </span>
+      <button id="next" class="tbtn" type="button" aria-label="Next page">›</button>
+      <span class="tsep" aria-hidden="true"></span>
+      <button id="zoom-out" class="tbtn" type="button" aria-label="Zoom out">−</button>
+      <button id="zoom-in" class="tbtn" type="button" aria-label="Zoom in">+</button>
+      <button id="fit" class="tbtn ttext" type="button">Fit width</button>
+      <span class="tsep" aria-hidden="true"></span>
+      <a class="tbtn ttext" href={PDF} download>Download</a>
+    </div>
+    <div id="viewer-scroll" class="viewer-scroll">
+      <div id="viewer" class="viewer-pages"></div>
+      <noscript><p class="card">Enable JavaScript to read the paper inline, or <a href={PDF}>download the PDF</a>.</p></noscript>
+    </div>
+  </div>
+
+  <script is:inline define:vars={{ PDF, PDFJS_VERSION }}>
+    (async () => {
+      const pdfjslib = await import(`https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.min.mjs`);
+      pdfjslib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.worker.min.mjs`;
+
+      const container = document.getElementById('viewer-scroll');
+      const viewer = document.getElementById('viewer');
+      const doc = await pdfjslib.getDocument(PDF).promise;
+
+      const pageCountEl = document.getElementById('page-count');
+      const pageInput = document.getElementById('page-num');
+      pageCountEl.textContent = `/ ${doc.numPages}`;
+      pageInput.max = String(doc.numPages);
+
+      let scale = 1.0;
+      const RENDER_AHEAD = 2;
+      const rendered = new Set();
+      const pageEls = new Map();
+
+      function pageWidth() { return Math.min(container.clientWidth - 32, 900); }
+
+      function createPage(n) {
+        const wrap = document.createElement('div');
+        wrap.className = 'page-wrap';
+        wrap.id = `pdf-page-${n}`;
+        const canvas = document.createElement('canvas');
+        canvas.className = 'page-canvas';
+        wrap.appendChild(canvas);
+        viewer.appendChild(wrap);
+        pageEls.set(n, wrap);
+        return canvas;
+      }
+
+      async function renderPage(n) {
+        if (rendered.has(n) || n < 1 || n > doc.numPages) return;
+        rendered.add(n);
+        const page = await doc.getPage(n);
+        const canvas = (pageEls.get(n) || createPage(n)).querySelector('canvas');
+        const base = page.getViewport({ scale: 1 });
+        const viewport = page.getViewport({ scale: (scale * pageWidth()) / base.width });
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = Math.floor(viewport.width * dpr);
+        canvas.height = Math.floor(viewport.height * dpr);
+        canvas.style.width = `${Math.floor(viewport.width)}px`;
+        canvas.style.height = `${Math.floor(viewport.height)}px`;
+        const ctx = canvas.getContext('2d');
+        await page.render({
+          canvasContext: ctx,
+          viewport,
+          transform: dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : undefined,
+        }).promise;
+      }
+
+      function currentPage() {
+        const mid = container.scrollTop + container.clientHeight / 2;
+        let best = 1;
+        for (const [n, el] of pageEls) {
+          if (el.offsetTop <= mid) best = n;
+        }
+        return best;
+      }
+
+      async function renderVisible() {
+        const cur = currentPage();
+        for (let n = Math.max(1, cur - 1); n <= cur + RENDER_AHEAD; n++) await renderPage(n);
+        pageInput.value = String(cur);
+      }
+
+      // virtualize: drop far-away canvases to keep memory flat on 44 pages
+      function gc(offscreenLimit = 6) {
+        const cur = currentPage();
+        for (const [n, el] of pageEls) {
+          if (Math.abs(n - cur) > offscreenLimit && rendered.has(n)) {
+            el.remove();
+            pageEls.delete(n);
+            rendered.delete(n);
+          }
+        }
+      }
+
+      function rerenderAll() {
+        rendered.clear();
+        for (const [, el] of pageEls) el.remove();
+        pageEls.clear();
+        renderVisible();
+      }
+
+      function goPage(n) {
+        n = Math.min(doc.numPages, Math.max(1, n));
+        renderPage(n).then(() => {
+          const el = pageEls.get(n);
+          if (el) container.scrollTo({ top: el.offsetTop - 8, behavior: 'smooth' });
+        });
+      }
+
+      document.getElementById('prev').addEventListener('click', () => goPage(currentPage() - 1));
+      document.getElementById('next').addEventListener('click', () => goPage(currentPage() + 1));
+      pageInput.addEventListener('change', () => goPage(Number(pageInput.value) || 1));
+      document.getElementById('zoom-in').addEventListener('click', () => { scale = Math.min(3, scale + 0.25); rerenderAll(); });
+      document.getElementById('zoom-out').addEventListener('click', () => { scale = Math.max(0.5, scale - 0.25); rerenderAll(); });
+      document.getElementById('fit').addEventListener('click', () => { scale = 1.0; rerenderAll(); });
+
+      let raf = 0;
+      container.addEventListener('scroll', () => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => { renderVisible(); gc(); });
+      });
+      let rt;
+      window.addEventListener('resize', () => {
+        clearTimeout(rt);
+        rt = setTimeout(rerenderAll, 250);
+      });
+
+      await renderVisible();
+    })().catch((err) => {
+      console.error('PDF.js failed to load:', err);
+      const v = document.getElementById('viewer');
+      if (v) v.innerHTML = '<p style="padding:1.5rem;">Could not load the inline reader. <a href="' + location.origin + '/doc/research-report.pdf">Open the PDF directly</a>.</p>';
+    });
+  </script>
+
+  <div class="after">
+    <p>Want to interrogate the evidence instead of reading it?</p>
+    <a class="action primary" href={LAB}>Open the Lab <span class="glyph" aria-hidden="true">→</span></a>
+  </div>
+</BaseLayout>
+<style>
+  .reader-head { margin: 2rem 0 1.25rem; }
+  .reader-head h1 { margin: 0.4rem 0 0.5rem; }
+  .reader-sub { color: var(--ink-soft); margin: 0 0 1.1rem; }
+  .reader-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+  .action {
+    font-family: var(--font-label); font-size: 0.78rem; letter-spacing: 0.1em;
+    text-transform: uppercase; text-decoration: none; color: var(--trad);
+    padding: 0.65rem 1.1rem; border: 1px solid var(--trad); border-radius: var(--radius);
+    transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .action:hover { background: var(--trad); color: var(--paper); }
+  .action.primary { background: var(--trad); color: var(--paper); box-shadow: 0 2px 10px rgba(53, 97, 138, 0.28); }
+  .action.primary:hover { background: var(--ink); border-color: var(--ink); }
+  .glyph { font-weight: 700; }
+
+  .viewer {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fbfbfa;
+    overflow: hidden;
+  }
+  .toolbar {
+    display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;
+    padding: 0.5rem 0.8rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+  }
+  .tbtn {
+    font-family: var(--font-label);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.9rem;
+  }
+  .tbtn:hover { color: var(--ink); border-color: var(--trad); }
+  .ttext { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .tsep { width: 1px; height: 1.2rem; background: var(--line); margin: 0 0.35rem; }
+  .page-indicator { display: inline-flex; align-items: center; gap: 0.35rem; }
+  #page-num {
+    width: 3.2rem;
+    font-family: var(--font-label);
+    font-size: 0.85rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0.25rem 0.4rem;
+    text-align: center;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  #page-num::-webkit-inner-spin-button { display: none; }
+  .page-count { font-family: var(--font-label); font-size: 0.78rem; color: var(--ink-mute); }
+
+  .viewer-scroll {
+    height: calc(100vh - 260px);
+    min-height: 480px;
+    overflow: auto;
+    background: #e9e7e1;
+  }
+  .viewer-pages {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 14px; padding: 16px 0 28px;
+  }
+  :global(.page-wrap) {
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(22, 26, 34, 0.18);
+    line-height: 0;
+  }
+  :global(.page-canvas) { display: block; }
+
+  .after {
+    margin: 2.5rem 0 0;
+    padding: 1.6rem 1.5rem;
+    text-align: center;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fbfbfa;
+  }
+  .after p { margin: 0 0 0.8rem; font-size: 1.05rem; font-weight: 600; color: var(--ink-soft); }
+  .after .action { display: inline-block; }
+
+  @media (max-width: 48rem) {
+    .viewer-scroll { height: calc(100vh - 220px); }
+    .fit-hide { display: none; }
+  }
+</style>
