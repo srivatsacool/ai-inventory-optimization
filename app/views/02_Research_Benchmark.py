@@ -1,4 +1,4 @@
-"""Page 1 - FROZEN RESULTS. Chart-first overview of published evidence.
+"""Page 2 - RESEARCH BENCHMARK. The frozen SIRP evidence, read-only.
 
 Read-only: every number arrives via app.lib.frozen_loader from files tracked
 at tag v1.0-evidence-freeze. Nothing here recomputes or reinterprets. The one
@@ -9,17 +9,18 @@ import streamlit as st
 
 from lib import frozen_loader as F
 from lib.lab import (
-    FROZEN, STEEL, STEEL_L, TEAL, TEAL_L, INDIGO_L, MUTED, WHITE,
+    FROZEN, INK, INK_SOFT, INK_MUTE, LINE_STRONG, SUCCESS,
+    MODEL_COLORS, model_color,
     badges, hero, meta_rail, metric_card, chart_panel, insight_panel, flow_diagram,
     glossary, inject_theme, lab_footer, fig_base, mono_annotation, empty_state,
     section_head, thesis_statement,
 )
 
 inject_theme()
-badges(("Locked / Published", "frozen"), ("Evidence · read only", "dim"), ("v1.0", "ver"))
-hero("Frozen Results",
-     "Forecast accuracy and inventory performance from the final verified research run — "
-     'nothing on this page is recomputed. Interrogate the "why" in the interactive sections.')
+badges(("Research Benchmark — frozen", "frozen"), ("Evidence · read only", "dim"), ("v1.0", "ver"))
+hero("Research Benchmark",
+     "Forecast accuracy and inventory performance from the final verified SIRP research run — "
+     "nothing on this page is recomputed. Interrogate the 'why' in the interactive sections.")
 ok = {k: v for k, v in F.verify_thesis().items()}
 missing = [k for k, v in F.check_all_present().items() if not v]
 if missing:
@@ -76,19 +77,24 @@ glossary("MASE", "Inventory cost")
 
 # ---------- chart A: model ranking (primary visual anchor) ----------
 section_head("Forecast evidence", "Accuracy ranking by environment")
-ds_pick = st.segmented_control("Demand environment", ["M5", "Store"], default="M5", key="fr_ds") or "M5"
+ds_pick = st.segmented_control("Demand environment", ["M5", "Store"], default="M5", key="rb_ds") or "M5"
 ds_key = "m5" if ds_pick == "M5" else "store_item_demand"
 rank = mase[mase["dataset"] == ds_key].sort_values("value")
 fig = fig_base(height=max(320, 40 * len(rank) + 100))
-colors = [TEAL if m == rank["model"].iloc[0] else STEEL_L for m in rank["model"]]
-fig.add_bar(x=rank["value"], y=rank["model"], orientation="h", marker_color=colors, width=.62,
-            hovertemplate="%{y}<br>MASE %{x:.4f}<extra></extra>")
+colors = [model_color(m) for m in rank["model"]]
+opacities = [1.0 if m == rank["model"].iloc[0] else 0.55 for m in rank["model"]]
+for opa in dict.fromkeys(opacities):  # one bar trace per opacity level
+    idx = [i for i, o in enumerate(opacities) if o == opa]
+    fig.add_bar(x=rank["value"].iloc[idx], y=rank["model"].iloc[idx], orientation="h",
+                marker_color=[colors[i] for i in idx], marker_opacity=opa, width=.62,
+                hovertemplate="%{y}<br>MASE %{x:.4f}<extra></extra>", showlegend=False)
 fig.update_layout(
-    title=dict(text=f"MASE by model · lower is better — {ds_pick}", font=dict(size=16, color=WHITE), x=.01),
+    title=dict(text=f"MASE by model · lower is better — {ds_pick}", font=dict(size=16, color=INK), x=.01),
     xaxis_title="MASE",
 )
-fig.add_annotation(mono_annotation(rank["value"].iloc[0] * 1.015, 0, "winner", color=TEAL_L, xanchor="left"))
-chart_panel(fig, "", "Frozen forecast accuracy over 500 series × 8 origins, test window only.")
+fig.add_annotation(mono_annotation(rank["value"].iloc[0] * 1.015, 0, "winner",
+                                   color=SUCCESS, xanchor="left"))
+chart_panel(fig, "", "Frozen forecast accuracy over 500 series × 8 origins, test window only. Each model carries its palette color; the winner renders at full saturation.")
 
 # ---------- chart D: forecast vs inventory outcome ----------
 section_head("Decision outcome", "Forecast winner ≠ inventory winner")
@@ -97,17 +103,18 @@ for i, (ds, label) in enumerate([("m5", "M5 · sparse"), ("store_item_demand", "
     sub = inv[inv["dataset"] == ds].sort_values("total_cost")
     fig2.add_bar(
         x=sub["total_cost"], y=sub["model"], orientation="h", legendgroup=ds, name=label,
-        marker_color=[TEAL if m == inv_win.loc[ds, "model"] else (INDIGO_L if m == fc_win.loc[ds, "model"] else "#22304A") for m in sub["model"]],
+        marker_color=[model_color(m) for m in sub["model"]],
+        marker_opacity=[1.0 if m == inv_win.loc[ds, "model"] else (0.85 if m == fc_win.loc[ds, "model"] else 0.45) for m in sub["model"]],
         offsetgroup=i, width=.42,
         hovertemplate=f"{label}<br>%{{y}}<br>cost %{{x:.2f}}<extra></extra>",
     )
 fig2.update_layout(
-    title=dict(text="Simulated inventory cost by model · lower is better", font=dict(size=16, color=WHITE), x=.01),
+    title=dict(text="Simulated inventory cost by model · lower is better", font=dict(size=16, color=INK), x=.01),
     xaxis_title="Total cost (holding units, H=1)", barmode="group", legend=dict(x=1.0, y=1),
 )
-fig2.add_annotation(mono_annotation(0.5, -0.5, "teal = inventory winner · indigo = forecast winner", color=MUTED,
+fig2.add_annotation(mono_annotation(0.5, -0.5, "full color = inventory winner · 85% = forecast winner", color=INK_MUTE,
                                     xref="paper", yref="paper", xanchor="center"))
-chart_panel(fig2, "", "Same models, same windows, one common policy. On Store demand the indigo forecast winner is not the teal inventory winner.",
+chart_panel(fig2, "", "Same models, same windows, one common policy. On Store demand the crimson forecast winner is not the teal-green inventory winner.",
             tag=("Frozen evidence", "frozen"))
 
 insight_panel(
@@ -149,4 +156,4 @@ with st.expander("Thesis lock — exact number-sheet rows"):
     )
     st.caption("Verified against 09_reports/final/data/final_number_sheet.csv on every load (7 rows).")
 
-lab_footer("Next → 02 Forecast Explorer: interrogate model behavior series by series.")
+lab_footer("Frozen files are never written. For live what-if analysis → Data Studio.")

@@ -1,22 +1,22 @@
-"""Page 4 - METHODOLOGY. The frozen protocol as a visual pipeline.
+"""Page 11 - RESEARCH / METHODOLOGY. The frozen protocol + the sandbox contract.
 
 Content sources are tracked at v1.0-evidence-freeze (protocol doc, decision
-log, number sheet). No prose walls: each stage is a compact module.
+log, number sheet). The sandbox integrity contract is stated explicitly.
 """
 
 import streamlit as st
 
 from lib import frozen_loader as F
 from lib.lab import (
-    badges, flow_diagram, glossary, hero, inject_theme, lab_footer, meta_rail, section_head,
-    insight_panel,
+    badges, flow_diagram, glossary, hero, inject_theme, insight_panel, lab_footer,
+    meta_rail, section_head,
 )
 
 inject_theme()
 badges(("Frozen protocol", "frozen"), ("Tracked sources only", "dim"), ("v1.0", "ver"))
-hero("Methodology",
+hero("Research / Methodology",
      "The research protocol as an instrument: eight stages, in order, with the locks "
-     "that make every number reproducible.")
+     "that make every number reproducible — and the rules the interactive lab obeys.")
 
 STAGES = [
     ("Data", "500 M5 series (sparse, 64.5% zeros) + 500 Store-Item-Demand series (dense, 0.02%). Two deliberately different demand environments.",
@@ -55,6 +55,23 @@ meta_rail([
     ("Boundary", "history < origin", "leakage-safe"),
 ], cols=5)
 
+# ---------------------------------------------------------------------------
+section_head("Sandbox integrity", "What the Interactive Experiment may and may not do")
+flow_diagram([
+    ("Read-only frozen", "06_results · 02_data · 09_reports/final · 05_experiments · docs/research"),
+    ("Derived extract", "app_data/interactive_series.parquet — additive, verified vs frozen actuals"),
+    ("Sandbox engine", "same simulator & metrics modules imported, never re-implemented"),
+    ("Labeled outputs", "Experiment ID + SANDBOX badge on every interactive run"),
+], last_highlight=False)
+insight_panel(
+    "<b>The frozen SIRP benchmark is immutable.</b> The lab never overwrites benchmark CSVs, "
+    "result files, manifests or research numbers. Every interactive result is stamped with an "
+    "Experiment ID and marked SANDBOX; every frozen number stays thesis-verified.",
+    "Sandbox model code is lifted verbatim from the research notebooks and is verified to "
+    "reproduce the frozen forecasts bit-for-bit (scripts/verify_sandbox_models.py).",
+    header="RESEARCH INTEGRITY", tone="frozen",
+)
+
 section_head("Evidence boundary", "Read-only vs interactive")
 insight_panel(
     "<b>Frozen evidence</b> (amber) is read-only — files tracked at tag "
@@ -78,4 +95,4 @@ st.success("Thesis lock verified live: " + " · ".join(
     f"{k.split('-', 1)[1]}={v['got']:.4f}" for k, v in ok.items() if v.get("ok")) + f" ({sum(v.get('ok') for v in ok.values())}/{len(ok)} rows)")
 
 glossary("MASE", "Common policy", "Intermittent demand", "Dense demand")
-lab_footer("Loop closed: return to 01 Frozen Results — now you know exactly what those numbers are.")
+lab_footer("Loop closed: return to Research Benchmark — now you know exactly what those numbers are.")

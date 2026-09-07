@@ -2,8 +2,15 @@
 # streamlit==1.43.2 caps pandas to <3,>=1.4 (pandas 3.x is uninstallable
 # alongside it). pandas==2.3.3 is the newest 2.x: satisfies the cap and ships
 # cp312–cp314 wheels, so Cloud resolves on both Python 3.12 and 3.14.
-# Only packages imported by app/**/*.py: streamlit, pandas, plotly, numpy.
+# App imports: streamlit, pandas, plotly, numpy, scipy (inventory z-quantile),
+# statsmodels (ARIMA/SARIMA), torch (LSTM).
+# torch: CPU wheel from the PyTorch index (keeps Cloud image small) and must be
+# >= 2.4 for NumPy 2.x compatibility (torch 2.2 fails against numpy 2.5).
 streamlit==1.43.2
 pandas==2.3.3
 plotly==6.3.0
 numpy==2.5.2
+scipy>=1.14
+statsmodels>=0.14
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.4

@@ -1,20 +1,40 @@
 ---
 // LabEmbed — the single Streamlit integration boundary for the /lab surface.
-// Contract: configurable URL, embed chrome, responsive frame, honest fallback.
+// Contract: configurable URL, embed chrome, honest fallback.
 // Never renders a fake lab: with no configured URL it shows the fallback only.
+// Optional envLabel/envSub render the dark "experiment environment" header
+// that makes the transition into the dark Streamlit app feel intentional.
 interface Props {
   streamlitUrl: string;
   title?: string;
+  envLabel?: string;
+  envSub?: string;
+  fullScreen?: boolean;
 }
-const { streamlitUrl, title = 'Interactive Research Laboratory' } = Astro.props;
+const {
+  streamlitUrl,
+  title = 'Interactive Research Laboratory',
+  envLabel,
+  envSub,
+  fullScreen = false,
+} = Astro.props;
 const src = streamlitUrl ? `${streamlitUrl}?embed=true&toolbarMode=minimal` : '';
+const hasEnv = Boolean(envLabel) && !fullScreen;
+const embedClass = fullScreen ? 'frame fullscreen' : hasEnv ? 'frame' : undefined;
 ---
-<div class="labembed">
+<div class:list={['labembed', { fullscreen: fullScreen }]}>
+  {hasEnv && (
+    <div class="env" aria-label="Experiment environment">
+      <p class="env-label">{envLabel}</p>
+      {envSub && <p class="env-sub">{envSub}</p>}
+    </div>
+  )}
   {src ? (
     <iframe
       src={src}
       title={title}
       loading="lazy"
+      class={embedClass}
       allow="clipboard-read; clipboard-write"
       referrerpolicy="no-referrer"
       sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
@@ -33,12 +53,14 @@ const src = streamlitUrl ? `${streamlitUrl}?embed=true&toolbarMode=minimal` : ''
       </p>
     </div>
   )}
-  <p class="labembed-note">
-    <a href={streamlitUrl || '/lab'} target={streamlitUrl ? '_blank' : undefined} rel={streamlitUrl ? 'noopener' : undefined}>
-      Open Research Lab in a new tab
-    </a>
-    {src && ' — the lab is an independent application mounted inside this page.'}
-  </p>
+  {!fullScreen && (
+    <p class="labembed-note">
+      <a href={streamlitUrl || '/lab'} target={streamlitUrl ? '_blank' : undefined} rel={streamlitUrl ? 'noopener' : undefined}>
+        Open Research Lab in a new tab
+      </a>
+      {src && ' — the lab is an independent application mounted inside this page.'}
+    </p>
+  )}
 </div>
 <style>
   .labembed iframe {
@@ -49,8 +71,49 @@ const src = streamlitUrl ? `${streamlitUrl}?embed=true&toolbarMode=minimal` : ''
     border-radius: var(--radius);
     background: #fff;
   }
+  /* With the environment header above, the frame loses its top chrome */
+  /* and the two read as a single dark-lab unit. */
+  .labembed iframe.frame {
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+  }
+  /* Fullscreen mode: full-bleed, edge to edge, viewport height, no chrome. */
+  .labembed.fullscreen {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+  }
+  .labembed iframe.fullscreen {
+    height: calc(100vh - 132px);
+    min-height: 560px;
+    border: none;
+    border-radius: 0;
+    background: #faf8f4;
+  }
+  .env {
+      background: var(--lab-bg);
+      color: var(--paper);
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 0.85rem 1.25rem 0.7rem;
+    }
+    .env-label {
+      margin: 0;
+      font-family: var(--font-label);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(244, 244, 241, 0.62);
+    }
+    .env-sub {
+      margin: 0.35rem 0 0;
+      font-family: var(--font-label);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--paper);
+    }
   .labembed-note { font-size: 0.85rem; color: var(--ink-mute); }
   @media (max-width: 40rem) {
     .labembed iframe { height: calc(100vh - 180px); min-height: 520px; }
+    .labembed iframe.fullscreen { height: calc(100vh - 108px); min-height: 480px; }
   }
 </style>

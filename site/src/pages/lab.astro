@@ -4,14 +4,82 @@ import LabEmbed from '../components/LabEmbed.astro';
 import { STREAMLIT_URL } from '../config.mjs';
 ---
 <BaseLayout
-  title="Research Lab"
+  title="Lab"
   section="lab"
-  description="Interactive research laboratory: frozen evidence, forecast explorer, inventory sensitivity, methodology."
+  description="Interactive AI Inventory Optimization Lab — from forecasts to shelf decisions. Change demand, run the model ladder, simulate inventory, and see how the winner changes."
 >
-  <p class="label">Interactive research laboratory · Evidence / Interactive</p>
-  <h1>Research Lab</h1>
-  <div class="prose">
-    <p>You entered from <em>what and why</em> — this is the evidence layer. Frozen Results are published and read-only; Forecast Explorer, Inventory / Sensitivity, and Methodology are interactive.</p>
+  <div class="lab-head">
+    <p class="label">Interactive / experimental · sandbox results, frozen evidence untouched</p>
+    <h1>Lab — From Forecasts to Shelf Decisions</h1>
+    <p class="lab-lede">
+      Select data, reshape demand, run the 12-model forecast ladder, and watch every forecast
+      become safety stock, orders, cost and service — live. The lab below runs the full app;
+      everything you change stays sandboxed.
+    </p>
   </div>
-  <LabEmbed streamlitUrl={STREAMLIT_URL} />
+
+  <LabEmbed
+    streamlitUrl={STREAMLIT_URL}
+    fullScreen
+    title="AI Inventory Optimization Lab"
+  />
+
+  <section class="below">
+    <p class="label">What this experiment tells you</p>
+    <h2>Interpretation</h2>
+    <div class="prose">
+      <p class="interpret-lead">The best forecaster is not always the cheapest model on the shelf.
+      Move a policy knob or reshape the demand and the winners move with it — the lab recomputes
+      the entire chain from forecast to inventory decision.</p>
+      <p class="interpret-note">Sandbox results with per-run Experiment IDs — never research
+      evidence. The frozen benchmark (tag v1.0-evidence-freeze) is read-only and verified on the
+      Research Benchmark page.</p>
+      <a class="cta-btn" href="/research">Read the research →</a>
+    </div>
+  </section>
+
+  <div class="connect">
+    <p class="connect-q">Want the evidence behind the experiment?</p>
+    <a class="cta-btn" href="/research">Read the research →</a>
+  </div>
 </BaseLayout>
+<style>
+  .lab-head { margin-bottom: 1.2rem; }
+  .lab-head h1 { margin: 0.2rem 0 0.4rem; }
+  .lab-lede { max-width: 52rem; color: var(--ink-soft); margin: 0; }
+
+  .below { margin-top: 2.8rem; }
+  .interpret-lead { font-size: 1.08rem; font-weight: 600; color: var(--ink-soft); }
+  .interpret-note { color: var(--ink-mute); font-size: 0.9rem; }
+
+  .cta-btn {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-family: var(--font-label);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--trad);
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--trad);
+    border-radius: var(--radius);
+    transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .cta-btn:hover { background: var(--trad); color: var(--paper); }
+
+  .connect {
+    margin: 2.8rem 0 0;
+    padding: 1.6rem 1.5rem;
+    text-align: center;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fbfbfa;
+  }
+  .connect-q {
+    margin: 0 0 0.8rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+</style>
