@@ -4,13 +4,16 @@
 # cp312–cp314 wheels, so Cloud resolves on both Python 3.12 and 3.14.
 # App imports: streamlit, pandas, plotly, numpy, scipy (inventory z-quantile),
 # statsmodels (ARIMA/SARIMA), torch (LSTM).
-# torch: CPU wheel from the PyTorch index (keeps Cloud image small) and must be
-# >= 2.4 for NumPy 2.x compatibility (torch 2.2 fails against numpy 2.5).
+# torch>=2.9: on the Cloud runtime (Python 3.14) the PyPI wheel IS the CPU
+# build (~200 MB, numpy-2 compatible). Do NOT add --extra-index-url here: it
+# makes pip resolve the CUDA-bundled Linux wheel (~900 MB + nvidia deps),
+# which times out the Cloud installer and silently leaves the old venv in
+# place (symptom: "No module named 'scipy'"). torch<2.4 is incompatible with
+# numpy>=2, and torch<2.9 has no cp314 wheels.
 streamlit==1.43.2
 pandas==2.3.3
 plotly==6.3.0
 numpy==2.5.2
 scipy>=1.14
 statsmodels>=0.14
---extra-index-url https://download.pytorch.org/whl/cpu
-torch>=2.4
+torch>=2.9
