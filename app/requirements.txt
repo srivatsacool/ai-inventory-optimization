@@ -1,9 +1,25 @@
-# Streamlit Community Cloud — kept identical to /requirements.txt.
+# Streamlit Community Cloud — install from repo root.
 # streamlit==1.43.2 caps pandas to <3,>=1.4 (pandas 3.x is uninstallable
 # alongside it). pandas==2.3.3 is the newest 2.x: satisfies the cap and ships
 # cp312–cp314 wheels, so Cloud resolves on both Python 3.12 and 3.14.
-# Only packages imported by app/**/*.py: streamlit, pandas, plotly, numpy.
+# App imports: streamlit, pandas, plotly, numpy, statsmodels (ARIMA/SARIMA,
+# which brings scipy), torch (LSTM).
+#
+# torch MUST come from the PyTorch CPU index with an EXACT +cpu pin.
+# Every PyPI torch build (2.4 ... 2.14, any Python version) is the
+# CUDA-bundled wheel on linux_x86_64 — Streamlit Cloud is Linux, so an
+# unpinned/PyPI torch drags ~15 nvidia-* packages + triton (~3 GB), the
+# installer times out, and Cloud silently reuses the old venv (symptom:
+# "No module named 'scipy'").
+# The exact +cpu pin is what makes --extra-index-url safe: pip prefers the
+# highest version, so an unpinned `torch` + this extra index still resolves
+# PyPI's newer CUDA wheel. `torch==2.9.1+cpu` has exactly one candidate
+# (cp312/cp313/cp314 manylinux + win wheels exist) — deterministic on all
+# runtimes. torch<2.4 is incompatible with numpy>=2.
+--extra-index-url https://download.pytorch.org/whl/cpu
 streamlit==1.43.2
 pandas==2.3.3
 plotly==6.3.0
 numpy==2.5.2
+statsmodels>=0.14
+torch==2.9.1+cpu
