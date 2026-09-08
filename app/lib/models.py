@@ -42,7 +42,7 @@ try:
         import torch
         import torch.nn as nn
 
-    (torch.from_numpy(np.zeros(2, dtype=np.float32)) + 1.0).item()  # ABI probe (fails on torch<2.4 + numpy>=2)
+    (torch.from_numpy(np.zeros(1, dtype=np.float32)) + 1.0).item()  # ABI probe (fails on torch<2.4 + numpy>=2); must be 1-element for .item()
     TORCH_AVAILABLE = True
 except Exception:  # pragma: no cover
     TORCH_AVAILABLE = False
